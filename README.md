@@ -10,6 +10,7 @@ Fairly simple but it shows how our nueral network goes through all its maths and
 | output| 2 neurons sum and carryout|  
 
 Truth table for full adder
+
 | in1 | in2 | cin| sum| cout|
 | --- | --- |--- | --- | --- |
 |0|0|0|0|0
@@ -20,7 +21,9 @@ Truth table for full adder
 |1|0|1|0|1
 |1|1|0|0|1
 |1|1|1|1|1   
+
 ![alt text](adder.bmp "Logo Title Text 1")
+
 
 - We randomly come up with weights ( a number between 0 and 1) 
 - Pass through the first row 
@@ -31,6 +34,7 @@ Truth table for full adder
 - Keep going until the result matches the expected for each row in the truth table.
  
 ###Some variable definitions
+
 | Name | Description |
 | --- | --- |
 |Sigmoid |        Function to calculate output of neuron  1/(1 + e^-Z) |
