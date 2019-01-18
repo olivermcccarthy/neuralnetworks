@@ -191,20 +191,20 @@ public class DrawPanel extends JPanel {
 		g2d.setColor(new Color(0, 255, 153));
 		g2d.fillOval(baseX, baseY, neuronWidth, neuronHeight);
 		g2d.setColor(Color.BLACK);
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 10, baseY + 40);
+		g2d.drawChars(chararr, 0, chararr.length, baseX + 15, baseY + 25);
 		
 		;
 		 
 		textStr = " b " + getDBL(neuron.bias);
 		 chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 10, baseY + 55);
+		g2d.drawChars(chararr, 0, chararr.length, baseX + 15, baseY + 40);
 		textStr = " err " + getDBL(neuron.errorVar);
 		 chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 10, baseY + 70);
+		g2d.drawChars(chararr, 0, chararr.length, baseX + 15, baseY + 55);
 		
 		textStr = " value " + getDBL(neuron.getValue());
 		 chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 10, baseY + 85);
+		g2d.drawChars(chararr, 0, chararr.length, baseX + 15, baseY + 70);
 		//g2d.drawRect(baseX, baseY, neuronWidth, neuronHeight);
 		neuron.X = baseX + neuronWidth;
 		neuron.Y = baseY + (neuronHeight/2);
