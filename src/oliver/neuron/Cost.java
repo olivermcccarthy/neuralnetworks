@@ -14,7 +14,7 @@ public class Cost implements Comparable<Cost>{
 	ArrayList<Tuple> rootMeanSquare = new ArrayList<Tuple>();
 	int tupleSize =0;
 	Tuple cost;
-
+    public int numWrong =0;
 	/**
 	 * Get the root mean square of the difference between actual and expected
 	 * @param tupleSize

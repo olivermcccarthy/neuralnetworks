@@ -1,7 +1,9 @@
 package oliver.neuron;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A layer of neurons. Sigmoid is called on this layer and it calculates sigmoid
@@ -11,9 +13,11 @@ import java.util.List;
  * @author oliver
  *
  */
-public class Layer {
+public class Layer implements Serializable{
 
 	static double getRandNum(double upperLevel) {
+	   
+	    
 		double res = (Math.random() * 2 * upperLevel) - upperLevel;
 		return res;
 	}
@@ -22,7 +26,7 @@ public class Layer {
 
 	String layerName;
 
-	Layer childLayer;
+	public Layer childLayer;
 
 	static List<Layer> layers = new ArrayList();
 
@@ -36,7 +40,7 @@ public class Layer {
 		this.childLayer = childLayer;
 		//
 		double upperLevel = 1 / (Math.sqrt(numNeurons));
-
+		
 		for (int x = 0; x < numNeurons; x++) {
 			Neuron newNu = new Neuron(layerName + "-" + x, 0);
 

@@ -1,6 +1,12 @@
 package oliver.neuron.mnist;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import oliver.neuron.Cost;
@@ -43,7 +49,17 @@ public class MnistTrainer {
 	public static void main(String[] args) {
 
 		MnistTrainer bmpFile = new MnistTrainer();
-		
+		String testDate = "2018-12-12T05:30:23.838-06:00".substring(0, 19);
+		SimpleDateFormat df;
+		java.time.LocalDateTime dg = java.time.LocalDateTime.parse(testDate,java.time.format.DateTimeFormatter.ISO_DATE_TIME);
+		try {
+			
+			java.util.Date date = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(testDate);
+			System.out.println(date.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		List<int[][]> images = MnistReader.getImages("train-images.idx3-ubyte");
 		int[] labels = MnistReader.getLabels("train-labels.idx1-ubyte");
 		List<double[]> inpuData = bmpFile.normalize(images, 28, 28);
@@ -91,7 +107,7 @@ public class MnistTrainer {
 					outputLayer.sigmoid();
 
 				}
-				int df = 0;
+				
 			}
 
 			long diff = System.currentTimeMillis() - startTime;

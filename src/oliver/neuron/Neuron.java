@@ -1,5 +1,6 @@
 package oliver.neuron;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,7 +11,7 @@ import java.util.List;
 import oliver.neuron.TruthTable.TruthRow;
 
 
-public class Neuron {
+public class Neuron implements Serializable{
 
 	List<Neuron> inputs = new ArrayList();
 
