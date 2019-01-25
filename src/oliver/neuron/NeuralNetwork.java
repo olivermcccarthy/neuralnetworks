@@ -14,18 +14,21 @@ public class NeuralNetwork {
 	Layer hiddenLayer = null;
 	Layer hiddenLayer2 = null;
 	public Layer outLayer = null;
-	public NeuralNetwork(int numInputs, int numHidden,  int numHidden2, int numOutputs){
+	public NeuralNetwork(int numInputs, int numHidden,  int numHidden2, int numOutputs, boolean linearOutput){
 		inputLayer = new Layer("input", numInputs);
 		
 		if(numHidden > 0) {
 			hiddenLayer = new Layer("hidden2", inputLayer, numHidden);
-		}
-		if(numHidden2 > 0) {
-			hiddenLayer2 = new Layer("hidden2", hiddenLayer, numHidden2);
-			outLayer = new Layer("outLayer", hiddenLayer2, numOutputs);
+			if(numHidden2 > 0) {
+				hiddenLayer2 = new Layer("hidden2", hiddenLayer, numHidden2);
+				outLayer = new Layer("outLayer", hiddenLayer2, numOutputs,linearOutput);
+			}else {
+				outLayer = new Layer("outLayer", hiddenLayer, numOutputs, linearOutput);
+			}
 		}else {
-			outLayer = new Layer("outLayer", hiddenLayer, numOutputs);
+			outLayer = new Layer("outLayer", inputLayer, numOutputs, linearOutput);
 		}
+		
 		try {
 			save();
 		} catch (IOException e) {
@@ -48,8 +51,13 @@ public class NeuralNetwork {
 			 hiddenLayer = hiddenLayer2.childLayer;
 			 inputLayer = hiddenLayer.childLayer; 
 		}else {
-			 hiddenLayer = outLayer.childLayer; 
-			 inputLayer = hiddenLayer.childLayer; 
+			if(hiddenLayer != null) {
+				 hiddenLayer = outLayer.childLayer; 
+				 inputLayer = hiddenLayer.childLayer; 
+			}else {
+				 inputLayer = outLayer.childLayer;
+			}
+			
 		}
 		
 		
@@ -72,22 +80,25 @@ public class NeuralNetwork {
 				numZeroWrong = 0;
 			}
 			if(trialInfo.bestCost < bestCost) {
-				save();
+			
 				bestCost = trialInfo.bestCost;
 				if(trialInfo.bestTrial < trialInfo.maxTrials -1) {
 					// run again upto that point;
 					load();
 					runTrial(trialInfo, trialInfo.bestTrial+1);
+					save();
 					System.out.println("Best trial" + trialInfo.bestTrial+ "Best cost" + trialInfo.bestCost);
 					// then half teh learning rate;
-					trialInfo.learningRate = trialInfo.learningRate/2;
+					trialInfo.learningRate = trialInfo.learningRate/trialInfo.learningRateChange;
 				}else {
+					save();
 					// Double teh learning rate;
-					trialInfo.learningRate = trialInfo.learningRate*1.5;
+					trialInfo.learningRate = trialInfo.learningRate*trialInfo.learningRateChange;
 				}
 			}else {
 				load();
-				trialInfo.learningRate = trialInfo.learningRate/1.5;
+			
+				trialInfo.learningRate = trialInfo.learningRate/trialInfo.learningRateChange;
 			}
 			
 		}
@@ -102,9 +113,9 @@ public class NeuralNetwork {
 		int bestNumWrong =20;
 		for (int trial = 0; trial < numTrials; trial++) {
 			//System.out.println("trial " + trial);
-			Cost theCost = trialInfo.sendinBatch(this);
+			Cost theCost = trialInfo.sendinBatch(this, true);
 			
-			double currentCost = theCost.getCost().getValues()[0];
+			double currentCost = theCost.getCost().getAverage();
             if(theCost.numWrong <  bestNumWrong) {
             	 bestNumWrong = theCost.numWrong;
             }

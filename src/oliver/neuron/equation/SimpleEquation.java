@@ -1,16 +1,13 @@
 package oliver.neuron.equation;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+
 
 import oliver.neuron.Cost;
-import oliver.neuron.Layer;
+
 import oliver.neuron.NeuralNetwork;
-import oliver.neuron.Neuron;
+
 import oliver.neuron.TrialInfo;
 
 public class SimpleEquation extends TrialInfo{
@@ -27,7 +24,7 @@ public class SimpleEquation extends TrialInfo{
 			for (int r = 0; r < numValues; r++) {
 				xCoeffs[r] = (int) (Math.random() * 5);
 				yCoeffs[r] = (int) (Math.random() * 5);
-				double result = xCoeffs[r] * 2 + yCoeffs[r] * 3;
+				double result = xCoeffs[r] * 13 + yCoeffs[r] * 7;
 				if (result > max) {
 					max = result;
 				}
@@ -36,10 +33,12 @@ public class SimpleEquation extends TrialInfo{
 			}
 
 		}
-		public Cost sendinBatch(NeuralNetwork neuralNetwork) {
+		
+		public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 			Cost theCost = new Cost(1);
 	
-			for (int r = 0; r < numValues/2; r++) {
+			
+			for (int r = 0; r < numValues; r++) {
 
 				double normalizedXCoeff = (xCoeffs[r]) / max;
 				double normalizedYCoeff = (yCoeffs[r]) / max;
@@ -54,8 +53,10 @@ public class SimpleEquation extends TrialInfo{
 					
 					theCost.numWrong++;
 				}
+				if(learning) {
 				// Anything above 0.5 we consider a match
 				neuralNetwork.outLayer.handleTopError(new double[] { normalizedResult });
+				}
 			}
 			return theCost;
 		}
@@ -64,8 +65,16 @@ public class SimpleEquation extends TrialInfo{
 
 		
 		SimpleEquation trial = new SimpleEquation();
-		NeuralNetwork neuralNetwork = new NeuralNetwork(2,8,8,1); 
+		NeuralNetwork neuralNetwork = new NeuralNetwork(2,8,8,1,true); 
+		trial.maxTrials =3000;
+		trial.numValues = 100;
 		neuralNetwork.runTrial(trial);
+		trial.numValues = 1000;
+		trial.learningRate = 1.2;
+		 trial.sendinBatch(neuralNetwork, false);
+			System.out.println("Best trial" + trial.bestTrial+ "Best cost" + trial.bestCost  + "  best numWrong "+ trial.bestNumWrong  + " LearningRate" + trial.learningRate + " numValues "+ trial.numValues);
+			
+		
 	}
 	
 	

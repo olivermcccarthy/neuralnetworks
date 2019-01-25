@@ -54,6 +54,26 @@ public class Layer implements Serializable{
 		}
 	}
 
+	
+	public Layer(String layerName, Layer childLayer, int numNeurons, boolean isLinear) {
+		layers.add(this);
+		this.layerName = layerName;
+		this.childLayer = childLayer;
+		//
+		double upperLevel = 1 / (Math.sqrt(numNeurons));
+		
+		for (int x = 0; x < numNeurons; x++) {
+			Neuron newNu = new LinearNeuron(layerName + "-" + x, 0);
+
+			for (Neuron child : childLayer.neurons) {
+
+				newNu.addInput(child, getRandNum(upperLevel));
+
+			}
+
+			this.neurons.add(newNu);
+		}
+	}
 	/**
 	 * InputLayer
 	 * 

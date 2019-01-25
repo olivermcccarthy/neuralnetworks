@@ -1,5 +1,6 @@
 package oliver.neuron.mnist;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -11,13 +12,24 @@ import java.util.List;
 
 import oliver.neuron.Cost;
 import oliver.neuron.Layer;
+import oliver.neuron.NeuralNetwork;
 import oliver.neuron.Neuron;
+import oliver.neuron.TrialInfo;
 
-public class MnistTrainer {
+public class MnistTrainer extends TrialInfo {
 
 	public MnistTrainer() {
+		images = MnistReader.getImages("train-images.idx3-ubyte");
+		labels=MnistReader.getLabels("train-labels.idx1-ubyte");
+		inputData = normalize(images, 28, 28);
 
+		tenBitArray = asTenBitArray(labels);
 	}
+
+	List<int[][]> images;
+	int[] labels;
+	List<double[]> inputData;
+	double[][] tenBitArray;
 
 	public List<double[]> normalize(List<int[][]> images, int numRows, int numCols) {
 
@@ -38,6 +50,45 @@ public class MnistTrainer {
 
 	}
 
+	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
+		Cost theCost = new Cost(10);
+
+		for (int image = 0; image < 10000; image++) {
+
+			double[] input = inputData.get(image);
+			// DrawPanel.input = images.get(image);
+			neuralNetwork.inputLayer.setvalues(input);
+			for (int innerTrial = 0; innerTrial < 1; innerTrial++) {
+
+				neuralNetwork.outLayer.sigmoid();
+				double[] expected = tenBitArray[image];
+				double[] output = neuralNetwork.outLayer.getvalues();
+				double expected2 = labels[image];
+
+				double max = 0;
+				int maxI = 0;
+				for (int x = 0; x < 10; x++) {
+					if (output[x] > max) {
+						max = output[x];
+						maxI = x;
+					}
+
+				}
+				if (maxI != expected2) {
+					theCost.numWrong++;
+				}
+
+				theCost.addResult(expected, output);
+				 neuralNetwork.outLayer.handleTopError(expected);
+			
+
+			}
+
+		}
+		System.out.println( theCost.getCost().getAverage() +" numWrong " + theCost.numWrong);
+		return theCost;
+	}
+
 	/**
 	 * Run each image through and compare actual with expected Expected will
 	 * converted into 10 bit array. Where only one bit is set. For example if
@@ -45,77 +96,17 @@ public class MnistTrainer {
 	 * set
 	 * 
 	 * @param args
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException, IOException {
 
-		MnistTrainer bmpFile = new MnistTrainer();
-		String testDate = "2018-12-12T05:30:23.838-06:00".substring(0, 19);
-		SimpleDateFormat df;
-		java.time.LocalDateTime dg = java.time.LocalDateTime.parse(testDate,java.time.format.DateTimeFormatter.ISO_DATE_TIME);
-		try {
-			
-			java.util.Date date = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(testDate);
-			System.out.println(date.getTime());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		List<int[][]> images = MnistReader.getImages("train-images.idx3-ubyte");
-		int[] labels = MnistReader.getLabels("train-labels.idx1-ubyte");
-		List<double[]> inpuData = bmpFile.normalize(images, 28, 28);
-	
-		Layer inputLayer = new Layer("input", 28 * 28);
-		Layer hiddenLayer = new Layer("hidden2", inputLayer, 40);
-
-		double[][] tenBitArray = asTenBitArray(labels);
-		double[] doubleArray = asDoubleArray(labels);
-		Layer outputLayer = new Layer("output", hiddenLayer, 10);
-		Neuron.learningRate = .2;
-		// DrawPanel.showNeurons();
-
-		for (int trial = 0; trial < 10; trial++) {
-			Cost theCost = new Cost(10);
-			int numWrong = 0;
-			long startTime = System.currentTimeMillis();
-			for (int image = 0; image < 60000; image++) {
-
-				double[] input = inpuData.get(image);
-				// DrawPanel.input = images.get(image);
-				inputLayer.setvalues(input);
-				for (int innerTrial = 0; innerTrial < 1; innerTrial++) {
-
-					outputLayer.sigmoid();
-					double[] expected = tenBitArray[image];
-					double[] output = outputLayer.getvalues();
-					double expected2 = labels[image];
-
-					double max = 0;
-					int maxI = 0;
-					for (int x = 0; x < 10; x++) {
-						if (output[x] > max) {
-							max = output[x];
-							maxI = x;
-						}
-
-					}
-					if (maxI != expected2) {
-						numWrong++;
-					}
-
-					theCost.addResult(expected, output);
-					outputLayer.handleTopError(expected);
-					outputLayer.sigmoid();
-
-				}
-				
-			}
-
-			long diff = System.currentTimeMillis() - startTime;
-			System.out.println("Finished trial " + trial + " Taking ms " + diff);
-			System.out.println(" Num wrong " + numWrong);
-			System.out.println(" The cost is " + Neuron.toString(theCost.getCost().getValues()));
-		}
-
+		MnistTrainer trainer = new MnistTrainer();
+        trainer.maxTrials = 20;
+        trainer.learningRate= 0.1;
+        NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
+        
+        neuralNetwork.runTrial(trainer);
 	}
 
 	public int bufAsInt(byte[] buffer, int startIndex, int length) {

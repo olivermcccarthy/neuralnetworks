@@ -2,18 +2,17 @@ package oliver.neuron;
 
 
 
-public class TrialInfo {
-	int maxTrials=100;
-	double learningRate = 1;
+public abstract class TrialInfo {
+	protected int maxTrials=100;
+	protected double learningRate = 1;
 	public int numValues =1000;
-	int bestTrial = 0;
-	double bestCost = 1;
-	double bestNumWrong = 10;
+	protected  int bestTrial = 0;
+	protected  double bestCost = 1;
+	protected double bestNumWrong = 10;
+	double learningRateChange = 1.005;
+	public abstract Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) ;
 	
-	public Cost sendinBatch(NeuralNetwork neuralNetwork) {
-		Cost theCost = new Cost(1);
-
-		return theCost;
+	public String toString() {
+		return String.format("Best trial %s Best cost %s   best numWrong %s LearningRate %s numValues %s", bestTrial, bestCost, this.learningRate, bestNumWrong, numValues);
 	}
-	
 }

@@ -53,13 +53,17 @@ Maths is hard but a small change in each weight causes a small improvement in th
 So we calculate the partial derivative  of each weight with respect  to Cost
 Then adjust this weight by a multiple of this  partial derivative 
 Derivative rules here https://www.mathsisfun.com/calculus/derivatives-rules.html
+Example 
+
+
 ###Some variable definitions
 | Name | Description |
 | --- | --- |
 | T   |            Expected value |
 |Sigmoid |        Function to calculate output of neuron  1/(1 + e^-Z) |
 |Z  |             Sum of all weights * inputs  w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)*input(n)| 
-|Cost|            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 
+|Cost|            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 |
+|Cost| If we expect .9 and neuron returns .8 then cost = 0.5( .9 -.8)^2 = 0.05|
 |pdW(x)-Cost|     Partial derivative  of weight with respect  to Cost  <br>
 |pdW(x)-Z|        Partial derivative  of weight with respect  to Z
 |pdZ-Sigmoid|     Partial derivative  of Z with respect  to Sigmoid
@@ -76,7 +80,7 @@ Using chain rule pdW-Cost =
  pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e^-Z)
  Reciprocal Rule  derivative of 1/f =   -df/(f^2)    
  f =  1 + e^-Z
- Derivative of 1 +e-Z =  -e-Z  so -df = e-Z 
+ Derivative of 1 +e^-Z =  -e^-Z  so -df = e^-Z 
  f sqaured = 
  df  = e^-z   We drop the 1 and the derivative e^x = e^x 
  f^2 = (1 + e^-Z) * (1 + e^-Z))  
