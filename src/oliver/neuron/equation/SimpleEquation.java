@@ -66,7 +66,7 @@ public class SimpleEquation extends TrialInfo{
 		
 		SimpleEquation trial = new SimpleEquation();
 		NeuralNetwork neuralNetwork = new NeuralNetwork(2,8,8,1,true); 
-		trial.maxTrials =3000;
+		trial.numTrialsBetweenSaves =3000;
 		trial.numValues = 100;
 		neuralNetwork.runTrial(trial);
 		trial.numValues = 1000;

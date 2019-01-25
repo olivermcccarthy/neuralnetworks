@@ -41,6 +41,7 @@ public class NeuralNetwork {
 		bout = new ByteArrayOutputStream();
 		ObjectOutputStream oout = new ObjectOutputStream(bout);
 		oout.writeObject(outLayer);
+		 
 	}
 	public void load() throws IOException, ClassNotFoundException {
 		ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
@@ -63,13 +64,13 @@ public class NeuralNetwork {
 		
 	}
 	public double runTrial(TrialInfo trialInfo) throws IOException, ClassNotFoundException {
-		int numTrials = trialInfo.maxTrials;
+		int numTrials = trialInfo.numTrialsBetweenSaves;
 		
 	  double bestCost = 1;
 	  int numZeroWrong = 0;
 		while(true) {
 		
-			runTrial(trialInfo,trialInfo.maxTrials); 
+			runTrial(trialInfo,trialInfo.numTrialsBetweenSaves); 
 			System.out.println("Best trial" + trialInfo.bestTrial+ "Best cost" + trialInfo.bestCost  + "  best numWrong "+ trialInfo.bestNumWrong  + " LearningRate" + trialInfo.learningRate + " numValues "+ trialInfo.numValues);
 			if(trialInfo.bestNumWrong == 0) {
 				numZeroWrong ++;
@@ -82,23 +83,32 @@ public class NeuralNetwork {
 			if(trialInfo.bestCost < bestCost) {
 			
 				bestCost = trialInfo.bestCost;
-				if(trialInfo.bestTrial < trialInfo.maxTrials -1) {
+				if(trialInfo.bestTrial < trialInfo.savePoint +trialInfo.numTrialsBetweenSaves -1) {
 					// run again upto that point;
+					System.out.println("Reloading from save point and playing as far as trial" + trialInfo.bestTrial);
+					
 					load();
+					trialInfo.trialNumber= trialInfo.savePoint; 
 					runTrial(trialInfo, trialInfo.bestTrial+1);
 					save();
-					System.out.println("Best trial" + trialInfo.bestTrial+ "Best cost" + trialInfo.bestCost);
+					trialInfo.savePoint = trialInfo.trialNumber;
+					System.out.println("Replayed as far as " + trialInfo.bestTrial+ "Best cost" + trialInfo.bestCost);
 					// then half teh learning rate;
 					trialInfo.learningRate = trialInfo.learningRate/trialInfo.learningRateChange;
+					System.out.println("Reducing learning rate to " + trialInfo.learningRate);
 				}else {
 					save();
 					// Double teh learning rate;
+					trialInfo.savePoint = trialInfo.trialNumber;
 					trialInfo.learningRate = trialInfo.learningRate*trialInfo.learningRateChange;
+					System.out.println("Doubling learning rate" + trialInfo.learningRate);
 				}
 			}else {
 				load();
-			
+				
+				trialInfo.trialNumber= trialInfo.savePoint; 
 				trialInfo.learningRate = trialInfo.learningRate/trialInfo.learningRateChange;
+				System.out.println("Reducing learning rate to " + trialInfo.learningRate);
 			}
 			
 		}
@@ -110,8 +120,9 @@ public class NeuralNetwork {
 		double lowestCost = 1;
 		Neuron.learningRate = trialInfo.learningRate;
 		double lastCost = 1;
-		int bestNumWrong =20;
-		for (int trial = 0; trial < numTrials; trial++) {
+		int bestNumWrong =trialInfo.numValues;
+		int maxtrial = trialInfo.trialNumber+numTrials;
+		for (int trial = trialInfo.trialNumber; trial <  maxtrial; trial++) {
 			//System.out.println("trial " + trial);
 			Cost theCost = trialInfo.sendinBatch(this, true);
 			
@@ -120,15 +131,18 @@ public class NeuralNetwork {
             	 bestNumWrong = theCost.numWrong;
             }
 	
-			if (currentCost <lowestCost) {
+			if (currentCost <	trialInfo.bestCost) {
 				trialInfo.bestCost = currentCost;
-				trialInfo.bestTrial = trial;
+				trialInfo.bestTrial = trialInfo.trialNumber;
 			}
+			System.out.println(trialInfo);
 			if (currentCost > lastCost) {
 				break;
 			}
 			lowestCost = currentCost;
 			lastCost = currentCost;
+		
+			trialInfo.trialNumber ++;
 		}
 		
 		trialInfo.bestNumWrong =bestNumWrong;	

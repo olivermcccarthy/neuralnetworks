@@ -102,7 +102,7 @@ public class MnistTrainer extends TrialInfo {
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 
 		MnistTrainer trainer = new MnistTrainer();
-        trainer.maxTrials = 20;
+        trainer.numTrialsBetweenSaves = 4;
         trainer.learningRate= 0.1;
         NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
         
