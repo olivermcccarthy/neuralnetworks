@@ -53,7 +53,7 @@ public class MnistTrainer extends TrialInfo {
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
 
-		for (int image = 0; image < 10000; image++) {
+		for (int image = 0; image < this.numValues; image++) {
 
 			double[] input = inputData.get(image);
 			// DrawPanel.input = images.get(image);
@@ -104,9 +104,13 @@ public class MnistTrainer extends TrialInfo {
 		MnistTrainer trainer = new MnistTrainer();
         trainer.numTrialsBetweenSaves = 4;
         trainer.learningRate= 0.1;
+        trainer.numValues = 5000;
         NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
         
         neuralNetwork.runTrial(trainer);
+        trainer.numValues = 60000;
+        trainer.sendinBatch(neuralNetwork, false);
+        
 	}
 
 	public int bufAsInt(byte[] buffer, int startIndex, int length) {

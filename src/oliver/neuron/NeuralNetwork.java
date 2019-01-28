@@ -70,83 +70,87 @@ public class NeuralNetwork {
 	  int numZeroWrong = 0;
 		while(true) {
 		
-			runTrial(trialInfo,trialInfo.numTrialsBetweenSaves); 
-			System.out.println("Best trial" + trialInfo.bestTrial+ "Best cost" + trialInfo.bestCost  + "  best numWrong "+ trialInfo.bestNumWrong  + " LearningRate" + trialInfo.learningRate + " numValues "+ trialInfo.numValues);
-			if(trialInfo.bestNumWrong == 0) {
+			boolean reachedBatchSize = runTrial(trialInfo,trialInfo.numTrialsBetweenSaves, false); 
+			System.out.println(trialInfo);
+			 if(trialInfo.bestCost < bestCost) {
+				 double improvement = bestCost/trialInfo.bestCost;
+				 
+				 System.out.println("improvment" + improvement);
+				 if ( improvement < 1.0001 ) {
+					 return trialInfo.bestCost;
+				 }
+			 }
+			if(reachedBatchSize == false) {
 				numZeroWrong ++;
-				if(numZeroWrong  >=10) {
-					return bestCost;
+				if(numZeroWrong > 2) {
+					return trialInfo.bestCost;
 				}
-			}else {
-				numZeroWrong = 0;
-			}
-			if(trialInfo.bestCost < bestCost) {
-			
-				bestCost = trialInfo.bestCost;
-				if(trialInfo.bestTrial < trialInfo.savePoint +trialInfo.numTrialsBetweenSaves -1) {
-					// run again upto that point;
-					System.out.println("Reloading from save point and playing as far as trial" + trialInfo.bestTrial);
-					
-					load();
-					trialInfo.trialNumber= trialInfo.savePoint; 
-					runTrial(trialInfo, trialInfo.bestTrial+1);
-					save();
-					trialInfo.savePoint = trialInfo.trialNumber;
-					System.out.println("Replayed as far as " + trialInfo.bestTrial+ "Best cost" + trialInfo.bestCost);
-					// then half teh learning rate;
-					trialInfo.learningRate = trialInfo.learningRate/trialInfo.learningRateChange;
-					System.out.println("Reducing learning rate to " + trialInfo.learningRate);
-				}else {
-					save();
-					// Double teh learning rate;
-					trialInfo.savePoint = trialInfo.trialNumber;
-					trialInfo.learningRate = trialInfo.learningRate*trialInfo.learningRateChange;
-					System.out.println("Doubling learning rate" + trialInfo.learningRate);
-				}
-			}else {
+				// run again upto that point;
+				System.out.println(String.format("Reloading from save point %s and playing as far as trial %s", trialInfo.savePoint, trialInfo.bestTrial));
+				 
 				load();
 				
 				trialInfo.trialNumber= trialInfo.savePoint; 
+				runTrial(trialInfo, trialInfo.bestTrial -trialInfo.savePoint, true);
+				save();
+				trialInfo.savePoint = trialInfo.trialNumber;
+				System.out.println("Replayed as far as " + trialInfo.bestTrial+ "Best cost" + trialInfo.bestCost);
+				// then half teh learning rate;
 				trialInfo.learningRate = trialInfo.learningRate/trialInfo.learningRateChange;
-				System.out.println("Reducing learning rate to " + trialInfo.learningRate);
-			}
+				System.out.println(String.format("Reducing learning rate to %s",trialInfo.learningRate));
+				bestCost = trialInfo.bestCost;
+				trialInfo.learningRateChange = (trialInfo.learningRateChange -1 )*0.5 +1;
+			}else {
+				numZeroWrong = 0;
+			    if(trialInfo.bestCost < bestCost) {
+			    	trialInfo.savePoint = trialInfo.trialNumber;
+				     bestCost = trialInfo.bestCost;
+					save();
+					// Double teh learning rate					trialInfo.savePoint = trialInfo.trialNumber;
+					trialInfo.learningRate = trialInfo.learningRate*trialInfo.learningRateChange;
+					System.out.println(String.format("Saving at save point %s Increasing learning rate to %s" , trialInfo.savePoint, trialInfo.learningRate));
+				
 			
+			}
+			}
 		}
 	
 	}
-	public  double runTrial(TrialInfo trialInfo, int numTrials) throws IOException, ClassNotFoundException {
+	public  boolean runTrial(TrialInfo trialInfo, int numTrials, boolean replay) throws IOException, ClassNotFoundException {
 
 		
-		double lowestCost = 1;
+	
 		Neuron.learningRate = trialInfo.learningRate;
-		double lastCost = 1;
+	
 		int bestNumWrong =trialInfo.numValues;
 		int maxtrial = trialInfo.trialNumber+numTrials;
 		for (int trial = trialInfo.trialNumber; trial <  maxtrial; trial++) {
+			trialInfo.trialNumber ++;
 			//System.out.println("trial " + trial);
 			Cost theCost = trialInfo.sendinBatch(this, true);
 			
-			double currentCost = theCost.getCost().getAverage();
+			trialInfo.currentCost = theCost.getCost().getAverage();
             if(theCost.numWrong <  bestNumWrong) {
             	 bestNumWrong = theCost.numWrong;
             }
 	
-			if (currentCost <	trialInfo.bestCost) {
-				trialInfo.bestCost = currentCost;
+			if (trialInfo.currentCost <	trialInfo.bestCost) {
+				trialInfo.bestCost = trialInfo.currentCost;
 				trialInfo.bestTrial = trialInfo.trialNumber;
+			}else if(!replay) {
+				
+				System.out.println(trialInfo);
+				System.out.println(String.format("Found increase in cost without running batch of trials %s",trialInfo.numTrialsBetweenSaves));
+				return false;
 			}
-			System.out.println(trialInfo);
-			if (currentCost > lastCost) {
-				break;
-			}
-			lowestCost = currentCost;
-			lastCost = currentCost;
+			
 		
-			trialInfo.trialNumber ++;
+			
+			System.out.println(trialInfo);
 		}
 		
-		trialInfo.bestNumWrong =bestNumWrong;	
-		return lowestCost;
+		
+		return true;
 
 	}
 }
