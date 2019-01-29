@@ -18,7 +18,10 @@ import oliver.neuron.TrialInfo;
 
 public class MnistTrainer extends TrialInfo {
 
-	public MnistTrainer() {
+	 public MnistTrainer(int numTrialsBetweenSaves, double learningRate, int numValues, double learningRateChange) {
+ 
+	  
+        super(numTrialsBetweenSaves, learningRate, numValues,learningRateChange);
 		images = MnistReader.getImages("train-images.idx3-ubyte");
 		labels=MnistReader.getLabels("train-labels.idx1-ubyte");
 		inputData = normalize(images, 28, 28);
@@ -99,15 +102,15 @@ public class MnistTrainer extends TrialInfo {
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) throws ClassNotFoundException, IOException {
+	public static void main(String[] args) throws Exception {
 
-		MnistTrainer trainer = new MnistTrainer();
-        trainer.numTrialsBetweenSaves = 4;
-        trainer.learningRate= 0.1;
-        trainer.numValues = 5000;
+		MnistTrainer trainer = new MnistTrainer(4,  0.1,5000, 1.1);
+       
         NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
+        for(int x =0; x < 100; x++) {
+           trainer.nextTrial(neuralNetwork);
+        }
         
-        neuralNetwork.runTrial(trainer);
         trainer.numValues = 60000;
         trainer.sendinBatch(neuralNetwork, false);
         

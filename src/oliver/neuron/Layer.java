@@ -63,7 +63,7 @@ public class Layer implements Serializable{
 		double upperLevel = 1 / (Math.sqrt(numNeurons));
 		
 		for (int x = 0; x < numNeurons; x++) {
-			Neuron newNu = new LinearNeuron(layerName + "-" + x, 0);
+			Neuron newNu = new Neuron(layerName + "-" + x, 0);
 
 			for (Neuron child : childLayer.neurons) {
 
