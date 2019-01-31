@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import oliver.neuron.Cost;
+import oliver.neuron.DrawPanel;
 import oliver.neuron.Layer;
 import oliver.neuron.NeuralNetwork;
 import oliver.neuron.Neuron;
@@ -28,7 +29,7 @@ public class MnistTrainer extends TrialInfo {
 
 		tenBitArray = asTenBitArray(labels);
 	}
-
+  static boolean stopAMinute = false;
 	List<int[][]> images;
 	int[] labels;
 	List<double[]> inputData;
@@ -80,7 +81,10 @@ public class MnistTrainer extends TrialInfo {
 				if (maxI != expected2) {
 					theCost.numWrong++;
 				}
-
+				if(stopAMinute) {
+					DrawPanel.input = images.get(image);
+				DrawPanel.stopAMinute(String.format(" Expected %s Got %s",expected2,maxI));
+				}
 				theCost.addResult(expected, output);
 				 neuralNetwork.outLayer.handleTopError(expected);
 			
@@ -104,14 +108,40 @@ public class MnistTrainer extends TrialInfo {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		MnistTrainer trainer = new MnistTrainer(4,  0.1,5000, 1.1);
-       
+		
+		double res = Math.exp(2) + Math.exp(6);
+		double jk = Math.exp(2)*(1 + Math.exp(4));
+		double logged=            2 + Math.log(1 + Math.exp(4));
+		            
+		double redfg=              Math.log(Math.exp(2)* Math.exp(6));
+		double firstLog = Math.log(res);
+		
+		
+		System.out.println(res);
+		res = 2* Math.exp(8) + 4 *Math.exp(3);
+		
+		double rety=       Math.log((8  + Math.log(2))* (3 +Math.log(4)));
+		double refres = 2*Math.exp(3)*(Math.exp(5) + 2);
+		
+		double res2 =Math.log(res);
+		double res4 = Math.exp(res2);
+		double res3 = 3 + Math.log(2) + 5 +Math.log(2);
+		
+		System.out.println(res);
+		res = Math.log(res/2);
+		System.out.println(res);
+		MnistTrainer trainer = new MnistTrainer(1,  0.1,1000, 1.1);
+		
+		
         NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
-        for(int x =0; x < 100; x++) {
+        for(int x =0; x < 40; x++) {
            trainer.nextTrial(neuralNetwork);
         }
         
+        
         trainer.numValues = 60000;
+        DrawPanel.showNeurons();
+        stopAMinute = true;
         trainer.sendinBatch(neuralNetwork, false);
         
 	}

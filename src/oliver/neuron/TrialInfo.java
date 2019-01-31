@@ -64,6 +64,7 @@ public abstract class TrialInfo {
 				this.savePointCost = this.currentCost;
 				System.out.println(String.format("Saving at save point %s learning rate is %s" ,savePoint, learningRate));
 			}
+			this.savePoint = this.trialNumber+1;
 		}
 		
 		trialNumber ++;
