@@ -57,6 +57,7 @@ Example
 
 
 ###Some variable definitions
+
 | Name | Description |
 | --- | --- |
 | T   |            Expected value |
@@ -92,28 +93,28 @@ Using chain rule pdW(x)-Cost =
  Mad but true.   As Cost is computed from Sigmoid which in turn is computed from Z which in turn is computed using W(x)
 
  pdW(x)-Z is just   input(x) as we can treat the other coeffs in Z as constants ( we are only making a small change in W(x) and therefore they have a derivative of 0
- pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e^-Z^)
- Reciprocal Rule  derivative of 1/f =   -df/(f^2^)    
- f =  1 + e^-Z^
+ pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e<sup>-Z</sup>)
+ Reciprocal Rule  derivative of 1/f =   -df/(f<sup>2</sup>)    
+ f =  1 + e<sup>-Z</sup>
   
- df  = -e^-Z^    
- f^2 = (1 + e^-Z^) * (1 + e^-Z^)  
+ df  = -e<sup>-Z</sup>    
+ f^2 = (1 + e<sup>-Z</sup>) * (1 + e<sup>-Z</sup>)  
  
  so -df/(f^2) =
    e^-z/[(1 + e^-Z)^2]
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
- (1 + e^-z^ -1)/[(1 + e^-Z^)^2^]
+ (1 + e<sup>-Z</sup> -1)/[(1 + e<sup>-Z</sup>)<sup>2</sup>]
  
  =
-  (1 + e^-z^)/[(1 + e^-Z^)^2^]  - 1/[(1 + e^-Z^)^2^]
+  (1 + e<sup>-Z</sup>)/[(1 + e<sup>-Z</sup>)<sup>2</sup>]  - 1/[(1 + e<sup>-Z</sup>)<sup>2</sup>]
   
-  we can divide the first part above and below by (1 + e^-z) giving us
-  1/(1 + e^-Z^) - 1/[(1 + e^-Z^)^2^]
+  we can divide the first part above and below by (1 + e<sup>-Z</sup>) giving us
+  1/(1 + e<sup>-Z</sup>) - 1/[(1 + e<sup>-Z</sup>)<sup>2</sup>]
   
   which is equal to
-  [1/(1 + e^-Z)] ( 1 - 1/(1 + e^-Z)]
+  [1/(1 + e<sup>-Z</sup>)] ( 1 - 1/(1 + e<sup>-Z</sup>)]
   
   Of course 1/(1 + e^-Z) is Sigmoid 
   Therefore the derivative of Sigmoid is 
@@ -124,5 +125,5 @@ Using chain rule pdW(x)-Cost =
   
    
      
-  1/(1 + e^-Z^)  -  e^-Z^/((1 + e^-Z^) * (1 + e^-Z^))
+  1/(1 + e<sup>-Z</sup>)  -  e<sup>-Z</sup>/((1 + e<sup>-Z</sup>) * (1 + e<sup>-Z</sup>))
     
