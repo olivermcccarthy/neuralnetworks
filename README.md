@@ -123,7 +123,12 @@ Using chain rule pdW(x)-Cost =
   This is useful because we can easily calculate the derivative of Sigmoid
   
   
-   
+   <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mfrac>
+    <mn>1</mn>
+    <mi>1 + e<sup>-Z</sup></mi>
+  </mfrac>
+</math>
      
   1/(1 + e<sup>-Z</sup>)  -  e<sup>-Z</sup>/((1 + e<sup>-Z</sup>) * (1 + e<sup>-Z</sup>))
     
@@ -131,8 +136,12 @@ Using chain rule pdW(x)-Cost =
 <math xmlns="http://www.w3.org/1998/Math/MathML">
  
   <mi>C</mi>
+  <mrow class="MJX-TeXAtom-ORD">
+    <mo>/</mo>
+  </mrow>
+ 
   <msub>
-    <mi>wk</mi>
-    
+    <mi>w</mi>
+    <mi>k</mi>
   </msub>
 </math>
