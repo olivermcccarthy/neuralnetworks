@@ -1,7 +1,7 @@
 # neuralnetworks
 
 Taking a full adder as an example we use a network of 3 Layers
-Fairly simple but it shows how our nueral network goes through all its maths and comes up with a solution of its own
+Fairly simple but it shows how our neural network goes through all its math and comes up with a solution of its own
 
 | Layer | Description | 
 | --- | --- |
@@ -70,21 +70,59 @@ Example
 |pdSigmoid-Cost|  Partial derivative  of Sigmoid  respect  to Cost
 |Error |          Useful variable  pdZ-Sigmoid *  pdSigmoid-Cost
 
+We need to find a small change in each weight that will improve the cost
+We change them in proportion to pdW(x)-Cost
+There are some funky maths to prove this but for the outputlayer
+ pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
        
-Using chain rule pdW-Cost =  
+ ### some funky maths
+       
+Using chain rule pdW(x)-Cost =  
  pdW(x)-Sigmoid * pSigmoid-Cost  = 
  pdW(x)-Z  *  pdZ-Sigmoid * pdSigmoid-Cost
+ 
+ As in a small change in weight produces a small change in Z which produces a small change in Sigmoid which reduces the cost 
+ The maths below prove that 
+ 
+ Small Change in W(x)  dw(x) = Input(x)
+ Small change in Z dZ =   sigMoid * (1 - sigMoid)
+ Small change in Sigmoid improves cost by t -Sigmoid
+  
+ 
  Mad but true.   As Cost is computed from Sigmoid which in turn is computed from Z which in turn is computed using W(x)
 
  pdW(x)-Z is just   input(x) as we can treat the other coeffs in Z as constants ( we are only making a small change in W(x) and therefore they have a derivative of 0
- pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e^-Z)
- Reciprocal Rule  derivative of 1/f =   -df/(f^2)    
- f =  1 + e^-Z
- Derivative of 1 +e^-Z =  -e^-Z  so -df = e^-Z 
- f sqaured = 
- df  = e^-z   We drop the 1 and the derivative e^x = e^x 
- f^2 = (1 + e^-Z) * (1 + e^-Z))  
+ pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e^-Z^)
+ Reciprocal Rule  derivative of 1/f =   -df/(f^2^)    
+ f =  1 + e^-Z^
+  
+ df  = -e^-Z^    
+ f^2 = (1 + e^-Z^) * (1 + e^-Z^)  
  
- so thats
-  1/(1 + e^-Z)  -  e^-z/((1 + e^-Z) * (1 + e^-Z))
+ so -df/(f^2) =
+   e^-z/[(1 + e^-Z)^2]
+   
+ For fun and to get what we are looking for we add and subtract 1 above the line
+ 
+ (1 + e^-z^ -1)/[(1 + e^-Z^)^2^]
+ 
+ =
+  (1 + e^-z^)/[(1 + e^-Z^)^2^]  - 1/[(1 + e^-Z^)^2^]
+  
+  we can divide the first part above and below by (1 + e^-z) giving us
+  1/(1 + e^-Z^) - 1/[(1 + e^-Z^)^2^]
+  
+  which is equal to
+  [1/(1 + e^-Z)] ( 1 - 1/(1 + e^-Z)]
+  
+  Of course 1/(1 + e^-Z) is Sigmoid 
+  Therefore the derivative of Sigmoid is 
+  Sigmoid*(1 - Sigmoid)
+  
+  This is useful because we can easily calculate the derivative of Sigmoid
+  
+  
+   
+     
+  1/(1 + e^-Z^)  -  e^-Z^/((1 + e^-Z^) * (1 + e^-Z^))
     
