@@ -127,3 +127,16 @@ Using chain rule pdW(x)-Cost =
      
   1/(1 + e<sup>-Z</sup>)  -  e<sup>-Z</sup>/((1 + e<sup>-Z</sup>) * (1 + e<sup>-Z</sup>))
     
+    
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+  <mi>C</mi>
+  <mrow class="MJX-TeXAtom-ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+  <msub>
+    <mi>w</mi>
+    <mi>k</mi>
+  </msub>
+</math>
