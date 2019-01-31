@@ -129,14 +129,10 @@ Using chain rule pdW(x)-Cost =
     
     
 <math xmlns="http://www.w3.org/1998/Math/MathML">
-  <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+ 
   <mi>C</mi>
-  <mrow class="MJX-TeXAtom-ORD">
-    <mo>/</mo>
-  </mrow>
-  <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
   <msub>
-    <mi>w</mi>
-    <mi>k</mi>
+    <mi>wk</mi>
+    
   </msub>
 </math>
