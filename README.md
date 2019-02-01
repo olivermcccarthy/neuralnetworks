@@ -133,15 +133,49 @@ Using chain rule pdW(x)-Cost =
   1/(1 + e<sup>-Z</sup>)  -  e<sup>-Z</sup>/((1 + e<sup>-Z</sup>) * (1 + e<sup>-Z</sup>))
     
     
-<math xmlns="http://www.w3.org/1998/Math/MathML">
- 
-  <mi>C</mi>
-  <mrow class="MJX-TeXAtom-ORD">
-    <mo>/</mo>
-  </mrow>
- 
-  <msub>
-    <mi>w</mi>
-    <mi>k</mi>
-  </msub>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <semantics>
+    <mtable columnalign="right center left" rowspacing="3pt" columnspacing="0 thickmathspace" displaystyle="true">
+      <mlabeledtr>
+        <mtd id="mjx-eqn-6">
+          <mtext>(6)</mtext>
+        </mtd>
+        <mtd>
+          <mi>C</mi>
+          <mo stretchy="false">(</mo>
+          <mi>w</mi>
+          <mo>,</mo>
+          <mi>b</mi>
+          <mo stretchy="false">)</mo>
+          <mo>&#x2261;<!-- ≡ --></mo>
+          <mfrac>
+            <mn>1</mn>
+            <mrow>
+              <mn>2</mn>
+              <mi>n</mi>
+            </mrow>
+          </mfrac>
+          <munder>
+            <mo>&#x2211;<!-- ∑ --></mo>
+            <mi>x</mi>
+          </munder>
+          <mo fence="false" stretchy="false">&#x2016;<!-- ‖ --></mo>
+          <mi>y</mi>
+          <mo stretchy="false">(</mo>
+          <mi>x</mi>
+          <mo stretchy="false">)</mo>
+          <mo>&#x2212;<!-- − --></mo>
+          <mi>a</mi>
+          <msup>
+            <mo fence="false" stretchy="false">&#x2016;<!-- ‖ --></mo>
+            <mn>2</mn>
+          </msup>
+          <mo>.</mo>
+        </mtd>
+      </mlabeledtr>
+    </mtable>
+    <annotation encoding="application/x-tex">\begin{eqnarray}  C(w,b) \equiv
+  \frac{1}{2n} \sum_x \| y(x) - a\|^2.
+\tag{6}\end{eqnarray}</annotation>
+  </semantics>
 </math>
