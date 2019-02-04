@@ -8,7 +8,7 @@ TABLE{border-collapse: collapse;border-spacing: 0;}
 
 --->
 </STYLE>
-</STYLE>
+
 # neuralnetworks
 
 Taking a full adder as an example we use a network of 3 Layers
