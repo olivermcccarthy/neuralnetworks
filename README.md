@@ -128,19 +128,19 @@ Using chain rule pdW(x)-Cost =
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
  
  Rewriting this we get  
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
  
- Then we take out  
+ Then we take out the following from first and second part 
  
 ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20  )
  
  Giving us
-
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20  )
+=
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20  )
   
 
   
@@ -149,8 +149,9 @@ Of course
 ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20  )
   
 Is Sigmoid 
-  Therefore the derivative of Sigmoid is 
-  Sigmoid*(1 - Sigmoid)
+  Therefore the partial derivative of Sigmoid with respect to Z is  
+  
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20  )
   
   This is useful because we can easily calculate the derivative of Sigmoid
 
