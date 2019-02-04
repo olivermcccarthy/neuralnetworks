@@ -88,7 +88,7 @@ There are some funky maths to prove this but for the outputlayer
  pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
        
  ### some funky maths
-       
+![f1]       
 Using chain rule pdW(x)-Cost =  
  pdW(x)-Sigmoid * pSigmoid-Cost  = 
  pdW(x)-Z  *  pdZ-Sigmoid * pdSigmoid-Cost
@@ -138,5 +138,8 @@ Using chain rule pdW(x)-Cost =
   This is useful because we can easily calculate the derivative of Sigmoid
  
   1/(1 + e^-Z^)  -  e^-Z^/((1 + e^-Z^) * (1 + e^-Z^))
+
+
     
+[f1]: http://chart.apis.google.com/chart?cht=tx&chl=m=\frac{m_0}{\sqrt{1-{\frac{v^2}{c^2}}}}
  
