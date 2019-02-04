@@ -35,6 +35,7 @@ Fairly simple but it shows how our neural network goes through all its math and 
 
 ![alt text](adder.bmp "Logo Title Text 1")
 
+![alt text]( http://chart.apis.google.com/chart?cht=tx&chl={\frac{1 %2B  e^{-Z}}{(1 %2B  e^{-Z}%29^2} - \frac{1}{(1 %2B e^{-Z}%29^2}}})
 
 - We randomly come up with weights ( a number between 0 and 1) 
 - Pass through the first row 
@@ -69,6 +70,7 @@ Example
 
 ###Some variable definitions
 
+
 | Name | Description |
 | --- | --- |
 | T   |            Expected value |
@@ -76,11 +78,12 @@ Example
 |Z  |             Sum of all weights * inputs  w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)*input(n)| 
 |Cost|            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 |
 |Cost| If we expect .9 and neuron returns .8 then cost = 0.5( .9 -.8)^2 = 0.05|
-|∂Cost-w(x)|     Partial derivative  of weight with respect  to Cost  <br>
+|![f4](http://chart.apis.google.com/chart?cht=tx&chl=\frac{\partial Cost}{\partial wx})|     Partial derivative  of weight with respect  to Cost  <br>
 |pdW(x)-Z|        Partial derivative  of weight with respect  to Z
 |pdZ-Sigmoid|     Partial derivative  of Z with respect  to Sigmoid
 |pdSigmoid-Cost|  Partial derivative  of Sigmoid  respect  to Cost
 |Error |          Useful variable  pdZ-Sigmoid *  pdSigmoid-Cost
+
 
 We need to find a small change in each weight that will improve the cost
 We change them in proportion to pdW(x)-Cost
@@ -105,40 +108,52 @@ Using chain rule pdW(x)-Cost =
  Mad but true.   As Cost is computed from Sigmoid which in turn is computed from Z which in turn is computed using W(x)
 
  pdW(x)-Z is just   input(x) as we can treat the other coeffs in Z as constants ( we are only making a small change in W(x) and therefore they have a derivative of 0
- pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e^-Z^)
- Reciprocal Rule  derivative of 1/f =   -df/(f^2^)    
- f =  1 + e^-Z^
-  
- df  = -e^-Z^    
- f^2 = (1 + e^-Z^) * (1 + e^-Z^)  
+ pdZ-Sigmoid is more fun  Sigmoid =
  
- so [-df%f^2^] =
-   [e^-z%(1 + e^-Z^)^2^]
+![d](http://chart.apis.google.com/chart?cht=tx&chl= (1%29/(1 %2B e^{-Z}%29 )
+ Reciprocal Rule  derivative of
+  
+![d](http://chart.apis.google.com/chart?cht=tx&chl= d({\frac{1}{f}%29 =   -df/(f^{2}%29 )
+     
+ here    
+![d](http://chart.apis.google.com/chart?cht=tx&chl= f =  1 %2B e^{-Z} )
+  
+![d](http://chart.apis.google.com/chart?cht=tx&chl=  df = -e^{-Z} )
+     
+![d](http://chart.apis.google.com/chart?cht=tx&chl= f^{2} = (1 %2B e ^{-Z}%29^{2} )
+ 
+ Thus
+ 
+![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{-df}{f^{2}} = {\frac{e ^{-Z} }{(1 %2B e^{-Z}%29^{2}} )
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
-  ![f3]
+![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1 %2B e ^{-Z} -1}{(1 %2B e^{-Z}%29^{2}} )
  
- Rewriting this we get  ![f2]
+ Rewriting this we get  
  
- Then we take out  ![f4]
+![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1 %2B e ^{-Z}}{(1 %2B e^{-Z}%29^{2}} - {\frac{1}{(1 %2B e^{-Z}%29^{2}} )
  
-  giving us
-![f5]  
+ Then we take out  
+ 
+![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1}{(1 %2B e^{-Z}%29} )
+ 
+ Giving us
+
+![d](http://chart.apis.google.com/chart?cht=tx&chl= ({\frac{1}{(1 %2B e^{-Z}%29}%29(1 -{\frac{1}{(1 %2B e^{-Z}%29}%29  )
   
 
   
-  Of course ![f4] is Sigmoid 
+Of course 
+
+![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1}{(1 %2B e^{-Z}%29} )
+  
+Is Sigmoid 
   Therefore the derivative of Sigmoid is 
   Sigmoid*(1 - Sigmoid)
   
   This is useful because we can easily calculate the derivative of Sigmoid
- 
-  1/(1 + e^-Z^)  -  e^-Z^/((1 + e^-Z^) * (1 + e^-Z^))
 
-[f2]: http://chart.apis.google.com/chart?cht=tx&chl={\frac{1 %2B  e^{-Z}}{(1 %2B  e^{-Z})^2} - \frac{1}{(1 %2B  e^{-Z})^2}}}
-[f4]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{1}{1 %2B e^{-Z}}
-[f5]: http://chart.apis.google.com/chart?cht=tx&chl=({\frac{1}{1 %2B e^{-Z}}}){(1  - \frac{1}{1 %2B  e^{-Z}}}})
-[f3]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{1 %2B e^{-Z} -1}{(1 %2B  e^{-Z})^2}}   
-[f1]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{m_0}{\sqrt{1-{\frac{v^2}{c^2}}}}
+
+
  
