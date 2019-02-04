@@ -110,43 +110,43 @@ Using chain rule pdW(x)-Cost =
  pdW(x)-Z is just   input(x) as we can treat the other coeffs in Z as constants ( we are only making a small change in W(x) and therefore they have a derivative of 0
  pdZ-Sigmoid is more fun  Sigmoid =
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl= (1%29/(1 %2B e^{-Z}%29 )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20(1%29/(1%20%2B%20e^{-Z}%29%20)
  Reciprocal Rule  derivative of
   
-![d](http://chart.apis.google.com/chart?cht=tx&chl= d({\frac{1}{f}%29 =   -df/(f^{2}%29 )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20)
      
  here    
-![d](http://chart.apis.google.com/chart?cht=tx&chl= f =  1 %2B e^{-Z} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20)
   
-![d](http://chart.apis.google.com/chart?cht=tx&chl=  df = -e^{-Z} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20)
      
-![d](http://chart.apis.google.com/chart?cht=tx&chl= f^{2} = (1 %2B e ^{-Z}%29^{2} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20)
  
  Thus
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{-df}{f^{2}} = {\frac{e ^{-Z} }{(1 %2B e^{-Z}%29^{2}} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20)
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1 %2B e ^{-Z} -1}{(1 %2B e^{-Z}%29^{2}} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20)
  
  Rewriting this we get  
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1 %2B e ^{-Z}}{(1 %2B e^{-Z}%29^{2}} - {\frac{1}{(1 %2B e^{-Z}%29^{2}} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20)
  
  Then we take out  
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1}{(1 %2B e^{-Z}%29} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20)
  
  Giving us
 
-![d](http://chart.apis.google.com/chart?cht=tx&chl= ({\frac{1}{(1 %2B e^{-Z}%29}%29(1 -{\frac{1}{(1 %2B e^{-Z}%29}%29  )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20)
   
 
   
 Of course 
 
-![d](http://chart.apis.google.com/chart?cht=tx&chl= {\frac{1}{(1 %2B e^{-Z}%29} )
+![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20)
   
 Is Sigmoid 
   Therefore the derivative of Sigmoid is 
