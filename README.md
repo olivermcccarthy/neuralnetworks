@@ -1,3 +1,14 @@
+<STYLE TYPE="text/css">
+<!--
+TD.denom{font-family: Arial; font-size: 8pt;padding:0px;text-align:center;}
+TD.numer{font-family: Arial; font-size: 8pt;border-top: 2px solid black;padding:0px;text-align:center;}
+TD.math{font-family: Arial; font-size: 14pt;padding:10px;text-align:center;}
+
+TABLE{border-collapse: collapse;border-spacing: 0;}
+
+--->
+</STYLE>
+</STYLE>
 # neuralnetworks
 
 Taking a full adder as an example we use a network of 3 Layers
@@ -9,7 +20,7 @@ Fairly simple but it shows how our neural network goes through all its math and 
 | hidden | 6 neurons we could use as few or as many as we need|
 | output| 2 neurons sum and carryout|  
 
-Truth table for full adder
+<span style="text-decoration: underline;">Truth table for full adder </span>
 
 | in1 | in2 | cin| sum| cout|
 | --- | --- |--- | --- | --- |
@@ -65,7 +76,7 @@ Example
 |Z  |             Sum of all weights * inputs  w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)*input(n)| 
 |Cost|            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 |
 |Cost| If we expect .9 and neuron returns .8 then cost = 0.5( .9 -.8)^2 = 0.05|
-|pdW(x)-Cost|     Partial derivative  of weight with respect  to Cost  <br>
+|∂Cost-w(x)|     Partial derivative  of weight with respect  to Cost  <br>
 |pdW(x)-Z|        Partial derivative  of weight with respect  to Z
 |pdZ-Sigmoid|     Partial derivative  of Z with respect  to Sigmoid
 |pdSigmoid-Cost|  Partial derivative  of Sigmoid  respect  to Cost
@@ -93,89 +104,37 @@ Using chain rule pdW(x)-Cost =
  Mad but true.   As Cost is computed from Sigmoid which in turn is computed from Z which in turn is computed using W(x)
 
  pdW(x)-Z is just   input(x) as we can treat the other coeffs in Z as constants ( we are only making a small change in W(x) and therefore they have a derivative of 0
- pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e<sup>-Z</sup>)
- Reciprocal Rule  derivative of 1/f =   -df/(f<sup>2</sup>)    
- f =  1 + e<sup>-Z</sup>
+ pdZ-Sigmoid is more fun  Sigmoid = 1/(1 + e^-Z^)
+ Reciprocal Rule  derivative of 1/f =   -df/(f^2^)    
+ f =  1 + e^-Z^
   
- df  = -e<sup>-Z</sup>    
- f^2 = (1 + e<sup>-Z</sup>) * (1 + e<sup>-Z</sup>)  
+ df  = -e^-Z^    
+ f^2 = (1 + e^-Z^) * (1 + e^-Z^)  
  
- so -df/(f^2) =
-   e^-z/[(1 + e^-Z)^2]
+ so [-df%f^2^] =
+   [e^-z%(1 + e^-Z^)^2^]
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
- (1 + e<sup>-Z</sup> -1)/[(1 + e<sup>-Z</sup>)<sup>2</sup>]
+ (1 + e^-Z^ -1)/[(1 + e^-Z^)^2^]
  
- =
-  (1 + e<sup>-Z</sup>)/[(1 + e<sup>-Z</sup>)<sup>2</sup>]  - 1/[(1 + e<sup>-Z</sup>)<sup>2</sup>]
+ 
+  [[(1 + e^-Z^)%(1 + e^-Z^)^2^]  - [1%(1 + e^-Z^)^2^]]
   
-  we can divide the first part above and below by (1 + e<sup>-Z</sup>) giving us
-  1/(1 + e<sup>-Z</sup>) - 1/[(1 + e<sup>-Z</sup>)<sup>2</sup>]
+  <table  cellspacing="0" > <tr><td><table style="white-space:pre;" cellspacing="0" > <tr ><td class="denom">(1 + e<sup>-Z</sup>)</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td><td><table  cellspacing="0" > <tr ><td class="math">  - </td></tr> </table></td><td><table style="white-space:pre;" cellspacing="0" > <tr ><td class="denom">1</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td> </tr></table>
+  
+  we can divide the first part above and below by (1 + e^-Z^) giving us
+  1/(1 + e^-Z^) - 1/[(1 + e^-Z^)^2^]
   
   which is equal to
-  [1/(1 + e<sup>-Z</sup>)] ( 1 - 1/(1 + e<sup>-Z</sup>)]
+  [1/(1 + e^-Z^)] ( 1 - 1/(1 + e^-Z^)]
   
   Of course 1/(1 + e^-Z) is Sigmoid 
   Therefore the derivative of Sigmoid is 
   Sigmoid*(1 - Sigmoid)
   
   This is useful because we can easily calculate the derivative of Sigmoid
-  
-  
-   <math xmlns="http://www.w3.org/1998/Math/MathML">
-  <mfrac>
-    <mn>1</mn>
-    <mi>1 + e<sup>-Z</sup></mi>
-  </mfrac>
-</math>
-     
-  1/(1 + e<sup>-Z</sup>)  -  e<sup>-Z</sup>/((1 + e<sup>-Z</sup>) * (1 + e<sup>-Z</sup>))
+ 
+  1/(1 + e^-Z^)  -  e^-Z^/((1 + e^-Z^) * (1 + e^-Z^))
     
-    
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <semantics>
-    <mtable columnalign="right center left" rowspacing="3pt" columnspacing="0 thickmathspace" displaystyle="true">
-      <mlabeledtr>
-        <mtd id="mjx-eqn-6">
-          <mtext>(6)</mtext>
-        </mtd>
-        <mtd>
-          <mi>C</mi>
-          <mo stretchy="false">(</mo>
-          <mi>w</mi>
-          <mo>,</mo>
-          <mi>b</mi>
-          <mo stretchy="false">)</mo>
-          <mo>&#x2261;<!-- ≡ --></mo>
-          <mfrac>
-            <mn>1</mn>
-            <mrow>
-              <mn>2</mn>
-              <mi>n</mi>
-            </mrow>
-          </mfrac>
-          <munder>
-            <mo>&#x2211;<!-- ∑ --></mo>
-            <mi>x</mi>
-          </munder>
-          <mo fence="false" stretchy="false">&#x2016;<!-- ‖ --></mo>
-          <mi>y</mi>
-          <mo stretchy="false">(</mo>
-          <mi>x</mi>
-          <mo stretchy="false">)</mo>
-          <mo>&#x2212;<!-- − --></mo>
-          <mi>a</mi>
-          <msup>
-            <mo fence="false" stretchy="false">&#x2016;<!-- ‖ --></mo>
-            <mn>2</mn>
-          </msup>
-          <mo>.</mo>
-        </mtd>
-      </mlabeledtr>
-    </mtable>
-    <annotation encoding="application/x-tex">\begin{eqnarray}  C(w,b) \equiv
-  \frac{1}{2n} \sum_x \| y(x) - a\|^2.
-\tag{6}\end{eqnarray}</annotation>
-  </semantics>
-</math>
+ 
