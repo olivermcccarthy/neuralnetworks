@@ -117,22 +117,18 @@ Using chain rule pdW(x)-Cost =
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
- (1 + e^-Z^ -1)/[(1 + e^-Z^)^2^]
+  ![f3]
  
+ Rewriting this we get  ![f2]
  
-  [[(1 + e^-Z^)%(1 + e^-Z^)^2^]  - [1%(1 + e^-Z^)^2^]]
+ Then we take out  ![f4]
+ 
+  giving us
+![f5]  
   
-<table  cellspacing="0" > <tr><td><table style="white-space:pre;border-collapse: collapse;" cellspacing="0" > <tr ><td style="font-size: 8pt;2px solid black;padding:0px;text-align:center;">(1 + e<sup>-Z</sup>)</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td><td><table  cellspacing="0" > <tr ><td class="math">  - </td></tr> </table></td><td><table style="white-space:pre;border-collapse: collapse;" cellspacing="0" > <tr ><td style="font-size: 8pt;2px solid black;padding:0px;text-align:center;">1</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td> </tr></table>
 
-
   
-  we can divide the first part above and below by (1 + e^-Z^) giving us
-  1/(1 + e^-Z^) - 1/[(1 + e^-Z^)^2^]
-  
-  which is equal to
-  [1/(1 + e^-Z^)] ( 1 - 1/(1 + e^-Z^)]
-  
-  Of course 1/(1 + e^-Z) is Sigmoid 
+  Of course ![f4] is Sigmoid 
   Therefore the derivative of Sigmoid is 
   Sigmoid*(1 - Sigmoid)
   
@@ -140,7 +136,9 @@ Using chain rule pdW(x)-Cost =
  
   1/(1 + e^-Z^)  -  e^-Z^/((1 + e^-Z^) * (1 + e^-Z^))
 
-[f2]: http://chart.apis.google.com/chart?cht=tx&chl=m={\frac{(1 + e^-Z)}{(1 + e^-Z)^2}} -\frac{1}{(1 + e^-Z)^2}}} 
-    
-[f1]: http://chart.apis.google.com/chart?cht=tx&chl=m=\frac{m_0}{\sqrt{1-{\frac{v^2}{c^2}}}}
+[f2]: http://chart.apis.google.com/chart?cht=tx&chl={\frac{1 %2B  e^{-Z}}{(1 %2B  e^{-Z})^2} - \frac{1}{(1 %2B  e^{-Z})^2}}}
+[f4]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{1}{1 %2B e^{-Z}}
+[f5]: http://chart.apis.google.com/chart?cht=tx&chl=({\frac{1}{1 %2B e^{-Z}}}){(1  - \frac{1}{1 %2B  e^{-Z}}}})
+[f3]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{1 %2B e^{-Z} -1}{(1 %2B  e^{-Z})^2}}   
+[f1]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{m_0}{\sqrt{1-{\frac{v^2}{c^2}}}}
  
