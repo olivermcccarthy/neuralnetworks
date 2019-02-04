@@ -121,7 +121,7 @@ Using chain rule pdW(x)-Cost =
  
   [[(1 + e^-Z^)%(1 + e^-Z^)^2^]  - [1%(1 + e^-Z^)^2^]]
   
-<table  cellspacing="0" > <tr><td><table style="white-space:pre;border-collapse: collapse;" cellspacing="0" > <tr ><td style="2px solid black;padding:0px;text-align:center;">(1 + e<sup>-Z</sup>)</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td><td><table  cellspacing="0" > <tr ><td class="math">  - </td></tr> </table></td><td><table style="white-space:pre;border-collapse: collapse;" cellspacing="0" > <tr ><td style="2px solid black;padding:0px;text-align:center;">1</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td> </tr></table>
+<table  cellspacing="0" > <tr><td><table style="font-size: 8pt;white-space:pre;border-collapse: collapse;" cellspacing="0" > <tr ><td style="2px solid black;padding:0px;text-align:center;">(1 + e<sup>-Z</sup>)</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td><td><table  cellspacing="0" > <tr ><td class="math">  - </td></tr> </table></td><td><table style="white-space:pre;border-collapse: collapse;" cellspacing="0" > <tr ><td style="2px solid black;padding:0px;text-align:center;">1</td></tr> <tr><td class="numer">(1 + e<sup>-Z</sup>)<sup>2</sup></td></tr> </table></td> </tr></table>
 
   
   we can divide the first part above and below by (1 + e^-Z^) giving us
