@@ -46,19 +46,9 @@
 </ul>
 </div> 
 
-# 3 Layer Network . How 
 
-How one run works through a 3 layer network works
-- We set each neuron in the input layer to a value
-- Each neuron in the hidden layer calculates its result based on inputs and weights 
-- Each neuron in the output layer calculates its result based on outputs of the hidden and Weights  
-- By compared the result with Expected we get An Error (Also known as Cost)
-- The goal is to reduce this cost. 
-- Using the Error each neuron in the output layers adjusts its weights and bias based on the Partial derivative of  Weight/bias versus Cost. 
-- Then each neuron in the hidden Layer adjust its weights and bias. 
-- And we repeat the process over and over.  
 
-###Using Sigmoid to calculate neurons Results
+### Using Sigmoid to calculate neurons Results
 
 We could use a neuron equation like
  ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20  ) 
@@ -70,6 +60,7 @@ We could use a neuron equation like
 Is used instead  be used to calculate the result of a Neuron. It is used because its value varies between 0 and 1. With the greatest change( most learning occurring around 0.5)
 
  
+###  Variable Definitions
    
 | Name | Description |
 | --- | --- |
@@ -95,12 +86,13 @@ Derivative rules here https://www.mathsisfun.com/calculus/derivatives-rules.html
 
 
 
-We need to find a small change in each weight that will improve the cost
+We need to find a small change in each weight that will improve the cost the most
 We change them in proportion to pdW(x)-Cost ( Partial Derivative of Weight with respect to Cost) 
 
 There are some funky maths to prove this but for the outputlayer
 
  pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
+
 
        
 ### Proof of pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
@@ -114,7 +106,7 @@ Using chain rule pdW(x)-Cost =
  As in a small change in weight produces a small change in Z which produces a small change in Sigmoid which reduces the cost.  
 
 
-|Name|Derivative|
+|Name|Derivative|Description|
 | --- | --- |--- |
 | pdW(x)-Z | input(x)|  as we can treat the other coeffs in Z as constants)|
 | pdZ-Sigmoid|  Sigmoid*(1 - Sigmoid) |  Proof below| 
@@ -160,6 +152,16 @@ Of course ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%
   
   This is useful because we can easily calculate the derivative of Sigmoid
 
+# 3 Layer Network . How 
 
+How one run works through a 3 layer network works
+- We set each neuron in the input layer to a value
+- Each neuron in the hidden layer calculates its result based on inputs and weights 
+- Each neuron in the output layer calculates its result based on outputs of the hidden and Weights  
+- By compared the result with Expected we get An Error (Also known as Cost)
+- The goal is to reduce this cost. 
+- Using the Error each neuron in the output layers adjusts its weights and bias based on the Partial derivative of  Weight/bias versus Cost. 
+- Then each neuron in the hidden Layer adjust its weights and bias. 
+- And we repeat the process over and over.  
 
  
