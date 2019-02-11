@@ -19,8 +19,14 @@ How one run works through a 3 layer network works
 
 ###Using Sigmoid to calculate neurons Results
 
-We could use a neuron equation like ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20  ) 
-. But then result would vary too much. Sigmod   ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20(1%29/(1%20%2B%20e^{-Z}%29%20  ) can be used to calculate the result of a Neuron. It is used because its value varies between 0 and 1. With the greatest change( most learning occurring around 0.5)
+We could use a neuron equation like
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20  ) 
+
+. But then result would vary too much.
+ 
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20  ) 
+
+Is used instead  be used to calculate the result of a Neuron. It is used because its value varies between 0 and 1. With the greatest change( most learning occurring around 0.5)
 
  
    
@@ -43,13 +49,13 @@ Maths is hard but a small change in each weight causes a small improvement in th
 So we calculate the partial derivative  of each weight with respect  to Cost
 Then adjust this weight by a multiple of this  partial derivative 
 Derivative rules here https://www.mathsisfun.com/calculus/derivatives-rules.html
-Example 
+
 
 
 
 
 We need to find a small change in each weight that will improve the cost
-We change them in proportion to pdW(x)-Cost
+We change them in proportion to pdW(x)-Cost ( Partial Derivative of Weight with respect to Cost) 
 
 There are some funky maths to prove this but for the outputlayer
 
@@ -68,7 +74,7 @@ Using chain rule pdW(x)-Cost =
 
 
 |Name|Derivative|
-|---|---|---|
+| --- | --- |--- |
 | pdW(x)-Z | input(x)|  as we can treat the other coeffs in Z as constants)|
 | pdZ-Sigmoid|  Sigmoid*(1 - Sigmoid) |  Proof below| 
 | pdSigmoid-Cost|Sigmoid - Expected|
