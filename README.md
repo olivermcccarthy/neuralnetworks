@@ -1,66 +1,35 @@
-<STYLE TYPE="text/css">
-<!--
-TD.denom{font-family: Arial; font-size: 8pt;padding:0px;text-align:center;}
-TD.numer{font-family: Arial; font-size: 8pt;border-top: 2px solid black;padding:0px;text-align:center;}
-TD.math{font-family: Arial; font-size: 14pt;padding:10px;text-align:center;}
-
-TABLE{border-collapse: collapse;border-spacing: 0;}
-
---->
-</STYLE>
 
 # neuralnetworks
 
-Taking a full adder as an example we use a network of 3 Layers
-Fairly simple but it shows how our neural network goes through all its math and comes up with a solution of its own
-
-| Layer | Description | 
-| --- | --- |
-| input | 3 input neurons (in1 , in2, carryin)|
-| hidden | 6 neurons we could use as few or as many as we need|
-| output| 2 neurons sum and carryout|  
-
-<span style="text-decoration: underline;">Truth table for full adder </span>
-
-| in1 | in2 | cin| sum| cout|
-| --- | --- |--- | --- | --- |
-|0|0|0|0|0
-|0|0|1|1|0
-|0|1|0|1|0
-|0|1|1|0|1
-|1|0|0|1|0
-|1|0|1|0|1
-|1|1|0|0|1
-|1|1|1|1|1   
-
-![alt text](adder.bmp "Logo Title Text 1")
-
-![alt text]( http://chart.apis.google.com/chart?cht=tx&chl={\frac{1 %2B  e^{-Z}}{(1 %2B  e^{-Z}%29^2} - \frac{1}{(1 %2B e^{-Z}%29^2}}})
-
-- We randomly come up with weights ( a number between 0 and 1) 
-- Pass through the first row 
-- Get the output
-- Pass back the error
-- Adjust each weight by a small bit ( Get a small bit closer to the solution)
-- Pass the next row and so on.
-- Keep going until the result matches the expected for each row in the truth table.
+To see A simple Neuron in action download [SimpleNeuron.html](SimpleNeuron.html) 
  
+
+
+# Simple 3 Layer Network
+
+How one run works through a 3 layer network works
+- We set each neuron in the input layer to a value
+- Each neuron in the hidden layer calculates its result based on inputs and weights 
+- Each neuron in the output layer calculates its result based on outputs of the hidden and Weights  
+- By compared the result with Expected we get an error.
+- Using the Error each neuron in the output layers adjusts its weights and bias 
+- Then each neuron in the hidden Layer adjust its weights and bias.
+- And we repeat the process over and over.  
+
 ###Some variable definitions
 
+We could use a neuron equation like  w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias
+. But then result would vary too much. 
+Sigmod can be used to calculate the result of a Neuron. It is used because its value varies between 0 and 1. With the greatest change( most learning occurring around 0.5)
+
+  
 | Name | Description |
 | --- | --- |
 |Sigmoid |        Function to calculate output of neuron  1/(1 + e^-Z) |
 | w(x) |      weight a neuron assigns to input(x) 
-|Z  |             Sum of all weights * inputs  w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias 
-| bias |  This neuron also has a bias
+|Z  |     Sum of    w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias 
+| bias |  This neuron also has a bias|  
 
-- We set each neuron in the input layer to its value
-- Each neuron in the hidden layer calculates its result using Sigmoid
-- Each neuron in the output layer calculates its result using Sigmoid 
-- We pass the expected values to the output layer
-- Using the expected values each neuron in teh output layers adjusts 
-
-Adjust each weight by an errorVariable
 Maths is hard but a small change in each weight causes a small improvement in the cost
 So we calculate the partial derivative  of each weight with respect  to Cost
 Then adjust this weight by a multiple of this  partial derivative 
@@ -110,33 +79,29 @@ Using chain rule pdW(x)-Cost =
  pdW(x)-Z is just   input(x) as we can treat the other coeffs in Z as constants ( we are only making a small change in W(x) and therefore they have a derivative of 0
  pdZ-Sigmoid is more fun  Sigmoid =
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20(1%29/(1%20%2B%20e^{-Z}%29%20  )
+  ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20(1%29/(1%20%2B%20e^{-Z}%29%20  )
  Reciprocal Rule  derivative of
   
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20  )
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20  ) 
      
  here    
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20  )
-  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20  )
-     
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20  )
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20  )  and  ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20  ) and ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20  ) 
  
  Thus
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20  ) 
  
  Rewriting this we get  
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20  )
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20  ) 
  
  Then we take out the following from first and second part 
  
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20  )
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20  ) 
  
  Giving us
 =
@@ -144,14 +109,10 @@ Using chain rule pdW(x)-Cost =
   
 
   
-Of course 
-
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20  )
-  
-Is Sigmoid 
+Of course ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20  ) Is Sigmoid 
   Therefore the partial derivative of Sigmoid with respect to Z is  
   
-![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20  )
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20  )
   
   This is useful because we can easily calculate the derivative of Sigmoid
 

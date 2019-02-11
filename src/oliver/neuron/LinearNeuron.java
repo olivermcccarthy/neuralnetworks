@@ -21,7 +21,7 @@ public class LinearNeuron extends Neuron{
 	}
 	
 	public void handleError(double t) {
-		// (y-t)*y*(1-y)* (in1) Dont ask
+		
 
 		//
 		double sigM = sigMoid;

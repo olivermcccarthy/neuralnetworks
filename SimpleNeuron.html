@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+tr:nth-child(6n) {background-color: lightgrey;}
+tr:nth-child(6n-1) {background-color: lightgrey;}
+tr:nth-child(6n-2) {background-color: lightblue;}
+tr:nth-child(6n-3) {background-color: lightblue;}
+tr:nth-child(6n-4) {background-color: lightgreen;}
+tr:nth-child(6n-5) {background-color: lightgreen;}
+table {
+ 
+  border-collapse: collapse;
+}
+li {
+ text-align: left;
+font-size:12px;
+}
+
+th {
+ text-align: left;
+font-size:14px;
+}
+td {
+ border-right: 1px solid black;
+ font-size:14px;
+}
+span {
+
+ font-size:10px;
+}
+th {
+ border-right: 1px solid black;
+
+}
+*.myHand:hover{
+ cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+
+<body>
+
+  
+</body>
+<script>
+
+var xCoeff=0.8
+ var xCoeff ;
+  var yCoeff;
+  var cCoeff 
+
+  var weight1=null
+  var weight2 
+ 
+  var bias 
+  var numTrials
+   var learningRate
+   var trial =0
+function getXCoeff(){
+ return 0.8
+}
+
+function runTrial(){
+
+  var newRow=  document.createElement("tr");
+  
+   var newRow2=   document.createElement("tr");
+   mytable.prepend(newRow2);
+    mytable.prepend(newRow);
+   var input1 = (Math.floor(Math.random() * 100) + 1)/100
+   var input2 = (Math.floor(Math.random() * 100) + 1)/100
+     var cell2 = newRow2.insertCell()
+   var cell = newRow.insertCell()
+   cell.innerHTML=trial
+  var cell2 = newRow2.insertCell()
+  var cell = newRow.insertCell()
+   cell.innerHTML=input1
+   var cell2 = newRow2.insertCell()
+     var cell = newRow.insertCell()
+   cell.innerHTML=input2
+   var result = input1 * weight1 + input2 * weight2 
+    result += bias
+    result=  (Math.floor(result*10000))/10000
+    var cell2 = newRow2.insertCell()
+   var cell = newRow.insertCell()
+   cell.innerHTML=result
+    var expected = input1 * xCoeff + input2 * yCoeff +  cCoeff
+    cell2.innerHTML="  <span> ( " + weight1 + "*" + input1 + " + " + weight2 + "*" + input2 + " + " +  bias + ")<span>"
+   expected=  (Math.floor(expected*10000))/10000
+    var cell2 = newRow2.insertCell()
+   var cell = newRow.insertCell()
+   cell.innerHTML=expected 
+   cell2.innerHTML=" <span> (" +  xCoeff + "*" + input1 + " + " + yCoeff + "*" + input2 + " + " +  cCoeff + ")</span>"
+ 
+   var cell2 = newRow2.insertCell()
+   var cell = newRow.insertCell()
+   var error = result - expected
+   
+   error = (Math.floor( error*10000))/10000
+   cell.innerHTML=error 
+   cell2.innerHTML=" <span> (" + result + "-" + expected + ") </span>"
+   var oldweight1 = weight1
+   var oldweight2 = weight2
+    var oldbias = bias
+   weight1 = oldweight1 - (learningRate * error *input1)
+   weight2 = oldweight2 - (learningRate * error *input2)  
+   weight1 = (Math.floor( weight1*10000))/10000
+   weight2 = (Math.floor( weight2*10000))/10000
+   var cell2 = newRow2.insertCell()
+   var cell = newRow.insertCell()
+   
+    cell2.innerHTML="  <span>  [" + oldweight1 + "-(" + learningRate + "*" +  error + "*" + input1 + ")]</span>"  
+  
+   cell.innerHTML=weight1   
+    var cell2 = newRow2.insertCell()
+   var cell = newRow.insertCell()
+   cell2.innerHTML="  <span>  [" + oldweight2 + "-(" + learningRate + "*" +  error + "*" + input2 + ")]</span>"  
+   cell.innerHTML=weight2   
+   
+   bias = oldbias - (learningRate * error)  
+   bias = (Math.floor( bias*10000))/10000
+    var cell = newRow.insertCell()
+      var cell2 = newRow2.insertCell()
+   cell.innerHTML=bias  
+    cell2.innerHTML="  <span>  [" + oldbias + "-(" + learningRate + "*" +  error + ")]</span>"
+    
+
+}
+function clearReults(){
+
+ while(mytable.rows.length > 0){
+   mytable.deleteRow(0);
+ }
+weight1 = null
+bestGuess.innerHTML= ""
+}
+function handleSubmit(){
+
+  
+   numTrials= parseFloat(myForm[3].value)
+  learningRate= parseFloat(myForm[4].value)
+  var startTrial =trial;
+  runtrials.disabled=true
+  if(weight1 == null){
+     xCoeff = parseFloat(myForm[0].value);
+     yCoeff = parseFloat(myForm[1].value);
+     cCoeff  = parseFloat(myForm[2].value)
+  
+     weight1 = (Math.floor(Math.random() * 100) + 1)/100
+     weight2   = (Math.floor(Math.random() * 100) + 1)/100
+ 
+     bias   = (Math.floor(Math.random() * 100) + 1)/100
+     startTrial=0   
+  }else{
+    numTrials += trial; 
+     startTrial=trial
+  }
+ 
+  for(trial=startTrial; trial < numTrials; trial++){
+  
+  if(trial %200 == 0){
+  bestGuess.innerHTML= "Running trial " + trial + " of " + numTrials
+  }
+  runTrial()
+ }
+ runtrials.disabled=false
+ var w1Str = weight1;
+ if (weight1 >=0) {
+   w1Str = "+" + weight1;
+ }
+  var w2Str = weight2;
+ if (weight2 >=0) {
+   w2Str = "+" + weight2;
+ }
+  var bStr = bias;
+ if (bias >=0) {
+   bStr = "+" + bias;
+ }
+ bestGuess.innerHTML= "With " + numTrials + " random trials estimated equation is  " +   w1Str + "X  " + w2Str + "Y  " + bStr 
+}
+
+</script>
+<div style="background-color:lightblue;">
+<div >
+<h1> Showing how a simple Neuron can solve a basic quadratic expression.</h1>
+<h3> Our neuron is based on our concept of how neurons work in our brains </h3> 
+<ul>
+
+<li> Imagine one neuron in your brain that has to decide whether to cross the road or not based on two inputs 
+    <ul>
+    
+    <li> Input1: Distance of an approaching car.
+    <li> Input2: Amount of Money across the road.
+    <li> Weight1: This neuron would attach a certain importance to input1.
+    <li> Weight2: This neuron would attach a certain importance to input2.
+    <li> Bias: It would also be biased towards either safety or money.    
+    <li> Equation for Neuron is Weight1*input1 + weight2*input2 + bias.
+    <li> Result: > 0 Cross the road . < 0  Do not cross teh road.
+    <li> Error: Neuron would learn from this decision. 
+    <li> This Neuron may come up with an equation -0.01*Cash + 10*distance -2
+    <li> But this equation would be too simple and would result in catastrophe if there was a million euros across the road at a truck was 10 meters away.  
+    <li> In reality  millions of neurons would be involved in this one decision to cross the road or not.
+    </ul>
+</ul>
+<h2> Here we only ask our one neuron to solve a simple problem. Our neuron knows nothing about the equation we are trying to solve, except it has two inputs </h2>
+<ul>
+<li> Equation for Neuron is Weight1*input1 + weight2*input2 + bias.
+<li> When our neuron starts up weights and bias are randomly picked. 
+<li> For each trial 
+<ul> 
+<li> We pick random values for X and Y. 
+<li> We pass them to the Neuron and get a result (Weight1*input1 + weight2*input2 + bias)
+<li> We calculate expected for X and Y using the equation you specified. AX +BY +C 
+<li> We calculate  Error as Result - Expected
+<li> The neuron adjusts his weights and bias in proportion to the input value and error
+<ul>
+ <li>weight1 = weight1 -(learningrate *error*input1)
+ <li>weight2 = weight2 -(learningrate *error*input2)
+ <li>bias = bias -(learningrate *error)
+ </ul>
+</ul>
+<li> The neuron is actually solving the problem using <a href="https://en.wikipedia.org/wiki/Gradient_descent" > Gradient of descent </a> a first-order iterative optimization algorithm for finding the minimum of a function
+<li> But our little neuron is unaware of anything as fancy as that. 
+<li> Note the speed at which we move closer to expected is determined by learningRate
+<li> The theory being that the more trials we run the closer to the expected result we get.      
+</ul>
+</div> 
+ 
+
+
+<form id ="myForm">
+<h2> Enter an equation you would like our neuron to solve  </h2>
+Enter numbers from -1 to 1 <br>
+Equation Ax +By +C  
+<br>
+
+A <input size="3" type="number" name="xCoeff" value=".8" step="0.01" max="1" min="-1" >
+
+ 
+B <input size="3" type="number" name="yCoeff" value="0.6" step="0.01" max="1" min="-1" >
+ 
+C <input type="number" name="cCoeff" value="0.2" size="3" step="0.01" max="1" min="-1" >
+ 
+
+
+<h2>We try to solve the above equation by running a number of trials on our neuron </h2>
+Number of Trials <input size="3" type="number" name="trials" value="2" step="1" max="1000" min="10" >
+
+<br>
+learningRate(lr) <input size="3" type="number" name="learningRate" value="1" step=".01" max="10" min=".01" >
+<br>
+
+
+<br>
+
+<br>
+</form>
+
+<button id="runtrials" onClick="return  handleSubmit()" > Run N (extra) Trials </button>
+<button id="clearresults"  onClick="return  clearReults()" > Clear Results </button>
+<h2 id="bestGuess">  </h2>
+</dev>
+<h4> Table showing how result is calculated and how weights and bias are adjusted for each trial. <br> You can click trough the trials step by step to see how error decreases with the number of trials.
+<br> Also note if you set learningRate too high. Neuron will adjust its weights too far.
+<br> If you set your learningRate too low. Neuron will take many trials to learn. 
+</h4>
+<table>
+<tr><th>Trial </th> <th>i1</th><th>i2</th> <th>Result  </th> <th>Expected</th> <th> Error</th> <th> Weight1</th> <th> Weight2 </th><th> Bias <th>
+</tr>
+<tr> 
+ <th></th><th></th><th></th> <th><span> ( w1 * 11 + w2 * i2 + b) </span> </th> <th><span> (A * i1  +  B *i2 + C) </span></th> <th><span> (result - expected) </span></th> <th> <span> [weight1 -(lr*error*input1 )] </span></th> <th> <span> [weight2 -(lr*error*input2 )] </span></th> <th> <span> [bias -(lr*error* )] </span><th>
+</tr>
+<tbody id="mytable">
+</tbody>
+</table> 
+</html>
