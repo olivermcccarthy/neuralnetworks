@@ -1,9 +1,50 @@
 
 # neuralnetworks
 
-To see A simple Neuron in action download <a href="SimpleNeuron.html" download="true"> SimpleNeuron.html </a> 
- 
+<div style="background-color:lightblue;">
+<div >
+<h1> Showing how a simple Neuron can solve a basic quadratic expression.</h1>
+<h3> Our neuron is based on our concept of how neurons work in our brains </h3> 
+<ul>
 
+<li> Imagine one neuron in your brain that has to decide whether to cross the road or not based on two inputs 
+    <ul>
+    <li> Input1: Distance of an approaching car.
+    <li> Input2: Amount of Money across the road.
+    <li> Weight1: This neuron would attach a certain importance to input1.
+    <li> Weight2: This neuron would attach a certain importance to input2.
+    <li> Bias: It would also be biased towards either safety or money.    
+    <li> Equation for Neuron is Weight1*input1 + weight2*input2 + bias.
+    <li> Result: > 0 Cross the road . < 0  Do not cross teh road.
+    <li> Error: Neuron would learn from this decision. 
+    <li> This Neuron may come up with an equation -0.01*Cash + 10*distance -2
+    <li> But this equation would be too simple and would result in catastrophe if there was a million euros across the road at a truck was 10 meters away.  
+    <li> In reality  millions of neurons would be involved in this one decision to cross the road or not.
+    </ul>
+</ul>
+<h2> Here we only ask our one neuron to solve a simple problem. Our neuron knows nothing about the equation we are trying to solve, except it has two inputs </h2>
+<ul>
+<li> Equation for Neuron is Weight1*input1 + weight2*input2 + bias.
+<li> When our neuron starts up weights and bias are randomly picked. 
+<li> For each trial 
+<ul> 
+<li> We pick random values for X and Y. 
+<li> We pass them to the Neuron and get a result (Weight1*input1 + weight2*input2 + bias)
+<li> We calculate expected for X and Y using the equation you specified. AX +BY +C 
+<li> We calculate  Error as Result - Expected
+<li> The neuron adjusts his weights and bias in proportion to the input value and error
+<ul>
+ <li>weight1 = weight1 -(learningrate *error*input1)
+ <li>weight2 = weight2 -(learningrate *error*input2)
+ <li>bias = bias -(learningrate *error)
+ </ul>
+</ul>
+<li> The neuron is actually solving the problem using <a href="https://en.wikipedia.org/wiki/Gradient_descent" > Gradient of descent </a> a first-order iterative optimization algorithm for finding the minimum of a function
+<li> But our little neuron is unaware of anything as fancy as that. 
+<li> Note the speed at which we move closer to expected is determined by learningRate
+<li> The theory being that the more trials we run the closer to the expected result we get.      
+</ul>
+</div> 
 
 # 3 Layer Network . How 
 
