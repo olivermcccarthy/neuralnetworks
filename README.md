@@ -1,34 +1,43 @@
 
 # neuralnetworks
 
-To see A simple Neuron in action download [SimpleNeuron.html](SimpleNeuron.html) 
+To see A simple Neuron in action download <a href="SimpleNeuron.html" download="true"> SimpleNeuron.html </a> 
  
 
 
-# Simple 3 Layer Network
+# 3 Layer Network . How 
 
 How one run works through a 3 layer network works
 - We set each neuron in the input layer to a value
 - Each neuron in the hidden layer calculates its result based on inputs and weights 
 - Each neuron in the output layer calculates its result based on outputs of the hidden and Weights  
-- By compared the result with Expected we get an error.
-- Using the Error each neuron in the output layers adjusts its weights and bias 
-- Then each neuron in the hidden Layer adjust its weights and bias.
+- By compared the result with Expected we get An Error (Also known as Cost)
+- The goal is to reduce this cost. 
+- Using the Error each neuron in the output layers adjusts its weights and bias based on the Partial derivative of  Weight/bias versus Cost. 
+- Then each neuron in the hidden Layer adjust its weights and bias. 
 - And we repeat the process over and over.  
 
-###Some variable definitions
+###Using Sigmoid to calculate neurons Results
 
-We could use a neuron equation like  w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias
-. But then result would vary too much. 
-Sigmod can be used to calculate the result of a Neuron. It is used because its value varies between 0 and 1. With the greatest change( most learning occurring around 0.5)
+We could use a neuron equation like ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20  ) 
+. But then result would vary too much. Sigmod   ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20(1%29/(1%20%2B%20e^{-Z}%29%20  ) can be used to calculate the result of a Neuron. It is used because its value varies between 0 and 1. With the greatest change( most learning occurring around 0.5)
 
-  
+ 
+   
 | Name | Description |
 | --- | --- |
 |Sigmoid |        Function to calculate output of neuron  1/(1 + e^-Z) |
 | w(x) |      weight a neuron assigns to input(x) 
 |Z  |     Sum of    w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias 
 | bias |  This neuron also has a bias|  
+| T   |            Expected value |
+|Cost|            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 |
+|Cost| If we expect .9 and neuron returns .8 then cost = 0.5( .9 -.8)^2 = 0.05|
+|pdW(x)-Cost|     Partial derivative  of weight with respect  to Cost  <br>
+|pdW(x)-Z|        Partial derivative  of weight with respect  to Z
+|pdZ-Sigmoid|     Partial derivative  of Z with respect  to Sigmoid
+|pdSigmoid-Cost|  Partial derivative  of Sigmoid  respect  to Cost
+|Error |          Useful variable  pdZ-Sigmoid *  pdSigmoid-Cost
 
 Maths is hard but a small change in each weight causes a small improvement in the cost
 So we calculate the partial derivative  of each weight with respect  to Cost
@@ -37,49 +46,37 @@ Derivative rules here https://www.mathsisfun.com/calculus/derivatives-rules.html
 Example 
 
 
-###Some variable definitions
-
-
-| Name | Description |
-| --- | --- |
-| T   |            Expected value |
-|Sigmoid |        Function to calculate output of neuron  1/(1 + e^-Z) |
-|Z  |             Sum of all weights * inputs  w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)*input(n)| 
-|Cost|            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 |
-|Cost| If we expect .9 and neuron returns .8 then cost = 0.5( .9 -.8)^2 = 0.05|
-|![f4](http://chart.apis.google.com/chart?cht=tx&chl=\frac{\partial Cost}{\partial wx})|     Partial derivative  of weight with respect  to Cost  <br>
-|pdW(x)-Z|        Partial derivative  of weight with respect  to Z
-|pdZ-Sigmoid|     Partial derivative  of Z with respect  to Sigmoid
-|pdSigmoid-Cost|  Partial derivative  of Sigmoid  respect  to Cost
-|Error |          Useful variable  pdZ-Sigmoid *  pdSigmoid-Cost
 
 
 We need to find a small change in each weight that will improve the cost
 We change them in proportion to pdW(x)-Cost
+
 There are some funky maths to prove this but for the outputlayer
+
  pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
+
        
- ### some funky maths
-![f1]
-![f2]       
+### Proof of pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
+
+We want to see what improvement in cost a small change in Weight(x) will bring.
+    
 Using chain rule pdW(x)-Cost =  
  pdW(x)-Sigmoid * pSigmoid-Cost  = 
  pdW(x)-Z  *  pdZ-Sigmoid * pdSigmoid-Cost
  
- As in a small change in weight produces a small change in Z which produces a small change in Sigmoid which reduces the cost 
- The maths below prove that 
- 
- Small Change in W(x)  dw(x) = Input(x)
- Small change in Z dZ =   sigMoid * (1 - sigMoid)
- Small change in Sigmoid improves cost by t -Sigmoid
-  
- 
- Mad but true.   As Cost is computed from Sigmoid which in turn is computed from Z which in turn is computed using W(x)
+ As in a small change in weight produces a small change in Z which produces a small change in Sigmoid which reduces the cost.  
 
- pdW(x)-Z is just   input(x) as we can treat the other coeffs in Z as constants ( we are only making a small change in W(x) and therefore they have a derivative of 0
- pdZ-Sigmoid is more fun  Sigmoid =
+
+|Name|Derivative|
+|---|---|---|
+| pdW(x)-Z | input(x)|  as we can treat the other coeffs in Z as constants)|
+| pdZ-Sigmoid|  Sigmoid*(1 - Sigmoid) |  Proof below| 
+| pdSigmoid-Cost|Sigmoid - Expected|
  
-  ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20(1%29/(1%20%2B%20e^{-Z}%29%20  )
+### Proof of pdZ-Sigmoid = sigMoid * (1 - sigMoid)
+ 
+ 
+  ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20  )
  Reciprocal Rule  derivative of
   
  ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20  ) 
