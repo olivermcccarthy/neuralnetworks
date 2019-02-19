@@ -284,7 +284,7 @@ public class Neuron implements Serializable{
 	
 		Layer outputLayer = new Layer("output", hiddenLayer, 2);
 		TruthTable tt = new TruthTable("adder.csv");
-		DrawPanel.showNeurons();
+		DrawPanel.showNeurons(20,4);
 		learningRate = 1;
 		for (int trial = 0; trial < 2000; trial++) {
 			Cost myCost = new Cost(2);
@@ -321,13 +321,13 @@ public class Neuron implements Serializable{
 			System.out.println("Trial" + trial + " Cost " + myCost.getCost() + " matches " + matches);
 
 		}
-		DrawPanel.showNeurons();
+		DrawPanel.showNeurons(20,4);
 		for (TruthRow tr : tt.rows) {
 			double[] ins = tr.inpputs;
 			inputLayer.setvalues(ins);
 			outputLayer.sigmoid();
 			double[] outs = outputLayer.getvalues();
-			DrawPanel.stopAMinute(" Expected" + Neuron.toString(outs));
+			DrawPanel.waitForUserClick(" Expected" + Neuron.toString(outs),0);
 			System.out.println(Neuron.toString(ins) + " : " + Neuron.toString(outs));
 		}
 	}

@@ -82,8 +82,8 @@ public class MnistTrainer extends TrialInfo {
 					theCost.numWrong++;
 				}
 				if(stopAMinute) {
-					DrawPanel.input = images.get(image);
-				DrawPanel.stopAMinute(String.format(" Expected %s Got %s",expected2,maxI));
+					DrawPanel.setInputImage(images.get(image),4);
+				DrawPanel.waitForUserClick(String.format(" Expected %s Got %s",expected2,maxI));
 				}
 				theCost.addResult(expected, output);
 				 neuralNetwork.outLayer.handleTopError(expected);
@@ -140,7 +140,7 @@ public class MnistTrainer extends TrialInfo {
         
         
         trainer.numValues = 60000;
-        DrawPanel.showNeurons();
+        DrawPanel.showNeurons(28,4);
         stopAMinute = true;
         trainer.sendinBatch(neuralNetwork, false);
         

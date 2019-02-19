@@ -16,7 +16,7 @@ public abstract class TrialInfo {
 	public int numValues =1000;
 	protected  int bestTrial = 0;
 	protected  double bestCost = 1;
-	int trialNumber =-1;
+	protected int trialNumber =-1;
 	int savePoint;
 	protected  double savePointCost = 1;
 	protected  double currentCost = 1;
