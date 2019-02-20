@@ -35,9 +35,10 @@ public class DrawPanel extends JPanel {
 	/**
 	 * Blutton to allow user click through training.
 	 */
-	static JButton button = new JButton("Run X Training intervals");
-	static JTextArea numTrials = new JTextArea();
-	static JFrame frame;
+	static JButton button = new JButton("Run ");
+	static JComboBox numTrials = new JComboBox();
+	static JComboBox sleepTime = new JComboBox();
+	public static JFrame frame;
 
 	/**
 	 * Type of input data. 1s and zeros or greyscale
@@ -90,23 +91,32 @@ public class DrawPanel extends JPanel {
 
 	public DrawPanel(ActionListener listener) {
 		button.addActionListener(listener);
-		button.setBounds(300, 30, 200, 30);
-		numTrials.setBounds(500, 30, 30, 30);
-		
-		// Sets JTextArea font and color.
-        Font font = new Font("Segoe Script", Font.BOLD, 40);
-        numTrials.setFont(font);
-        numTrials.setForeground(Color.BLUE);
+		button.setBounds(300, 30, 100, 30);
+		numTrials.setBounds(200, 30, 100, 30);
+		sleepTime.setBounds(400, 30, 100, 30);
 		button.setFont(this.getFont().deriveFont(20.0f));
-		numTrials.setText("1");
-		numTrials.getText();
+
 		this.setLayout(null);
-		this.add(numTrials);
+		 numTrials.addItem("1 trial");
+		 numTrials.addItem("10 trials");
+		 numTrials.addItem("100 trials");
+		 numTrials.addItem("1000 trials");
+		 numTrials.setSelectedIndex(0);
+		 
+		 sleepTime.addItem("1000ms sleep between runs");
+		 sleepTime.addItem("100ms sleep between runs");
+		 sleepTime.addItem("10ms sleep between runs");
+		 sleepTime.addItem("1ms sleep between runs");
+		
+		 
+		
+		 sleepTime.setSelectedIndex(0);
 		this.add(button);
+		this.add(numTrials);
+		this.add(sleepTime);
 	}
 
 	protected void paintInputImage(Graphics g) {
-		numTrials.setFont(g.getFont().deriveFont(100));
 		
 		if (inputImage != null) {
 			int pictureHeight = inputImage.length;
@@ -165,6 +175,9 @@ public class DrawPanel extends JPanel {
 		g.drawChars(chararr, 0, chararr.length, 300, 25);
 		g.setFont(existing);
 		int maxLevelSize = 0;
+		
+		showLegend( g, 40, 200);
+		
 		for (Layer layer : Layer.layers) {
 			if (layer.neurons.size() > 20) {
 				continue;
@@ -198,7 +211,7 @@ public class DrawPanel extends JPanel {
 			} else {
 				for (Neuron nu : layer.neurons) {
 
-					paintNewronTopX(g, nu, baseX + diffX, baseY + diffY);
+					paintNeuron(g, nu, baseX + diffX, baseY + diffY);
 					diffY += neuronSpaceHeight;
 				}
 			}
@@ -226,26 +239,36 @@ public class DrawPanel extends JPanel {
 	 * @param baseX
 	 * @param baseY
 	 */
-	protected void paintInputsInSquare(Graphics g, Neuron neuron, int baseX, int baseY) {
+	protected void paintInputsInSquare(Graphics g, Neuron neuron, int baseX, int baseY, boolean includeInput) {
 		int w = 0;
 		int h = 0;
 		double maxSize = 0;
-
+		double minSize = 0;
 		for (int x = 0; x < neuron.weights.size(); x++) {
 			double weight = neuron.weights.get(x);
 			double input = neuron.inputs.get(x).getValue();
 
-			double mult = weight * input;
-			if (mult < 0) {
-				mult = mult * -1;
+			double mult = weight ;
+			if(includeInput) {
+				mult = weight * input;
 			}
+			
+			
 
 			if (mult > maxSize) {
 				maxSize = mult;
 			}
-
+			if (mult < minSize) {
+				minSize = mult;
+			}
 		}
-
+        double ln =  Math.log(maxSize);
+        
+        if(ln < 0) {
+        	ln *= -1;
+        }
+        
+        
 		g.setColor(Color.WHITE);
 		int pictureHeight = neuron.weights.size() / pictureWidth;
 		pictureScale = neuronHeight/pictureHeight;
@@ -253,7 +276,7 @@ public class DrawPanel extends JPanel {
 				BufferedImage.TYPE_INT_RGB);
 
 		int x = 0;
-		
+		//showLegend(maxSize,minSize,g, baseX - 60,baseY);
 		for (h = 0; h < pictureHeight * pictureScale; h++) {
 			x = (pictureWidth) * (h / pictureScale);
 			for (w = 0; w < pictureWidth; w++) {
@@ -262,12 +285,14 @@ public class DrawPanel extends JPanel {
 				double input = neuron.inputs.get(x).getValue();
 
 				x++;
-				double currentValue = weight * input;
-				double fractionOfMax = currentValue / maxSize;
-				if (fractionOfMax < 0) {
-					fractionOfMax *= -1;
+				double currentValue = weight;
+				if(includeInput) {
+					 currentValue = weight * input;
 				}
-				int rgb = faderYellowToRed(fractionOfMax).getRGB();
+				
+
+			
+				int rgb = faderYellowToRed(maxSize, minSize,currentValue).getRGB();
 				for (int z = 0; z < pictureScale; z++) {
 					img.setRGB(w * pictureScale + z, h, rgb);
 				}
@@ -275,7 +300,7 @@ public class DrawPanel extends JPanel {
 
 		}
 
-		g.drawImage(img, baseX - 150, baseY, pictureWidth * pictureScale, pictureHeight * pictureScale,
+		g.drawImage(img, baseX , baseY, pictureWidth * pictureScale, pictureHeight * pictureScale,
 				new ImageObserver() {
 
 					@Override
@@ -288,26 +313,70 @@ public class DrawPanel extends JPanel {
 		int df = 0;
 	}
 
+
+	
+	static Color[] shadesPositive = new Color[] {new Color(255,0,0), new Color(225,125,125),new Color(255,255,204)};
+	static Color[] shadesNegative = new Color[] {new Color(0,0,105), new Color(0,0,255),new Color(153,255,255)};
 	/**
-	 * if you pass 0 you get yellow. if you pass 1 you get bright red Values between
+	 * Fade colour based of difference of LOg
 	 * fade from yellow to red
 	 *
 	 */
-	private Color faderYellowToRed(double fade) {
+	private Color faderYellowToRed(double maxValue, double minValue, double currentValue) {
 
-		fade = fade * 255;
-		if (fade > 255) {
-			int debugME = 0;
+		if(maxValue == 0 &&  minValue == 0) {
+			return new Color(255, 255, 0);
 		}
-		if (fade < 128) {
-			fade = fade * 1.3;
-			return new Color(255, 255, 180 - (int) fade);
+		if(currentValue < 0) {
+			return faderYellowToRedMinSide(minValue *-1, currentValue*-1);
 		}
-		return new Color(255, 255 - (int) fade, 0);
+		double fraction = currentValue/maxValue;
+		if(fraction > 0.5) {
+			return shadesPositive[0];
+		}
+		if(fraction > 0.2) {
+			return shadesPositive[1];
+		}
+		return shadesPositive[2];
+	}
+
+	private Color faderYellowToRedMinSide(double minValue, double currentValue) {
+
+		
+		double fraction = currentValue/minValue;
+		if(fraction > 0.5) {
+			return shadesNegative[0];
+		}
+		if(fraction > 0.2) {
+			return shadesNegative[1];
+		}
+		return shadesNegative[2];
+	}
+	  private void showLegend( Graphics g, int x, int y) { 
+		  
+		  showLegend(g,x,y, shadesPositive[0], "50 -> 100% of max weight");
+		  showLegend(g,x,y+20, shadesPositive[1], "20 -> 50% of max weight ");
+		  showLegend(g,x,y+40, shadesPositive[2], "0 -> 20% of max weight ");
+		  showLegend(g,x,y+60, shadesNegative[2], "0 -> 20% of min weight ");
+		  showLegend(g,x,y+80, shadesNegative[1], "20 -> 50% of min weight");
+		  showLegend(g,x,y+100, shadesNegative[0], "50 -> 100% of min weight ");
+		  
+		  
+	  }
+       private void showLegend( Graphics g, int x, int y,  Color color, String message) {
+
+		
+		
+		char[] chararr =  message.toCharArray();
+		g.setColor(Color.BLACK);
+		g.drawChars(chararr, 0, chararr.length, x, y+15);
+		g.setColor(color);
+		g.fillRect(x -20, y, 20, 20);
+		
 	}
 
 	/**
-	 * Dra a circle for a neuron. Showing value and errorValue. Also Draw links to
+	 * Draw a circle for a neuron. Showing value and errorValue. Also Draw links to
 	 * input Neurons. If there are more than 20 inputs we just paint them as a
 	 * Square
 	 * 
@@ -316,15 +385,15 @@ public class DrawPanel extends JPanel {
 	 * @param baseX
 	 * @param baseY
 	 */
-	protected void paintNewronTopX(Graphics g, Neuron neuron, int baseX, int baseY) {
+	protected void paintNeuron(Graphics g, Neuron neuron, int baseX, int baseY) {
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		String textStr = "  " + neuron.name;
 		char[] chararr = textStr.toCharArray();
-		g2d.setColor(faderYellowToRed(neuron.getValue()));
-		float fontSize = neuronHeight/5;
-		g.setFont(g.getFont().deriveFont(fontSize));
+		g2d.setColor(faderYellowToRed(1,0,neuron.getValue()));
+		float fontSize = neuronHeight/8;
+		//g.setFont(g.getFont().deriveFont(fontSize));
 		g2d.fillRect(baseX, baseY, neuronWidth, neuronHeight);
 		
 		int textSpace = neuronHeight/5;
@@ -356,7 +425,13 @@ public class DrawPanel extends JPanel {
 
 		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
 		if (numInputs > 20) {
-			paintInputsInSquare(g, neuron, baseX, baseY);
+			if(neuron.name.endsWith("-0")) {
+				textStr = " Weights      Weights*input"; 
+				chararr = textStr.toCharArray();
+				g2d.drawChars(chararr, 0, chararr.length, baseX -200 , baseY -10 );
+			}
+			paintInputsInSquare(g, neuron, baseX -100, baseY,true);
+			paintInputsInSquare(g, neuron, baseX -200, baseY,false);
 			return;
 		}
 
@@ -364,15 +439,17 @@ public class DrawPanel extends JPanel {
 
 			int nI = 0;
 			double max = 0;
+			double min = 0;
 			for (int x = 0; x < neuron.weights.size(); x++) {
 				double weight = neuron.weights.get(x);
 				double input = neuron.inputs.get(x).getValue();
 				double value = weight * input;
-				if (value < 0) {
-					value *= -1;
-				}
+				
 				if (value > max) {
 					max = value;
+				}
+				if (value < min) {
+					min = value;
 				}
 			}
 			max = max / neuron.getValue();
@@ -388,16 +465,22 @@ public class DrawPanel extends JPanel {
 				double weight = neuron.weights.get(n);
 				double input = neuron.inputs.get(n).getValue();
 				double value = weight * input;
-				if (value < 0) {
-					value *= -1;
+				
+				if(value < 0) {
+					if(value/min > 0.5) {
+						g2d.setColor(faderYellowToRed(max,min,value));
+						g2d.drawLine(connNu.X, connNu.Y, baseX, baseY + (neuronHeight / 2));
+
+					}
 				}
-				Font existingFont = g2d.getFont();
-				if (value > 0.2 * max) {
+				if(value > 0) {
+					if(value/max > 0.5) {
+						g2d.setColor(faderYellowToRed(max,min,value));
+						g2d.drawLine(connNu.X, connNu.Y, baseX, baseY + (neuronHeight / 2));
 
-					g2d.setColor(faderYellowToRed(value / max));
-					g2d.drawLine(connNu.X, connNu.Y, baseX, baseY + (neuronHeight / 2));
-
-					int centerX = (baseX - connNu.X) / 2 + connNu.X;
+					}
+				}	
+					/*int centerX = (baseX - connNu.X) / 2 + connNu.X;
 					int centerY = (baseY - connNu.Y + neuronHeight) / 2 + connNu.Y;
 					textStr = " w " + getDBL(inpu);
 					chararr = textStr.toCharArray();
@@ -412,9 +495,7 @@ public class DrawPanel extends JPanel {
 					g2d.setFont(rotatedFont);
 					g2d.setColor(Color.black);
 					g2d.drawChars(chararr, 0, chararr.length, centerX - 10, centerY);
-				}
-
-				g2d.setFont(existingFont);
+			*/
 				// g2d.drawLine(baseX - 60, baseY + (neuronHeight / 2), baseX, baseY +
 				// (neuronHeight / 2));
 
@@ -426,6 +507,56 @@ public class DrawPanel extends JPanel {
 
 	static String message = "About to start Training";
 
+	static int numTrialsToRun =0;
+	static int sleepTimeMs =100;
+	public static void waitForUserClick(TrialInfo info, double expected, double got) {
+		message = String.format("Trial %d  . Expected %s  Got %s ",info.trialNumber,expected, got);
+		numTrialsToRun --;
+		frame.repaint();
+		try {
+			Thread.sleep(sleepTimeMs);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(numTrialsToRun <=0) {
+			button.setText("RUN");
+			synchronized (waitForMe) {
+				try {
+					waitForMe.wait(100000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			int selectedIndex = sleepTime.getSelectedIndex();
+			if(selectedIndex == 0) {
+				sleepTimeMs =1000;
+			}
+			if(selectedIndex == 1) {
+				sleepTimeMs =100;
+			}
+			if(selectedIndex == 2) {
+				sleepTimeMs = 10;
+			}
+			if(selectedIndex == 3) {
+				sleepTimeMs = 1;
+			}
+			selectedIndex = numTrials.getSelectedIndex();
+			if(selectedIndex == 0) {
+				numTrialsToRun =1;
+			}
+			if(selectedIndex == 1) {
+				numTrialsToRun =10;
+			}
+			if(selectedIndex == 2) {
+				numTrialsToRun = 100;
+			}
+			if(selectedIndex == 3) {
+				numTrialsToRun = 100;
+			}
+		}
+	}
 	/**
 	 * Call this method when you want to stop your training. It will wait until user clicks continue
 	 * . Returns the number of trials to run before Stopping again.
@@ -446,15 +577,18 @@ public class DrawPanel extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int value =1;
-		try {
-		  value = Integer.valueOf(DrawPanel.numTrials.getText());
-		}
-		catch (Throwable t) {
-			System.out.println("Please enter number" + t.getMessage());
-		}
 		
-		return value;
+		int selectedIndex = numTrials.getSelectedIndex();
+		if(selectedIndex == 0) {
+			return 1;
+		}
+		if(selectedIndex == 1) {
+			return 10;
+		}
+		if(selectedIndex == 2) {
+			return 100;
+		}
+		return 1000;
 		
 	}
 
@@ -480,6 +614,8 @@ public class DrawPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				synchronized (waitForMe) {
 					waitForMe.notifyAll();
+					button.setText("STOP");
+					numTrialsToRun=0;
 				}
 
 			}

@@ -29,7 +29,7 @@ public class MnistTrainer extends TrialInfo {
 
 		tenBitArray = asTenBitArray(labels);
 	}
-  static boolean stopAMinute = false;
+  static boolean stopAMinute = true;
 	List<int[][]> images;
 	int[] labels;
 	List<double[]> inputData;
@@ -82,8 +82,8 @@ public class MnistTrainer extends TrialInfo {
 					theCost.numWrong++;
 				}
 				if(stopAMinute) {
-					DrawPanel.setInputImage(images.get(image),4);
-				DrawPanel.waitForUserClick(String.format(" Expected %s Got %s",expected2,maxI));
+					DrawPanel.setInputImage(images.get(image),4, DrawPanel.PICTURE_TYPE.GREYSCALE);
+				DrawPanel.waitForUserClick(this,expected2,maxI);
 				}
 				theCost.addResult(expected, output);
 				 neuralNetwork.outLayer.handleTopError(expected);
@@ -132,7 +132,7 @@ public class MnistTrainer extends TrialInfo {
 		System.out.println(res);
 		MnistTrainer trainer = new MnistTrainer(1,  0.1,1000, 1.1);
 		
-		
+		 DrawPanel.showNeurons(28,4);
         NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
         for(int x =0; x < 40; x++) {
            trainer.nextTrial(neuralNetwork);
@@ -140,7 +140,7 @@ public class MnistTrainer extends TrialInfo {
         
         
         trainer.numValues = 60000;
-        DrawPanel.showNeurons(28,4);
+       
         stopAMinute = true;
         trainer.sendinBatch(neuralNetwork, false);
         

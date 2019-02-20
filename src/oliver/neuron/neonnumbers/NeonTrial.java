@@ -25,8 +25,8 @@ public class NeonTrial extends TrialInfo {
 	@Override
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
-		DrawPanel.waitForUserClick(String.format("CLick to start learning"), this.trialNumber);
-		for (int y = 0; y < 20; y++) {
+		DrawPanel.waitForUserClick(this, 0, 0);
+		for (int y = 0; y < 2000; y++) {
 			for (int image = 0; image < this.numValues; image++) {
 
 				double[] input = inputData.get(image);
@@ -56,7 +56,8 @@ public class NeonTrial extends TrialInfo {
 					theCost.addResult(expected, output);
 					neuralNetwork.outLayer.handleTopError(expected);
 					DrawPanel.setInputImage(images.get(image), 4,DrawPanel.PICTURE_TYPE.BINARY);
-					DrawPanel.waitForUserClick(String.format("Click to continue. Expected %s Got %s", expected2, maxI), this.trialNumber);
+					
+					DrawPanel.waitForUserClick(this, expected2, maxI);
 
 				}
 
