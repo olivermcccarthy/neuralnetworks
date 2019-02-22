@@ -1,4 +1,4 @@
-package oliver.neuron;
+package oliver.neuron.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,6 +23,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import oliver.neuron.Layer;
+import oliver.neuron.Neuron;
+import oliver.neuron.TrialInfo;
 
 /**
  * Draw neurons showing input weights and output values.
@@ -93,7 +97,7 @@ public class DrawPanel extends JPanel {
 		button.addActionListener(listener);
 		button.setBounds(300, 30, 100, 30);
 		numTrials.setBounds(200, 30, 100, 30);
-		sleepTime.setBounds(400, 30, 100, 30);
+		sleepTime.setBounds(400, 30, 300, 30);
 		button.setFont(this.getFont().deriveFont(20.0f));
 
 		this.setLayout(null);
@@ -101,12 +105,14 @@ public class DrawPanel extends JPanel {
 		 numTrials.addItem("10 trials");
 		 numTrials.addItem("100 trials");
 		 numTrials.addItem("1000 trials");
+		 numTrials.addItem("10000 trials");
+		 numTrials.addItem("100000 trials");
 		 numTrials.setSelectedIndex(0);
 		 
-		 sleepTime.addItem("1000ms sleep between runs");
-		 sleepTime.addItem("100ms sleep between runs");
-		 sleepTime.addItem("10ms sleep between runs");
-		 sleepTime.addItem("1ms sleep between runs");
+		 sleepTime.addItem("1000ms sleep between trials");
+		 sleepTime.addItem("100ms sleep between trials");
+		 sleepTime.addItem("10ms sleep between trials");
+		 sleepTime.addItem("1ms sleep between trials");
 		
 		 
 		
@@ -176,13 +182,13 @@ public class DrawPanel extends JPanel {
 		g.setFont(existing);
 		int maxLevelSize = 0;
 		
-		showLegend( g, 40, 200);
+		showLegend( g, this.getWidth() -200 , 20);
 		
-		for (Layer layer : Layer.layers) {
-			if (layer.neurons.size() > 20) {
+		for (Layer layer : Layer.getLayers()) {
+			if (layer.getNeurons().size() > 20) {
 				continue;
 			}
-			int size = layer.neurons.size();
+			int size = layer.getNeurons().size();
 			if (size > maxLevelSize) {
 				maxLevelSize = size;
 			}
@@ -191,25 +197,25 @@ public class DrawPanel extends JPanel {
 		int screenWidth = this.getWidth();
 		int screenHeight = this.getHeight();
 		
-		int diffX = screenWidth / Layer.layers.size();
+		int diffX = screenWidth / Layer.getLayers().size();
 	    int shiftY = 0;
 
 	    // Space 
 	    int neuronSpaceHeight=  screenHeight/(maxLevelSize+1);
 	    neuronHeight = (neuronSpaceHeight*9 )/10;
 	     neuronWidth =  neuronHeight;
-		for (Layer layer : Layer.layers) {
-			if (layer.neurons.size() > 20) {
+		for (Layer layer : Layer.getLayers()) {
+			if (layer.getNeurons().size() > 20) {
 				continue;
 			}
 			
-			int startLevel = (maxLevelSize - layer.neurons.size()) / 2;
+			int startLevel = (maxLevelSize - layer.getNeurons().size()) / 2;
 			shiftY = (startLevel * neuronSpaceHeight);
 			int diffY  = shiftY;
-			if (layer.neurons.size() > 20) {
+			if (layer.getNeurons().size() > 20) {
 
 			} else {
-				for (Neuron nu : layer.neurons) {
+				for (Neuron nu : layer.getNeurons()) {
 
 					paintNeuron(g, nu, baseX + diffX, baseY + diffY);
 					diffY += neuronSpaceHeight;
@@ -244,9 +250,9 @@ public class DrawPanel extends JPanel {
 		int h = 0;
 		double maxSize = 0;
 		double minSize = 0;
-		for (int x = 0; x < neuron.weights.size(); x++) {
-			double weight = neuron.weights.get(x);
-			double input = neuron.inputs.get(x).getValue();
+		for (int x = 0; x < neuron.getWeights().size(); x++) {
+			double weight = neuron.getWeights().get(x);
+			double input = neuron.getInputs().get(x).getValue();
 
 			double mult = weight ;
 			if(includeInput) {
@@ -270,8 +276,8 @@ public class DrawPanel extends JPanel {
         
         
 		g.setColor(Color.WHITE);
-		int pictureHeight = neuron.weights.size() / pictureWidth;
-		pictureScale = neuronHeight/pictureHeight;
+		int pictureHeight = neuron.getWeights().size() / pictureWidth;
+		pictureScale = neuronHeight/pictureHeight +1;
 		BufferedImage img = new BufferedImage(pictureWidth * pictureScale, pictureHeight * pictureScale,
 				BufferedImage.TYPE_INT_RGB);
 
@@ -281,8 +287,8 @@ public class DrawPanel extends JPanel {
 			x = (pictureWidth) * (h / pictureScale);
 			for (w = 0; w < pictureWidth; w++) {
 
-				double weight = neuron.weights.get(x);
-				double input = neuron.inputs.get(x).getValue();
+				double weight = neuron.getWeights().get(x);
+				double input = neuron.getInputs().get(x).getValue();
 
 				x++;
 				double currentValue = weight;
@@ -389,7 +395,7 @@ public class DrawPanel extends JPanel {
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
-		String textStr = "  " + neuron.name;
+		String textStr = "  " + neuron.getName();
 		char[] chararr = textStr.toCharArray();
 		g2d.setColor(faderYellowToRed(1,0,neuron.getValue()));
 		float fontSize = neuronHeight/8;
@@ -402,10 +408,10 @@ public class DrawPanel extends JPanel {
 
 		;
 
-		textStr = " b " + getDBL(neuron.bias);
+		textStr = " b " + getDBL(neuron.getBias());
 		chararr = textStr.toCharArray();
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace*2);
-		textStr = " err " + getDBL(neuron.errorVar);
+		textStr = " err " + getDBL(neuron.getErrorVar());
 		chararr = textStr.toCharArray();
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace*3);
 
@@ -416,7 +422,7 @@ public class DrawPanel extends JPanel {
 		neuron.X = baseX + neuronWidth;
 		neuron.Y = baseY + (neuronHeight / 2);
 
-		int numInputs = neuron.inputs.size();
+		int numInputs = neuron.getInputs().size();
 		int newY = baseY + 15;
 
 		Color[] colors = new Color[] { Color.BLUE, Color.black, Color.RED, new Color(0, 102, 0), Color.MAGENTA,
@@ -425,7 +431,7 @@ public class DrawPanel extends JPanel {
 
 		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
 		if (numInputs > 20) {
-			if(neuron.name.endsWith("-0")) {
+			if(neuron.getName().endsWith("-0")) {
 				textStr = " Weights      Weights*input"; 
 				chararr = textStr.toCharArray();
 				g2d.drawChars(chararr, 0, chararr.length, baseX -200 , baseY -10 );
@@ -440,9 +446,9 @@ public class DrawPanel extends JPanel {
 			int nI = 0;
 			double max = 0;
 			double min = 0;
-			for (int x = 0; x < neuron.weights.size(); x++) {
-				double weight = neuron.weights.get(x);
-				double input = neuron.inputs.get(x).getValue();
+			for (int x = 0; x < neuron.getWeights().size(); x++) {
+				double weight = neuron.getWeights().get(x);
+				double input = neuron.getInputs().get(x).getValue();
 				double value = weight * input;
 				
 				if (value > max) {
@@ -453,17 +459,17 @@ public class DrawPanel extends JPanel {
 				}
 			}
 			max = max / neuron.getValue();
-			for (int n = 0; n < neuron.inputs.size(); n++) {
+			for (int n = 0; n < neuron.getInputs().size(); n++) {
 				colorIndex++;
 				if (colorIndex >= colors.length) {
 					colorIndex = 0;
 				}
-				Neuron connNu = neuron.inputs.get(n);
-				Double inpu = neuron.weights.get(n);
+				Neuron connNu = neuron.getInputs().get(n);
+				Double inpu = neuron.getWeights().get(n);
 				// System.out.println(connNu.X + ":" + connNu.Y + " to" + baseX + ":" + newY);
 				g2d.setColor(colors[colorIndex]);
-				double weight = neuron.weights.get(n);
-				double input = neuron.inputs.get(n).getValue();
+				double weight = neuron.getWeights().get(n);
+				double input = neuron.getInputs().get(n).getValue();
 				double value = weight * input;
 				
 				if(value < 0) {
@@ -508,9 +514,11 @@ public class DrawPanel extends JPanel {
 	static String message = "About to start Training";
 
 	static int numTrialsToRun =0;
+	static int numTrialsRun =0;
 	static int sleepTimeMs =100;
 	public static void waitForUserClick(TrialInfo info, double expected, double got) {
-		message = String.format("Trial %d  . Expected %s  Got %s ",info.trialNumber,expected, got);
+		numTrialsRun++;
+		message = String.format("Trial %d  . Expected %s  Got %s ",numTrialsRun,expected, got);
 		numTrialsToRun --;
 		frame.repaint();
 		try {
@@ -553,8 +561,15 @@ public class DrawPanel extends JPanel {
 				numTrialsToRun = 100;
 			}
 			if(selectedIndex == 3) {
-				numTrialsToRun = 100;
+				numTrialsToRun = 1000;
 			}
+			if(selectedIndex == 4) {
+				numTrialsToRun = 10000;
+			}
+			if(selectedIndex == 5) {
+				numTrialsToRun = 100000;
+			}
+			
 		}
 	}
 	/**
@@ -621,11 +636,11 @@ public class DrawPanel extends JPanel {
 			}
 		});
 		JScrollPane scroll = new JScrollPane(neuronPanel);
-		//neuronPanel.setPreferredSize(new Dimension(1000, 1000));
+		neuronPanel.setPreferredSize(new Dimension(1000, 1000));
 		frame.setVisible(true);
 		neuronPanel.setBackground(new Color(230, 255, 255));
 		frame.getContentPane().add(scroll);
-
+	
 		frame.repaint();
 
 	}

@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oliver.neuron.Cost;
-import oliver.neuron.DrawPanel;
 import oliver.neuron.NeuralNetwork;
 import oliver.neuron.TrialInfo;
 import oliver.neuron.mnist.MnistTrainer;
+import oliver.neuron.ui.DrawPanel;
 
 public class NeonTrial extends TrialInfo {
 	static List<int[][]> images = new ArrayList<int[][]>();

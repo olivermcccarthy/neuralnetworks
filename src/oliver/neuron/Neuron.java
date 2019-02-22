@@ -9,17 +9,18 @@ import java.util.HashSet;
 import java.util.List;
 
 import oliver.neuron.TruthTable.TruthRow;
+import oliver.neuron.ui.DrawPanel;
 
 
 public class Neuron implements Serializable{
 
-	List<Neuron> inputs = new ArrayList();
+	private List<Neuron> inputs = new ArrayList();
 
-	List<Double> weights = new ArrayList();
+	private List<Double> weights = new ArrayList();
 
 
     // Bias of this neuron
-	double bias = 0.0;
+	private double bias = 0.0;
 	
 
 	// The output neurons from this neuron will pass back a weighted error ( During
@@ -35,7 +36,7 @@ public class Neuron implements Serializable{
     public static double learningRate = 5;
 	
 	// Calculated errorVariable
-	double errorVar = 0;
+	private double errorVar = 0;
 	
 	
 	// Ensure names are unique
@@ -44,7 +45,7 @@ public class Neuron implements Serializable{
 	// Is this an inut Neuron or not
 	boolean input = false;
 	
-	String name;
+	private String name;
 
 
 	// Current value of the neuron 1 (1 -e^-z)
@@ -61,13 +62,13 @@ public class Neuron implements Serializable{
 	 * @param bias
 	 */
 	public Neuron(String name, double bias) {
-		this.bias = bias;
-		this.name = name;
-		while (uniqueNames.containsKey(this.name)) {
-			this.name += "_1";
+		this.setBias(bias);
+		this.setName(name);
+		while (uniqueNames.containsKey(this.getName())) {
+			this.setName(this.getName() + "_1");
 
 		}
-		uniqueNames.put(this.name, this);
+		uniqueNames.put(this.getName(), this);
 		
 
 	}
@@ -82,16 +83,16 @@ public class Neuron implements Serializable{
 	public Neuron(String name, double value, boolean input) {
 		this.sigMoid = value;
 		this.input = true;
-		this.name = name;
-		while (uniqueNames.containsKey(this.name)) {
-			this.name += "_1";
+		this.setName(name);
+		while (uniqueNames.containsKey(this.getName())) {
+			this.setName(this.getName() + "_1");
 
 		}
-		uniqueNames.put(this.name, this);
+		uniqueNames.put(this.getName(), this);
 	}
 
 	public String toString() {
-		return String.format("%s bias(%s) value (%s)", this.name, this.bias, this.getValue());
+		return String.format("%s bias(%s) value (%s)", this.getName(), this.getBias(), this.getValue());
 	}
 
 
@@ -123,8 +124,8 @@ public class Neuron implements Serializable{
 		double result =0;
 
 		
-		for (int n = 0; n < inputs.size(); n++) {
-			double weight = inputs.get(n).getValue() * weights.get(n);
+		for (int n = 0; n < getInputs().size(); n++) {
+			double weight = getInputs().get(n).getValue() * getWeights().get(n);
 			
 			result += weight;
 			if(weight < 0) {
@@ -137,8 +138,8 @@ public class Neuron implements Serializable{
 	}
 	
 	public void addInput(Neuron input, double weight) {
-		this.inputs.add(input);
-		this.weights.add(weight);
+		this.getInputs().add(input);
+		this.getWeights().add(weight);
 	
 		this.input = false;
 	}
@@ -204,16 +205,16 @@ public class Neuron implements Serializable{
 
 		//
 		double sigM = sigMoid;
-		errorVar = (sigM - t) * sigM * (1 - sigM);
-		for (int wI = 0; wI < this.weights.size(); wI++) {
-			Neuron inputNeuron = this.inputs.get(wI);
+		setErrorVar((sigM - t) * sigM * (1 - sigM));
+		for (int wI = 0; wI < this.getWeights().size(); wI++) {
+			Neuron inputNeuron = this.getInputs().get(wI);
 			double input = inputNeuron.getValue();
-			double weight = this.weights.get(wI);
-			inputNeuron.addWeightedError( weight * errorVar);
-			weight = weight - learningRate * (errorVar * input);
-			this.weights.set(wI, weight);
+			double weight = this.getWeights().get(wI);
+			inputNeuron.addWeightedError( weight * getErrorVar());
+			weight = weight - learningRate * (getErrorVar() * input);
+			this.getWeights().set(wI, weight);
 		}
-		bias = bias - learningRate * (errorVar);
+		setBias(getBias() - learningRate * (getErrorVar()));
 
 	}
 
@@ -236,23 +237,23 @@ public class Neuron implements Serializable{
 		// A small change cuases a small chnage in sigmoid
 		// This change is the dirivitive of sigmoid multiplied by the weighted errors of
 		// the next layer
-		errorVar = (this.weigthedError) * sigM * (1 - sigM);
-		for (int wI = 0; wI < this.weights.size(); wI++) {
+		setErrorVar((this.weigthedError) * sigM * (1 - sigM));
+		for (int wI = 0; wI < this.getWeights().size(); wI++) {
 			
-			Neuron inputNeuron = this.inputs.get(wI);
+			Neuron inputNeuron = this.getInputs().get(wI);
 			double input =  inputNeuron.getValue();
 
-			double weight = this.weights.get(wI);
+			double weight = this.getWeights().get(wI);
 		
-			if(this.inputs.size() >0) {
-				inputNeuron.addWeightedError(weight * errorVar);
+			if(this.getInputs().size() >0) {
+				inputNeuron.addWeightedError(weight * getErrorVar());
 			}
-			weight = weight - learningRate * (input * errorVar);
+			weight = weight - learningRate * (input * getErrorVar());
 			
-			this.weights.set(wI, weight);
+			this.getWeights().set(wI, weight);
 		}
 		
-		bias = bias - learningRate * (errorVar);
+		setBias(getBias() - learningRate * (getErrorVar()));
 	}
 
 	/**
@@ -269,7 +270,7 @@ public class Neuron implements Serializable{
 		}
 		double res = getSigmoidWeightedValue();
 
-		res += bias;
+		res += getBias();
 		res *= -1;
 		res = Math.exp(res);
 		res = 1 / (1 + res);
@@ -335,8 +336,8 @@ public class Neuron implements Serializable{
 	public static List<Double> getWeightsAndBiases() {
 		List<Double> result = new ArrayList<Double>();
 		for (Neuron nu : uniqueNames.values()) {
-			result.add(nu.bias);
-			result.addAll(nu.weights);
+			result.add(nu.getBias());
+			result.addAll(nu.getWeights());
 
 		}
 		return result;
@@ -351,5 +352,55 @@ public class Neuron implements Serializable{
 			res += in[index];
 		}
 		return res;
+	}
+
+
+	public List<Double> getWeights() {
+		return weights;
+	}
+
+
+	public void setWeights(List<Double> weights) {
+		this.weights = weights;
+	}
+
+
+	public List<Neuron> getInputs() {
+		return inputs;
+	}
+
+
+	private void setInputs(List<Neuron> inputs) {
+		this.inputs = inputs;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	private void setName(String name) {
+		this.name = name;
+	}
+
+
+	public double getBias() {
+		return bias;
+	}
+
+
+	protected void setBias(double bias) {
+		this.bias = bias;
+	}
+
+
+	public double getErrorVar() {
+		return errorVar;
+	}
+
+
+	protected void setErrorVar(double errorVar) {
+		this.errorVar = errorVar;
 	}
 }

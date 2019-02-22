@@ -11,11 +11,11 @@ import java.util.Date;
 import java.util.List;
 
 import oliver.neuron.Cost;
-import oliver.neuron.DrawPanel;
 import oliver.neuron.Layer;
 import oliver.neuron.NeuralNetwork;
 import oliver.neuron.Neuron;
 import oliver.neuron.TrialInfo;
+import oliver.neuron.ui.DrawPanel;
 
 public class MnistTrainer extends TrialInfo {
 
@@ -45,6 +45,7 @@ public class MnistTrainer extends TrialInfo {
 				for (int c = 0; c < row.length; c++) {
 					newImage[index] = row[c];
 					newImage[index] /= 256;
+					//newImage[index] = newImage[index] * 2 -1;
 					index++;
 				}
 			}
@@ -82,8 +83,8 @@ public class MnistTrainer extends TrialInfo {
 					theCost.numWrong++;
 				}
 				if(stopAMinute) {
-					DrawPanel.setInputImage(images.get(image),4, DrawPanel.PICTURE_TYPE.GREYSCALE);
-				DrawPanel.waitForUserClick(this,expected2,maxI);
+					DrawPanel.setInputImage(images.get(image),10, DrawPanel.PICTURE_TYPE.GREYSCALE);
+				    DrawPanel.waitForUserClick(this,expected2,maxI);
 				}
 				theCost.addResult(expected, output);
 				 neuralNetwork.outLayer.handleTopError(expected);
@@ -134,7 +135,7 @@ public class MnistTrainer extends TrialInfo {
 		
 		 DrawPanel.showNeurons(28,4);
         NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
-        for(int x =0; x < 40; x++) {
+        for(int x =0; x < 4000; x++) {
            trainer.nextTrial(neuralNetwork);
         }
         

@@ -22,20 +22,20 @@ public class Layer implements Serializable{
 		return res;
 	}
 
-	List<Neuron> neurons = new ArrayList<Neuron>();
+	private List<Neuron> neurons = new ArrayList<Neuron>();
 
 	String layerName;
 
 	public Layer childLayer;
 
-	static List<Layer> layers = new ArrayList();
+	private static List<Layer> layers = new ArrayList();
 
 	/*
 	 * sqrt(d) where d is the number of inputs to the neuron. The resulting weights
 	 * are normally distributed between [−1/d√,1/d√] s
 	 */
 	public Layer(String layerName, Layer childLayer, int numNeurons) {
-		layers.add(this);
+		getLayers().add(this);
 		this.layerName = layerName;
 		this.childLayer = childLayer;
 		//
@@ -44,35 +44,35 @@ public class Layer implements Serializable{
 		for (int x = 0; x < numNeurons; x++) {
 			Neuron newNu = new Neuron(layerName + "-" + x, 0);
 
-			for (Neuron child : childLayer.neurons) {
+			for (Neuron child : childLayer.getNeurons()) {
 
 				newNu.addInput(child, getRandNum(upperLevel));
 
 			}
 
-			this.neurons.add(newNu);
+			this.getNeurons().add(newNu);
 		}
 	}
 
 	
 	
 	public Layer(String layerName, Layer childLayer, int numNeurons, boolean isLinear) {
-		layers.add(this);
+		getLayers().add(this);
 		this.layerName = layerName;
 		this.childLayer = childLayer;
 		//
-		double upperLevel = 1 / (Math.sqrt(childLayer.neurons.size()));
+		double upperLevel = 1 / (Math.sqrt(childLayer.getNeurons().size()));
 		
 		for (int x = 0; x < numNeurons; x++) {
 			Neuron newNu = new Neuron(layerName + "-" + x, 0);
 
-			for (Neuron child : childLayer.neurons) {
+			for (Neuron child : childLayer.getNeurons()) {
 
 				newNu.addInput(child, getRandNum(upperLevel));
 
 			}
 
-			this.neurons.add(newNu);
+			this.getNeurons().add(newNu);
 		}
 	}
 	/**
@@ -82,10 +82,10 @@ public class Layer implements Serializable{
 	 * @param numNeurons
 	 */
 	public Layer(String layerName, int numNeurons) {
-		layers.add(this);
+		getLayers().add(this);
 		for (int x = 0; x < numNeurons; x++) {
 			Neuron newNu = new Neuron(layerName + "-" + x, 0, true);
-			this.neurons.add(newNu);
+			this.getNeurons().add(newNu);
 		}
 
 		this.layerName = layerName;
@@ -93,7 +93,7 @@ public class Layer implements Serializable{
 
 	public void setvalues(double[] inVals) {
 		int index = 0;
-		for (Neuron nu : this.neurons) {
+		for (Neuron nu : this.getNeurons()) {
 			nu.sigMoid = inVals[index];
 			index ++;
 		}
@@ -101,9 +101,9 @@ public class Layer implements Serializable{
 	}
 
 	public double[] getvalues() {
-		double [] values = new double[this.neurons.size()];
+		double [] values = new double[this.getNeurons().size()];
 		int index = 0;
-		for (Neuron nu : this.neurons) {
+		for (Neuron nu : this.getNeurons()) {
 			values[index]=nu.getValue();
 		    index ++;
 		}
@@ -119,7 +119,7 @@ public class Layer implements Serializable{
 		} 
 
 		
-		for (Neuron nu : this.neurons) {
+		for (Neuron nu : this.getNeurons()) {
 			nu.sigmoid();
 		
 		}
@@ -127,7 +127,7 @@ public class Layer implements Serializable{
 	}
 
 	public void clearWeightedError() {
-		for (Neuron nu : this.neurons) {
+		for (Neuron nu : this.getNeurons()) {
 			nu.clearWeightedError();
 		}
 	}
@@ -143,7 +143,7 @@ public class Layer implements Serializable{
 
 		this.childLayer.clearWeightedError();
 		int index =0;
-		for (Neuron nu : this.neurons) {
+		for (Neuron nu : this.getNeurons()) {
 			nu.handleError(args[index]);
 			index ++;
 		
@@ -164,7 +164,7 @@ public class Layer implements Serializable{
 		// Each neuorn adds a little bit of weighted error to each of the
 		// childWeigthedErrors
 		// we then use this array to pass onto teh child layer.
-		for (Neuron nu : this.neurons) {
+		for (Neuron nu : this.getNeurons()) {
 			nu.handleError();
 		}
 
@@ -172,5 +172,29 @@ public class Layer implements Serializable{
 			// DrawPanel.stopAMinute("Handled layer" + this.layerName);
 			this.childLayer.handleError();
 		}
+	}
+
+
+
+	public List<Neuron> getNeurons() {
+		return neurons;
+	}
+
+
+
+	public void setNeurons(List<Neuron> neurons) {
+		this.neurons = neurons;
+	}
+
+
+
+	public static List<Layer> getLayers() {
+		return layers;
+	}
+
+
+
+	public static void setLayers(List<Layer> layers) {
+		Layer.layers = layers;
 	}
 }

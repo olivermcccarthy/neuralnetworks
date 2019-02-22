@@ -60,15 +60,15 @@ public class NeuralNetwork {
 			}
 			
 		}
-		Layer.layers.clear();
-		Layer.layers.add(inputLayer);
+		Layer.getLayers().clear();
+		Layer.getLayers().add(inputLayer);
 		if(hiddenLayer != null) {
-			Layer.layers.add(hiddenLayer);
+			Layer.getLayers().add(hiddenLayer);
 		}
 		if(hiddenLayer2 != null) {
-			Layer.layers.add(hiddenLayer2);
+			Layer.getLayers().add(hiddenLayer2);
 		}
-		Layer.layers.add(outLayer);
+		Layer.getLayers().add(outLayer);
 	}
 	
 

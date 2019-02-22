@@ -15,7 +15,7 @@ public class LinearNeuron extends Neuron{
 		}
 		double res = getSigmoidWeightedValue();
 
-		res += bias;
+		res += getBias();
 		this.sigMoid = res;
 		return res;
 	}
@@ -25,16 +25,16 @@ public class LinearNeuron extends Neuron{
 
 		//
 		double sigM = sigMoid;
-		errorVar = (sigM - t);
-		for (int wI = 0; wI < this.weights.size(); wI++) {
-			Neuron inputNeuron = this.inputs.get(wI);
+		setErrorVar((sigM - t));
+		for (int wI = 0; wI < this.getWeights().size(); wI++) {
+			Neuron inputNeuron = this.getInputs().get(wI);
 			double input = inputNeuron.getValue();
-			double weight = this.weights.get(wI);
-			inputNeuron.addWeightedError( weight * errorVar);
-			weight = weight - learningRate * (errorVar * input);
-			this.weights.set(wI, weight);
+			double weight = this.getWeights().get(wI);
+			inputNeuron.addWeightedError( weight * getErrorVar());
+			weight = weight - learningRate * (getErrorVar() * input);
+			this.getWeights().set(wI, weight);
 		}
-		bias = bias - learningRate * (errorVar);
+		setBias(getBias() - learningRate * (getErrorVar()));
 
 	}
 }

@@ -26,7 +26,7 @@ public class SimpleNeuron {
 			simpleNU.handleError(expected);
 			
 		}
-		System.out.println(simpleNU.weights);
-		System.out.println(simpleNU.bias);
+		System.out.println(simpleNU.getWeights());
+		System.out.println(simpleNU.getBias());
 	}
 }
