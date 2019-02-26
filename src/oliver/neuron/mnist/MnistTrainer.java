@@ -15,21 +15,21 @@ import oliver.neuron.Layer;
 import oliver.neuron.NeuralNetwork;
 import oliver.neuron.Neuron;
 import oliver.neuron.TrialInfo;
-import oliver.neuron.ui.DrawPanel;
+import oliver.neuron.ui.DrawNeuralNetwork;
 
 public class MnistTrainer extends TrialInfo {
 
-	 public MnistTrainer(int numTrialsBetweenSaves, double learningRate, int numValues, double learningRateChange) {
- 
-	  
-        super(numTrialsBetweenSaves, learningRate, numValues,learningRateChange);
+	public MnistTrainer(int numTrialsBetweenSaves, double learningRate, int numValues, double learningRateChange) {
+
+		super(numTrialsBetweenSaves, learningRate, numValues, learningRateChange);
 		images = MnistReader.getImages("train-images.idx3-ubyte");
-		labels=MnistReader.getLabels("train-labels.idx1-ubyte");
+		labels = MnistReader.getLabels("train-labels.idx1-ubyte");
 		inputData = normalize(images, 28, 28);
 
 		tenBitArray = asTenBitArray(labels);
 	}
-  static boolean stopAMinute = true;
+
+	static boolean stopAMinute = true;
 	List<int[][]> images;
 	int[] labels;
 	List<double[]> inputData;
@@ -45,7 +45,7 @@ public class MnistTrainer extends TrialInfo {
 				for (int c = 0; c < row.length; c++) {
 					newImage[index] = row[c];
 					newImage[index] /= 256;
-					//newImage[index] = newImage[index] * 2 -1;
+					// newImage[index] = newImage[index] * 2 -1;
 					index++;
 				}
 			}
@@ -57,7 +57,7 @@ public class MnistTrainer extends TrialInfo {
 
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
-
+		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
 		for (int image = 0; image < this.numValues; image++) {
 
 			double[] input = inputData.get(image);
@@ -82,18 +82,17 @@ public class MnistTrainer extends TrialInfo {
 				if (maxI != expected2) {
 					theCost.numWrong++;
 				}
-				if(stopAMinute) {
-					DrawPanel.setInputImage(images.get(image),10, DrawPanel.PICTURE_TYPE.GREYSCALE);
-				    DrawPanel.waitForUserClick(this,expected2,maxI);
+				if (stopAMinute) {
+					drawPanel.setInputImage(images.get(image), 10, DrawNeuralNetwork.PICTURE_TYPE.GREYSCALE);
+					drawPanel.waitForUserClick(this, expected2, maxI);
 				}
 				theCost.addResult(expected, output);
-				 neuralNetwork.outLayer.handleTopError(expected);
-			
+				neuralNetwork.outLayer.handleTopError(expected);
 
 			}
 
 		}
-		System.out.println( theCost.getCost().getAverage() +" numWrong " + theCost.numWrong);
+		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.numWrong);
 		return theCost;
 	}
 
@@ -104,47 +103,25 @@ public class MnistTrainer extends TrialInfo {
 	 * set
 	 * 
 	 * @param args
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 */
 	public static void main(String[] args) throws Exception {
 
+		MnistTrainer trainer = new MnistTrainer(1, 0.1, 1000, 1.1);
+
 		
-		double res = Math.exp(2) + Math.exp(6);
-		double jk = Math.exp(2)*(1 + Math.exp(4));
-		double logged=            2 + Math.log(1 + Math.exp(4));
-		            
-		double redfg=              Math.log(Math.exp(2)* Math.exp(6));
-		double firstLog = Math.log(res);
-		
-		
-		System.out.println(res);
-		res = 2* Math.exp(8) + 4 *Math.exp(3);
-		
-		double rety=       Math.log((8  + Math.log(2))* (3 +Math.log(4)));
-		double refres = 2*Math.exp(3)*(Math.exp(5) + 2);
-		
-		double res2 =Math.log(res);
-		double res4 = Math.exp(res2);
-		double res3 = 3 + Math.log(2) + 5 +Math.log(2);
-		
-		System.out.println(res);
-		res = Math.log(res/2);
-		System.out.println(res);
-		MnistTrainer trainer = new MnistTrainer(1,  0.1,1000, 1.1);
-		
-		 DrawPanel.showNeurons(28,4);
-        NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28,15,0,10,false); 
-        for(int x =0; x < 4000; x++) {
-           trainer.nextTrial(neuralNetwork);
-        }
-        
-        
-        trainer.numValues = 60000;
-       
-        stopAMinute = true;
-        trainer.sendinBatch(neuralNetwork, false);
-        
+		NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28, 15, 0, 10, false);
+		DrawNeuralNetwork.showNeurons(neuralNetwork,28, 4);
+		for (int x = 0; x < 4000; x++) {
+			trainer.nextTrial(neuralNetwork);
+		}
+
+		trainer.numValues = 60000;
+
+		stopAMinute = true;
+		trainer.sendinBatch(neuralNetwork, false);
+
 	}
 
 	public int bufAsInt(byte[] buffer, int startIndex, int length) {

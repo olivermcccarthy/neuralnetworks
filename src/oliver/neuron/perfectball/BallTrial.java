@@ -4,7 +4,7 @@ import oliver.neuron.Cost;
 import oliver.neuron.NeuralNetwork;
 import oliver.neuron.TrialInfo;
 import oliver.neuron.neonnumbers.NeonTrial;
-import oliver.neuron.ui.DrawPanel;
+import oliver.neuron.ui.DrawNeuralNetwork;
 
 public class BallTrial extends  TrialInfo{
 
@@ -21,8 +21,9 @@ public class BallTrial extends  TrialInfo{
 	
 		 panel = new BallDisplay();
 		NeuralNetwork neuralNetwork = new NeuralNetwork(2, 4, 0, 1, false);
-		DrawPanel.showNeurons(10, 4);
-		DrawPanel.setInputPanel(panel);
+		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 4);
+		DrawNeuralNetwork.getNeuronPanel().setInputPanel(panel);
+	
 		for (int x = 0; x < 400; x++) {
 			trainer.nextTrial(neuralNetwork);
 			
@@ -33,6 +34,8 @@ public class BallTrial extends  TrialInfo{
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		// TODO Auto-generated method stub
 		Cost theCost = new Cost(1);
+		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
+		
 		for(int trial = 0; trial < this.numValues; trial ++) {
 			double roundness = Math.random()/4 + 0.6;
 			double redness = Math.random()/4 + 0.5;
@@ -49,7 +52,7 @@ public class BallTrial extends  TrialInfo{
 			double value = neuralNetwork.outLayer.getvalues()[0];
 			neuralNetwork.outLayer.handleTopError(new double[] {expected});
 			theCost.addResult(new double[] {expected}, new double[] {value});
-			DrawPanel.waitForUserClick(this, expected, value);
+			drawPanel.waitForUserClick(this, expected, value);
 		}
 		return theCost;
 	}

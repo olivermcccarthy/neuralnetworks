@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -60,16 +62,19 @@ public class NeuralNetwork {
 			}
 			
 		}
-		Layer.getLayers().clear();
-		Layer.getLayers().add(inputLayer);
-		if(hiddenLayer != null) {
-			Layer.getLayers().add(hiddenLayer);
-		}
-		if(hiddenLayer2 != null) {
-			Layer.getLayers().add(hiddenLayer2);
-		}
-		Layer.getLayers().add(outLayer);
+		
 	}
 	
+	public List<Layer> getLayers(){
+		List<Layer> layers = new ArrayList<Layer>();
+		layers.add(this.inputLayer);
+		if(this.hiddenLayer != null) {
+			layers.add(hiddenLayer);
+		}
+		if(this.hiddenLayer2 != null) {
+			layers.add(hiddenLayer2);
+		}
+		return layers;
+	}
 
 }

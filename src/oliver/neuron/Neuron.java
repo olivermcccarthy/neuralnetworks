@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import oliver.neuron.TruthTable.TruthRow;
-import oliver.neuron.ui.DrawPanel;
+import oliver.neuron.ui.DrawNeuralNetwork;
 
 
 public class Neuron implements Serializable{
@@ -281,70 +281,7 @@ public class Neuron implements Serializable{
 		return res;
 	}
 	
-	public static void main(String[] args) {
-
-		Layer inputLayer = new Layer("input", 3);
-		Layer hiddenLayer = new Layer("hidden2", inputLayer, 6);
 	
-		Layer outputLayer = new Layer("output", hiddenLayer, 2);
-		TruthTable tt = new TruthTable("adder.csv");
-		DrawPanel.showNeurons(20,4);
-		learningRate = 1;
-		for (int trial = 0; trial < 2000; trial++) {
-			Cost myCost = new Cost(2);
-
-			boolean matches = true;
-			for (TruthRow tr : tt.rows) {
-				for (int run = 0; run < 2; run++) {
-					double[] ins = tr.inpputs;
-					inputLayer.setvalues(ins);
-					
-					// hiddenLayer2.sigmoid();
-					outputLayer.sigmoid();
-					double[] outs = outputLayer.getvalues();
-					// System.out.println("Sigmoid" + testSigMoid.sigmoid());
-					// System.out.println("partialdiff" + testSigMoid.partialDiff());
-
-					// System.out.println(adder);
-
-					double[] expected = tt.getOuts(ins);
-
-					// if (!tt.matches(ins, outs)) {
-					// matches = false;
-					// }
-
-					// DrawPanel.stopAMinute(" Expected" + Equation.toString(expected));
-					// DrawPanel.frame.repaint();
-					outputLayer.handleTopError(expected);
-					// DrawPanel.stopAMinute(" Handlederror" + Equation.toString(expected));
-					myCost.addResult(expected, outs);
-
-				}
-			}
-			
-			System.out.println("Trial" + trial + " Cost " + myCost.getCost() + " matches " + matches);
-
-		}
-		DrawPanel.showNeurons(20,4);
-		for (TruthRow tr : tt.rows) {
-			double[] ins = tr.inpputs;
-			inputLayer.setvalues(ins);
-			outputLayer.sigmoid();
-			double[] outs = outputLayer.getvalues();
-			DrawPanel.waitForUserClick(" Expected" + Neuron.toString(outs),0);
-			System.out.println(Neuron.toString(ins) + " : " + Neuron.toString(outs));
-		}
-	}
-
-	public static List<Double> getWeightsAndBiases() {
-		List<Double> result = new ArrayList<Double>();
-		for (Neuron nu : uniqueNames.values()) {
-			result.add(nu.getBias());
-			result.addAll(nu.getWeights());
-
-		}
-		return result;
-	}
 	
 	public static String toString(double[] in) {
 		String res = "";

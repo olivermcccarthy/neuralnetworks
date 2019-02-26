@@ -22,10 +22,12 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 import oliver.neuron.Layer;
+import oliver.neuron.NeuralNetwork;
 import oliver.neuron.Neuron;
 import oliver.neuron.TrialInfo;
 
@@ -35,18 +37,35 @@ import oliver.neuron.TrialInfo;
  * @author oliver
  *
  */
-public class DrawPanel extends JPanel {
+public class DrawNeuralNetwork extends JPanel {
+
+	
+	static DrawNeuralNetwork neuronPanel = null;
+	
+	NeuralNetwork neuralNetwork = null;
+	
+	
+	public static DrawNeuralNetwork getNeuronPanel() {
+		return neuronPanel;
+	}
+
+
+
+	
+
 
 	/**
 	 * Blutton to allow user click through training.
 	 */
-	static JButton button = new JButton("Run ");
-	static JComboBox numTrials = new JComboBox();
-	static JComboBox numPerBatch = new JComboBox();
-	static JComboBox sleepTime = new JComboBox();
-	static JComboBox learningRate = new JComboBox();
-	public static JFrame frame;
+	JButton button = new JButton("Run ");
+	JComboBox numTrials = new JComboBox();
+	JComboBox numPerBatch = new JComboBox();
+	JComboBox sleepTime = new JComboBox();
+	JComboBox learningRate = new JComboBox();
 
+	
+	
+	private static JFrame frame;
 	/**
 	 * Type of input data. 1s and zeros or greyscale
 	 */
@@ -64,54 +83,62 @@ public class DrawPanel extends JPanel {
 	/**
 	 * How large to paint each Neuron
 	 */
-	static int neuronWidth = 100;
-	static int neuronHeight = 100;
+	int neuronWidth = 100;
+	int neuronHeight = 100;
 
 	/**
 	 * Type of input data
 	 */
-	static PICTURE_TYPE pictureType;
+	 PICTURE_TYPE pictureType;
 
 	/**
 	 * When there are more than 20 inputs to a neuron . The weights will be painted
 	 * as a picture. Brightest color being highest weight This value will be the
 	 * width of the picture.
 	 */
-	static int pictureWidth = 28;
+	int pictureWidth = 28;
 
 	/**
 	 * How many times to blow up the image.
 	 */
-	static int pictureScale = 1;
+	int pictureScale = 1;
 
 	// We will draw the input Image in the top corner;
-	private static int[][] inputImage = null;
+	private  int[][] inputImage = null;
 
-	private static JPanel inputPanel = null;
+	private JPanel inputPanel = null;
 	
-	public static JPanel getInputPanel() {
-		return inputPanel;
+	
+
+	public void setInputPanel(JPanel inputPanel) {
+		this.inputPanel = inputPanel;
+		
 	}
 
-	public static void setInputPanel(JPanel inputPanel) {
-		DrawPanel.inputPanel = inputPanel;
-		neuronPanel.add(inputPanel);
-		neuronPanel.setLayout(null);
-		inputPanel.setBounds(0, 0, 100, 100);
+	
+
+	public void setInputImage(int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
+		inputImage = inputImage;
+		pictureType = typeOfPicture;
+		
 	}
 
-	public static int[][] getInputImage() {
-		return inputImage;
-	}
+	public DrawNeuralNetwork() {
+		ActionListener listener =new ActionListener() {
 
-	public static void setInputImage(int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
-		DrawPanel.inputImage = inputImage;
-		DrawPanel.pictureType = typeOfPicture;
-	}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				synchronized (waitForMe) {
+					waitForMe.notifyAll();
+					button.setText("STOP");
+					numTrialsToRun=0;
+				}
 
-	public DrawPanel(ActionListener listener) {
+			}
+		};
 		button.addActionListener(listener);
 		JTextPane heading = new JTextPane();
+		heading.setBackground(new Color(230, 255, 255));
 		 heading.setFont(this.getFont().deriveFont(15.0f));
 		heading.setText("Trials are broken up into batches. Sleep is to allow you see changes in Network for each trial");
 		button.setBounds(350, 60, 100, 30);
@@ -157,11 +184,20 @@ public class DrawPanel extends JPanel {
 		this.add(button);
 		this.add(numTrials);
 		this.add(sleepTime);
+		
+		
 	}
 
-	protected void paintInputImage(Graphics g) {
+	protected void paintInputImage(Graphics g, int baseY) {
+		
+		String textStr =  "Input Image ";
+		char[] chararr = textStr.toCharArray();
+		g.setColor(Color.BLACK);
+		g.drawChars(chararr, 0, chararr.length, 0, baseY -5);
+		
 		if (inputPanel != null) {
-			inputPanel.setBounds(0, 0, 100, 100);
+			inputPanel.setBackground(new Color(230, 255, 255));
+			inputPanel.setBounds(0, baseY, 100, 100);
 			return;
 		}
 		if (inputImage != null) {
@@ -188,7 +224,7 @@ public class DrawPanel extends JPanel {
 				}
 			}
 
-			g.drawImage(img, 0, 0, pictureWidth * pictureScale, pictureHeight * pictureScale, new ImageObserver() {
+			g.drawImage(img, 0, baseY, pictureWidth * pictureScale, pictureHeight * pictureScale, new ImageObserver() {
 
 				@Override
 				public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
@@ -211,7 +247,7 @@ public class DrawPanel extends JPanel {
 		int baseY = 140;
 
 		
-		paintInputImage(g);
+		
 		Font existing = g.getFont();
 		g.setFont(g.getFont().deriveFont(15.0f));
 		
@@ -223,8 +259,8 @@ public class DrawPanel extends JPanel {
 		int maxLevelSize = 0;
 		
 		showLegend( g, this.getWidth() -200 , 20);
-		
-		for (Layer layer : Layer.getLayers()) {
+		List<Layer> layers= this.neuralNetwork.getLayers();
+		for (Layer layer :  layers) {
 			if (layer.getNeurons().size() > 20) {
 				continue;
 			}
@@ -237,7 +273,7 @@ public class DrawPanel extends JPanel {
 		int screenWidth = this.getWidth();
 		int screenHeight = this.getHeight();
 		
-		int diffX = screenWidth / Layer.getLayers().size();
+		int diffX = screenWidth / layers.size();
 		if(diffX > 200) {
 			diffX=200;
 		}
@@ -254,15 +290,20 @@ public class DrawPanel extends JPanel {
         	neuronHeight = 100;
 	    }
 	     neuronWidth =  neuronHeight;
-		for (Layer layer : Layer.getLayers()) {
+	     int startLevel = (maxLevelSize - 1);
+		 shiftY = (startLevel * neuronSpaceHeight/2);
+			
+	      int diffY  = shiftY;
+	      paintInputImage(g, baseY + diffY);	
+		for (Layer layer : layers) {
 			if (layer.getNeurons().size() > 20) {
 				continue;
 			}
 			
-			int startLevel = (maxLevelSize - layer.getNeurons().size());
+			startLevel = (maxLevelSize - layer.getNeurons().size());
 			shiftY = (startLevel * neuronSpaceHeight/2);
 			
-			int diffY  = shiftY;
+			diffY  = shiftY;
 			if (layer.getNeurons().size() > 20) {
 
 			} else {
@@ -572,7 +613,7 @@ public class DrawPanel extends JPanel {
 	static int numTrialsToRun =0;
 	static int numTrialsRun =0;
 	static int sleepTimeMs =100;
-	public static void waitForUserClick(TrialInfo info, double expected, double got) {
+	public  void waitForUserClick(TrialInfo info, double expected, double got) {
 		numTrialsRun++;
 	
 		message = String.format("Trial %d  . Expected %s  Got %s Cost of last Bactch %s LearningRate %s",numTrialsRun,getDBL(expected), getDBL(got), getDBL(info.getBestCost()), getDBL(info.getLearningRate()));
@@ -671,7 +712,7 @@ public class DrawPanel extends JPanel {
 	 * . Returns the number of trials to run before Stopping again.
 	 * @param msg
 	 */
-	public static int waitForUserClick(String msg , int trialNumber) {
+	public  int waitForUserClick(String msg , int trialNumber) {
 		if (dontStop) {
 			return 1000000;
 		}
@@ -701,41 +742,41 @@ public class DrawPanel extends JPanel {
 		
 	}
 
-	private static DrawPanel neuronPanel;
+	
 
+	
+	
+	
 	/**
 	 * Paint a picture of Neurons in all the layers
 	 * 
 	 * @param pictureWidth
 	 * @param pictureScale
 	 */
-	public static void showNeurons(int pictureWidth, int pictureScale) {
+	public static DrawNeuralNetwork showNeurons(NeuralNetwork neuralNetwork,int pictureWidth, int pictureScale) {
 
-		DrawPanel.pictureWidth = pictureWidth;
-		DrawPanel.pictureScale = pictureScale;
+		if(frame == null) {
+			frame = new JFrame();
+			frame.setSize(1000, 1000);
 
-		frame = new JFrame();
-		frame.setSize(1000, 1000);
+			neuronPanel = new DrawNeuralNetwork();
+			neuronPanel.pictureWidth = pictureWidth;
+			neuronPanel.pictureScale = pictureScale;
+			JTabbedPane tabs = new JTabbedPane(); 
+			JScrollPane scroll = new JScrollPane(neuronPanel);
+			neuronPanel.setPreferredSize(new Dimension(1000, 1000));
+			frame.setVisible(true);
+			HelpPanel helpPanel = new HelpPanel();
+			neuronPanel.setBackground(new Color(230, 255, 255));
+			tabs.add("RunTrial", scroll);
+			tabs.add("Help", helpPanel);
+			frame.getContentPane().add(tabs);
+		}
+		 neuronPanel.neuralNetwork = neuralNetwork;
 
-		neuronPanel = new DrawPanel(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				synchronized (waitForMe) {
-					waitForMe.notifyAll();
-					button.setText("STOP");
-					numTrialsToRun=0;
-				}
-
-			}
-		});
-		JScrollPane scroll = new JScrollPane(neuronPanel);
-		neuronPanel.setPreferredSize(new Dimension(1000, 1000));
-		frame.setVisible(true);
-		neuronPanel.setBackground(new Color(230, 255, 255));
-		frame.getContentPane().add(scroll);
 	
-		frame.repaint();
+
+		return neuronPanel;
 
 	}
 }

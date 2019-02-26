@@ -28,14 +28,14 @@ public class Layer implements Serializable{
 
 	public Layer childLayer;
 
-	private static List<Layer> layers = new ArrayList();
+	private  List<Layer> layers = new ArrayList();
 
 	/*
 	 * sqrt(d) where d is the number of inputs to the neuron. The resulting weights
 	 * are normally distributed between [−1/d√,1/d√] s
 	 */
 	public Layer(String layerName, Layer childLayer, int numNeurons) {
-		getLayers().add(this);
+		
 		this.layerName = layerName;
 		this.childLayer = childLayer;
 		//
@@ -57,7 +57,7 @@ public class Layer implements Serializable{
 	
 	
 	public Layer(String layerName, Layer childLayer, int numNeurons, boolean isLinear) {
-		getLayers().add(this);
+		
 		this.layerName = layerName;
 		this.childLayer = childLayer;
 		//
@@ -82,7 +82,7 @@ public class Layer implements Serializable{
 	 * @param numNeurons
 	 */
 	public Layer(String layerName, int numNeurons) {
-		getLayers().add(this);
+	
 		for (int x = 0; x < numNeurons; x++) {
 			Neuron newNu = new Neuron(layerName + "-" + x, 0, true);
 			this.getNeurons().add(newNu);
@@ -188,13 +188,5 @@ public class Layer implements Serializable{
 
 
 
-	public static List<Layer> getLayers() {
-		return layers;
-	}
-
-
-
-	public static void setLayers(List<Layer> layers) {
-		Layer.layers = layers;
-	}
+	
 }

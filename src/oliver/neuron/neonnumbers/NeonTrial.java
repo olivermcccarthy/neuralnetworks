@@ -8,7 +8,7 @@ import oliver.neuron.Cost;
 import oliver.neuron.NeuralNetwork;
 import oliver.neuron.TrialInfo;
 import oliver.neuron.mnist.MnistTrainer;
-import oliver.neuron.ui.DrawPanel;
+import oliver.neuron.ui.DrawNeuralNetwork;
 
 public class NeonTrial extends TrialInfo {
 	static List<int[][]> images = new ArrayList<int[][]>();
@@ -25,7 +25,8 @@ public class NeonTrial extends TrialInfo {
 	@Override
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
-		DrawPanel.waitForUserClick(this, 0, 0);
+		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
+	
 		for (int y = 0; y < 2000; y++) {
 			for (int image = 0; image < this.numValues; image++) {
 
@@ -55,9 +56,9 @@ public class NeonTrial extends TrialInfo {
 				
 					theCost.addResult(expected, output);
 					neuralNetwork.outLayer.handleTopError(expected);
-					DrawPanel.setInputImage(images.get(image), 4,DrawPanel.PICTURE_TYPE.BINARY);
+					drawPanel.setInputImage(images.get(image), 4,DrawNeuralNetwork.PICTURE_TYPE.BINARY);
 					
-					DrawPanel.waitForUserClick(this, expected2, maxI);
+					drawPanel.waitForUserClick(this, expected2, maxI);
 
 				}
 
@@ -74,7 +75,7 @@ public class NeonTrial extends TrialInfo {
 	
 		
 		NeuralNetwork neuralNetwork = new NeuralNetwork(10 * 20, 0, 0, 10, false);
-		DrawPanel.showNeurons(10, 4);
+		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 4);
 
 	
 
