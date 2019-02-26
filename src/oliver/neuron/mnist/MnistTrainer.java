@@ -62,12 +62,12 @@ public class MnistTrainer extends TrialInfo {
 
 			double[] input = inputData.get(image);
 			// DrawPanel.input = images.get(image);
-			neuralNetwork.inputLayer.setvalues(input);
+			neuralNetwork.setInput(input);
 			for (int innerTrial = 0; innerTrial < 1; innerTrial++) {
 
-				neuralNetwork.outLayer.sigmoid();
+				neuralNetwork.sigmoid();
 				double[] expected = tenBitArray[image];
-				double[] output = neuralNetwork.outLayer.getvalues();
+				double[] output = neuralNetwork.getOutput();
 				double expected2 = labels[image];
 
 				double max = 0;
@@ -87,7 +87,7 @@ public class MnistTrainer extends TrialInfo {
 					drawPanel.waitForUserClick(this, expected2, maxI);
 				}
 				theCost.addResult(expected, output);
-				neuralNetwork.outLayer.handleTopError(expected);
+				neuralNetwork.handleTopError(expected);
 
 			}
 

@@ -32,12 +32,12 @@ public class NeonTrial extends TrialInfo {
 
 				double[] input = inputData.get(image);
 				// DrawPanel.input = images.get(image);
-				neuralNetwork.inputLayer.setvalues(input);
+				neuralNetwork.setInput(input);
 				for (int innerTrial = 0; innerTrial < 1; innerTrial++) {
 
-					neuralNetwork.outLayer.sigmoid();
+					neuralNetwork.sigmoid();
 					double[] expected = tenBitArray[image];
-					double[] output = neuralNetwork.outLayer.getvalues();
+					double[] output = neuralNetwork.getOutput();
 					double expected2 = labels.get(image);
 
 					this.trialNumber ++;
@@ -55,7 +55,7 @@ public class NeonTrial extends TrialInfo {
 					}
 				
 					theCost.addResult(expected, output);
-					neuralNetwork.outLayer.handleTopError(expected);
+					neuralNetwork.handleTopError(expected);
 					drawPanel.setInputImage(images.get(image), 4,DrawNeuralNetwork.PICTURE_TYPE.BINARY);
 					
 					drawPanel.waitForUserClick(this, expected2, maxI);

@@ -25,6 +25,9 @@ public class BallDisplay extends JPanel {
 	
 	double roundness =0.5;
 	double redness = 0.7;
+	
+	static double perfectRedness = 0.7;
+	static double perfectRoundness = 0.8;
     public double getRoundness() {
 		return roundness;
 	}
@@ -61,11 +64,15 @@ public class BallDisplay extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Dimension dimension = this.getSize();
-		int height = dimension.height;
+		int height = dimension.height/2;
 		int width = dimension.width;
 		g.setColor(new Color((int)(255*redness),0,0));
 		g.fillOval(0, 0, width, (int)(height*roundness));
-		int rectWidth = 3;
+		
+		
+		g.setColor(new Color((int)(255*perfectRoundness),0,0));
+		g.fillOval(0, height, width, (int)(height*perfectRoundness));
+		
 
 
 	}

@@ -112,13 +112,14 @@ public class DrawNeuralNetwork extends JPanel {
 
 	public void setInputPanel(JPanel inputPanel) {
 		this.inputPanel = inputPanel;
+		this.add(this.inputPanel);
 		
 	}
 
 	
 
 	public void setInputImage(int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
-		inputImage = inputImage;
+		neuronPanel.inputImage = inputImage;
 		pictureType = typeOfPicture;
 		
 	}
@@ -707,41 +708,7 @@ public class DrawNeuralNetwork extends JPanel {
 			}
 		}
 	}
-	/**
-	 * Call this method when you want to stop your training. It will wait until user clicks continue
-	 * . Returns the number of trials to run before Stopping again.
-	 * @param msg
-	 */
-	public  int waitForUserClick(String msg , int trialNumber) {
-		if (dontStop) {
-			return 1000000;
-		}
-		try {
-			message = String.format("Trial %d  %s",trialNumber,msg);
-			
-			frame.repaint();
-			synchronized (waitForMe) {
-				waitForMe.wait(100000);
-			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		int selectedIndex = numTrials.getSelectedIndex();
-		if(selectedIndex == 0) {
-			return 1;
-		}
-		if(selectedIndex == 1) {
-			return 10;
-		}
-		if(selectedIndex == 2) {
-			return 100;
-		}
-		return 1000;
-		
-	}
-
+	
 	
 
 	
@@ -767,14 +734,16 @@ public class DrawNeuralNetwork extends JPanel {
 			neuronPanel.setPreferredSize(new Dimension(1000, 1000));
 			frame.setVisible(true);
 			HelpPanel helpPanel = new HelpPanel();
+			JScrollPane scroll2 = new JScrollPane(helpPanel);
+			helpPanel.setPreferredSize(new Dimension(1000, 1000));
 			neuronPanel.setBackground(new Color(230, 255, 255));
 			tabs.add("RunTrial", scroll);
-			tabs.add("Help", helpPanel);
+			tabs.add("Help", scroll2);
 			frame.getContentPane().add(tabs);
 		}
 		 neuronPanel.neuralNetwork = neuralNetwork;
 
-	
+		 frame.repaint();
 
 		return neuronPanel;
 

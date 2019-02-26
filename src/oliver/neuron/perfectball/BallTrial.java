@@ -20,7 +20,7 @@ public class BallTrial extends  TrialInfo{
 
 	
 		 panel = new BallDisplay();
-		NeuralNetwork neuralNetwork = new NeuralNetwork(2, 4, 0, 1, false);
+		NeuralNetwork neuralNetwork = new NeuralNetwork(2, 2, 0, 1, false);
 		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 4);
 		DrawNeuralNetwork.getNeuronPanel().setInputPanel(panel);
 	
@@ -35,22 +35,23 @@ public class BallTrial extends  TrialInfo{
 		// TODO Auto-generated method stub
 		Cost theCost = new Cost(1);
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
-		
+		drawPanel.setInputPanel(panel);
 		for(int trial = 0; trial < this.numValues; trial ++) {
-			double roundness = Math.random()/4 + 0.6;
-			double redness = Math.random()/4 + 0.5;
+			double roundness = Math.random()/4 + 0.775;
+			double redness = Math.random()/4 + 0.675;
 			panel.setRedness(redness);
 			panel.setRoundness(roundness);
 			double [] inputs = new double[] {roundness,redness};
-			neuralNetwork.inputLayer.setvalues(inputs);
+			neuralNetwork.setInput(inputs);
 			// Human makes ups its mind how much it likes tehball 
 			// based on how far off perefection we are (0.7) redness and 0.8 roundness
 			double dislike = Math.abs(redness - 0.7);
 			dislike = dislike  + Math.abs(roundness - 0.8);
-			neuralNetwork.outLayer.sigmoid();
+			neuralNetwork.sigmoid();
 			double expected = 1 - dislike;
-			double value = neuralNetwork.outLayer.getvalues()[0];
-			neuralNetwork.outLayer.handleTopError(new double[] {expected});
+		
+			double value = neuralNetwork.getOutput()[0];
+			neuralNetwork.handleTopError(new double[] {expected});
 			theCost.addResult(new double[] {expected}, new double[] {value});
 			drawPanel.waitForUserClick(this, expected, value);
 		}

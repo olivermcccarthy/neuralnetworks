@@ -12,10 +12,10 @@ import java.util.List;
 
 public class NeuralNetwork {
 	ByteArrayOutputStream bout;
-	public Layer inputLayer =  null;
+	private Layer inputLayer =  null;
 	Layer hiddenLayer = null;
 	Layer hiddenLayer2 = null;
-	public Layer outLayer = null;
+	private Layer outLayer = null;
 	public NeuralNetwork(int numInputs, int numHidden,  int numHidden2, int numOutputs, boolean linearOutput){
 		inputLayer = new Layer("input", numInputs);
 		
@@ -74,7 +74,20 @@ public class NeuralNetwork {
 		if(this.hiddenLayer2 != null) {
 			layers.add(hiddenLayer2);
 		}
+		layers.add(outLayer);
 		return layers;
 	}
-
+	public void sigmoid() {
+		this.outLayer.sigmoid();
+	}
+	
+	public double[] getOutput() {
+		return this.outLayer.getvalues();
+	}
+	public  void setInput(double[] values) {
+	this.inputLayer.setvalues(values);
+	}
+	public  void handleTopError(double[] values) {
+		this.outLayer.handleTopError(values);
+		}
 }
