@@ -16,6 +16,23 @@ public abstract class TrialInfo {
 	public int numValues =1000;
 	protected  int bestTrial = 0;
 	protected  double bestCost = 1;
+	
+	public double getLearningRate() {
+		return learningRate;
+	}
+
+	public void setLearningRate(double learningRate) {
+		this.learningRate = learningRate;
+	}
+
+	public double getBestCost() {
+		return bestCost;
+	}
+
+	public void setBestCost(double bestCost) {
+		this.bestCost = bestCost;
+	}
+
 	protected int trialNumber =-1;
 	int savePoint;
 	protected  double savePointCost = 1;

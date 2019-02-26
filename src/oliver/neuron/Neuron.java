@@ -268,6 +268,9 @@ public class Neuron implements Serializable{
 		if (this.input) {
 			return sigMoid;
 		}
+		if(this.name.contains("hidden")) {
+			int debugME =0;
+		}
 		double res = getSigmoidWeightedValue();
 
 		res += getBias();

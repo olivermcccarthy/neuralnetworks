@@ -1,28 +1,84 @@
 <html>
 
-<div style="background-color:lightblue;">
-<div >
-<h1> Each Neuron calculates an output based on its inputs and weights using teh sigmoid function</h1>
 
+<h1> Each Neuron calculates an output based on its inputs and weights using the Sigmoid function</h1>
 
+ <br>Sigmoid returns a value between 0 and 1 ( No matter what our inputs and weights are)
+ <br> A value of close to 1 means that our Neuron is fully fired
+ <br> A value of close to zero means that our Neuron is switched off. 
+<h2>  Some terms </h2>
 <table>
 
-<tr> <td> Name </td><td> Description </td> </tr>
+<tr> <th> Term </td><td> Description </td> </tr>
 
 <tr> <td>Sigmoid </td><td>        Function to calculate output of neuron  1/(1 + e^-Z)</td> </tr>
 <tr> <td> w(x) </td><td>      weight a neuron assigns to input(x) </td> </tr>
 <tr> <td>Z  </td><td>     Sum of    w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias </td> </tr>
 <tr> <td> bias </td><td>  This neuron also has a bias</td> </tr>  
-<tr> <td> T   </td><td>            Expected value </td> </tr>|
+<tr> <td> T   </td><td>            Expected value </td> </tr>
 <tr> <td>Error </td><td>  Each run an error var is calculated. Each weight and bias is adjust by this error var       (1 </td> </tr>
 <tr> <td>Error </td><td> For output layer it is (sigmoid - T) * (1 -sigmoid) * (sigmoid) </td> </tr>
+<tr> <td>LearningRate </td><td> We adjust each weight and bias in proportion to learningRate*Error  </td> </tr>
+<tr> <td>Adjusted w(x) </td><td> Each training run weight(x) is changed </td> </tr>
+<tr> <td>Adjusted w(x) </td><td> new w(x) = w(x) - LearningRate*Error*input(x) </td> </tr>
 
 </table>
 
-<h2>  Example of one neuron with two inputs
+<h2>  Example of training one neuron with two inputs ( Not a very useful Neuron) </h2>
+<br> We know is that Perfect combination of weights is  -0.15 and 0.84
+  Redness and RoundNess 
+  Redness 0 white 1 ( bright red) Roundness  vertical axis/ divided by horizonal axis
+  Out perfect ball has a redness of 0.7 and a roundness of 0.9
+   
+  0.7 Roundness of 0.8 / vertical axis/ divided by horizonal axis
+  As sigmoid is calculated as 1/(1 + e^-Z)
+  As Z gets more and more positive the closer to 1 we get 
+  
+  As Z gets more and more negative the closer to 0 we get.
+  
+      <br> But the Neuron has no idea what the perfect weights are.
+      <br> We pass it the inputs and it calculates a value
+      <br> Its told what the expected result for these values is either 0 or 1
+      <br> It then adjusts its weights to move towards this expected result
+      <br> Of course it could learn too fast and miss the above perfect combination 
 
-    <ul>
+   
+   <br> Table showing calculation of Sigmoid , Error and how weights are adjusted for one training 
+    <table>
+    <tr> <th>w1 w2</th> <th> inputs </th> <th> Z = w1*input1 + w2 * input2 - bias </th> <th> Sigmoid(S) 1/(1 + e^ -Z) </th> <th>  Error= (S - T) * (1 -S) * (S) </th> <th> w1 = w1 - lRate *Error *i1 </th> <th> w2 = w2 - lRate *Error *i2 </th>  <th> b = b - lRate *Error </th> </tr>
+   <tr> <td>-0.24 0.78 </td> <td> 0.34  0.67 </td>-0.24 * 0.34 + 0.78 * 0.67 - 0.54 = 0.34 </td> <td>1(1 +e^-0.34) = 0.584 </td> <td>   (0.584 - 1) * (1 - 0.584) * 0.584 = -0.1 </td> <td> -0.24 -(-0.1)*0.34 = -0.205 </td> <td> -0.78 -(-0.1)*0.67 = 0.84 </td> <td> 0.1 -(-0.1)  = 0 </td> </tr>
+  
+    </table>
     
-
-
+    The more training runs we do the closer to weights of  -0.15 and 0.84 we get.
+    
+ <h2> In our Neon Number example we have 2 Layers of Neurons Input and Output </h2>
+   <li> Layer 1 is the input layer where we pass in our data ( or image) 
+   <li> Each neuron in input layer is connected to each Neuron in output Layer
+   <li> Each weight is randomly assigned. Resulting in each Neuron learning a different thing
+   <li> In our digit examples we have 10 output Neurons. 
+   <li> Which ever Neuron has the highest value is the calculated number   
+   <li> Suppose we pass through digit 2 and get a result of digit 6 ( neuron 6 has the highest value)
+   <li> If Neuron 6 of the output layer is giving the highest output then or little Network is telling us it thinks the answer is 6.
+   <li> Example output Layer 0.24 , 0.43,0.25,0.13,0.01,0.16,0.78,0.34,0.12,0.32
+   <li> Here we see Neuron 6 (value 0.78) has the highest value 
+   <li> But we can see that the answer should be 2. So we pass back
+   <li> 0,0,1,0,0,0,0,0,0,0,0 
+   
+   <li> Here Neuron 6 (Expected 0) would calculate a error of (0.78 -0)(1 -0.78)(0.78) =  0.134
+   <ul>
+   <li> Each Weight would then be adjusted by -LearningRate*Error*Input 
+   <li> As inputs are either 1 or 0 only weights for inputs of 1 would be adjusted
+   <li> Error= -1*0.134*1 .
+   <li> Here you can see all weights are decreased bringing actual value of 0.78 closer to expected value of 0.
+   </ul>
+   <li> Neuron 2 (Expected 1) would calculate a error of (0.78 -1)(1 -0.78)(0.78) =  -0.034
+   <ul>
+   <li> Each Weight would then be adjusted by -LearningRate*Error*Input 
+   <li> As inputs are either 1 or 0 only weights for inputs of 1 would be adjusted
+   <li> Error= -1*-0.034*1 .
+   <li> Here you can see all weights are increased bringing actual value of 0.25 closer to expected value of 1.
+   </ul>
+   <li> All other Neurons would also have there weights decreased (Where input is 1) 
+  
 </html>
