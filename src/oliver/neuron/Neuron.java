@@ -289,12 +289,17 @@ public class Neuron implements Serializable{
 			if (index > 0) {
 				res += ",";
 			}
-			res += in[index];
+			res += getDBL(in[index]);
 		}
 		return res;
 	}
 
+	public static String getDBL(double value) {
 
+		String doubleStr = "" + (Math.floor(value * 1000) / 1000);
+
+		return doubleStr;
+	}
 	public List<Double> getWeights() {
 		return weights;
 	}

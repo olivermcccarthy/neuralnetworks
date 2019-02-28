@@ -27,9 +27,10 @@ public class NeonTrial extends TrialInfo {
 		Cost theCost = new Cost(10);
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
 	
-		for (int y = 0; y < 2000; y++) {
-			for (int image = 0; image < this.numValues; image++) {
+	
+			for (int y = 0; y < this.numValues; y++) {
 
+				int image = (int)(Math.random()*10);
 				double[] input = inputData.get(image);
 				// DrawPanel.input = images.get(image);
 				neuralNetwork.setInput(input);
@@ -39,7 +40,7 @@ public class NeonTrial extends TrialInfo {
 					double[] expected = tenBitArray[image];
 					double[] output = neuralNetwork.getOutput();
 					double expected2 = labels.get(image);
-
+					NeonDisplay.number = (int)expected2;
 					this.trialNumber ++;
 					double max = 0;
 					int maxI = 0;
@@ -56,14 +57,14 @@ public class NeonTrial extends TrialInfo {
 				
 					theCost.addResult(expected, output);
 					neuralNetwork.handleTopError(expected);
-					drawPanel.setInputImage(images.get(image), 4,DrawNeuralNetwork.PICTURE_TYPE.BINARY);
+				//	drawPanel.setInputImage(images.get(image), 4,DrawNeuralNetwork.PICTURE_TYPE.BINARY);
 					
 					drawPanel.waitForUserClick(this, expected2, maxI);
 
 				}
 
 			}
-		}
+		
 		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.numWrong);
 		return theCost;
 	}
@@ -78,8 +79,11 @@ public class NeonTrial extends TrialInfo {
 		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 4);
 
 	
-
-		images = NeonDisplay.drawImages(labels);
+		NeonDisplay display = new NeonDisplay();
+		DrawNeuralNetwork.getNeuronPanel().setInputPanel(display);
+		DrawNeuralNetwork.getNeuronPanel().repaint();
+		Thread.sleep(20000);
+		images =display.drawImages(labels);
 		for (int d = 0; d < images.size(); d++) {
 			NeonDisplay.number = d;
 			int [][] imageData =images.get(d);

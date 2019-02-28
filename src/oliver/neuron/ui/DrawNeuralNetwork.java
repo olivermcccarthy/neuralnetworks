@@ -30,6 +30,7 @@ import oliver.neuron.Layer;
 import oliver.neuron.NeuralNetwork;
 import oliver.neuron.Neuron;
 import oliver.neuron.TrialInfo;
+import oliver.neuron.neonnumbers.NeonTrial;
 
 /**
  * Draw neurons showing input weights and output values.
@@ -244,8 +245,8 @@ public class DrawNeuralNetwork extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		int baseX = 0;
-		int baseY = 140;
+		int baseX = 300;
+		int baseY = 160;
 
 		
 		
@@ -262,7 +263,7 @@ public class DrawNeuralNetwork extends JPanel {
 		showLegend( g, this.getWidth() -200 , 20);
 		List<Layer> layers= this.neuralNetwork.getLayers();
 		for (Layer layer :  layers) {
-			if (layer.getNeurons().size() > 20) {
+			if (layer.getNeurons().size() > 10) {
 				continue;
 			}
 			int size = layer.getNeurons().size();
@@ -297,7 +298,7 @@ public class DrawNeuralNetwork extends JPanel {
 	      int diffY  = shiftY;
 	      paintInputImage(g, baseY + diffY);	
 		for (Layer layer : layers) {
-			if (layer.getNeurons().size() > 20) {
+			if (layer.getNeurons().size() > 10) {
 				continue;
 			}
 			
@@ -370,7 +371,7 @@ public class DrawNeuralNetwork extends JPanel {
         
 		g.setColor(Color.WHITE);
 		int pictureHeight = neuron.getWeights().size() / pictureWidth;
-		pictureScale = neuronHeight/pictureHeight +1;
+		pictureScale = neuronHeight/pictureHeight ;
 		BufferedImage img = new BufferedImage(pictureWidth * pictureScale, pictureHeight * pictureScale,
 				BufferedImage.TYPE_INT_RGB);
 
@@ -519,7 +520,7 @@ public class DrawNeuralNetwork extends JPanel {
 		int newY = baseY + 15;
 
 		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
-		if (numInputs > 20) {
+		if (numInputs > 10) {
 			if(neuron.getName().endsWith("-0")) {
 				textStr = " Weights      Weights*input"; 
 				chararr = textStr.toCharArray();
@@ -608,19 +609,24 @@ public class DrawNeuralNetwork extends JPanel {
 			}
 			g2d.setFont(existing);	
 	}
-	
+	 public void doRedraw(){
+         getTopLevelAncestor().revalidate();
+         getTopLevelAncestor().repaint();
+     }
 	static String message = "About to start Training";
 
 	static int numTrialsToRun =0;
 	static int numTrialsRun =0;
 	static int sleepTimeMs =100;
-	public  void waitForUserClick(TrialInfo info, double expected, double got) {
+	public  void waitForUserClick(TrialInfo info, double [] expected, double [] got) {
 		numTrialsRun++;
 	
-		message = String.format("Trial %d  . Expected %s  Got %s Cost of last Bactch %s LearningRate %s",numTrialsRun,getDBL(expected), getDBL(got), getDBL(info.getBestCost()), getDBL(info.getLearningRate()));
-		
+		message = String.format("Trial %d  . Expected %s  Got %s Cost of last Bactch %s LearningRate %s",numTrialsRun,Neuron.toString(expected), Neuron.toString(got), getDBL(info.getBestCost()), getDBL(info.getLearningRate()));
+		tabs.invalidate();
+		tabs.repaint();
 		numTrialsToRun --;
-		frame.repaint();
+		frame.getContentPane().revalidate();
+		frame.getContentPane().repaint();
 		try {
 			Thread.sleep(sleepTimeMs);
 		} catch (InterruptedException e1) {
@@ -713,7 +719,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	
 	
-	
+	static JTabbedPane tabs;
 	/**
 	 * Paint a picture of Neurons in all the layers
 	 * 
@@ -729,7 +735,7 @@ public class DrawNeuralNetwork extends JPanel {
 			neuronPanel = new DrawNeuralNetwork();
 			neuronPanel.pictureWidth = pictureWidth;
 			neuronPanel.pictureScale = pictureScale;
-			JTabbedPane tabs = new JTabbedPane(); 
+		     tabs = new JTabbedPane(); 
 			JScrollPane scroll = new JScrollPane(neuronPanel);
 			neuronPanel.setPreferredSize(new Dimension(1000, 1000));
 			frame.setVisible(true);
@@ -747,5 +753,13 @@ public class DrawNeuralNetwork extends JPanel {
 
 		return neuronPanel;
 
+	}
+
+
+
+	public void waitForUserClick(TrialInfo info, double expected, int got) {
+		// TODO Auto-generated method stub
+		this.waitForUserClick(info, new double[] {expected}, new double[] {got});
+		
 	}
 }

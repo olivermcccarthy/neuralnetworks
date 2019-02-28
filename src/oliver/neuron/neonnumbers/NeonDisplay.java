@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import oliver.neuron.ui.DrawNeuralNetwork;
+import oliver.neuron.ui.Helper;
 
 public class NeonDisplay extends JPanel {
 
@@ -98,50 +99,19 @@ public class NeonDisplay extends JPanel {
 	}
 	public int[][] saveImage(int sampleRate) {
 
-		int w = getWidth();
-		int h = getHeight();
-		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = bi.createGraphics();
-		paint(g);
-		g.dispose();
-				int [][] reds= new int[h/sampleRate][w/sampleRate];
-		int numReds=0;
-	    int widthSamples = w/sampleRate;
-	    int heightSamples= h/sampleRate;
-	    for(int h1 = 0; h1 <  heightSamples; h1++) {
-		for(int w1 = 0; w1 <  widthSamples; w1++) {
-			int redC= new Color(bi.getRGB(w1 * sampleRate, (h1*sampleRate))).getRed();
-			if(redC > 240) {
-				reds[h1][w1] = 1;
-			}
-			
-		}
-	    }
-		return reds;
+		return Helper.saveImage(this, sampleRate);
+	
 	}
 	
-	public static List<int[][]> drawImages(List<Integer> labels){
+	public  List<int[][]> drawImages(List<Integer> labels){
 		ArrayList<int[][]> images = new ArrayList<int[][]>();
-		JFrame frame = new JFrame();
-		frame.setSize(100, 100);
-
-		NeonDisplay panel = new NeonDisplay();
-		NeonDisplay.me = panel;
-		frame.setVisible(true);
-		panel.setBackground(new Color(230, 255, 255));
-	
-		frame.setLayout(null);
-		
-		frame.add(panel);
-		panel.setBounds(0,0,30,60);
-		frame.repaint();
 		
 		for (int d = 0; d < 10; d++) {
 			NeonDisplay.number = d;
 			labels.add(d);
-			int[][] imageData = NeonDisplay.me.saveImage(3);
+			int[][] imageData = saveImage(3);
 			images.add(imageData);
-			frame.repaint();
+			
 		    try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -152,9 +122,5 @@ public class NeonDisplay extends JPanel {
 		return images;
 	}
 	
-	public static void main(String[] args) {
-		
-		drawImages(new ArrayList<Integer>());
-		
-	}
+	
 }
