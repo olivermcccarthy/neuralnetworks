@@ -205,6 +205,10 @@ public class Neuron implements Serializable{
 
 		//
 		double sigM = sigMoid;
+		double learningRate = this.learningRate;
+		if( t ==0 && sigM > 0) {
+		//	learningRate = learningRate*10;
+		}
 		setErrorVar((sigM - t) * sigM * (1 - sigM));
 		for (int wI = 0; wI < this.getWeights().size(); wI++) {
 			Neuron inputNeuron = this.getInputs().get(wI);

@@ -15,6 +15,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.Raster;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -51,8 +53,28 @@ public class DrawNeuralNetwork extends JPanel {
 	}
 
 
-
+	HashSet<JButton> outButtons = new HashSet<JButton>();
 	
+    public void addButton(JButton button) {
+    	if(!outButtons.contains(button)) {
+    		this.add(button);
+    	}
+    	this.outButtons.add(button);
+    }
+
+	public int getOutLayerXPos() {
+		return outLayerXPos;
+	}
+	public int getOutLayerYPos() {
+		return outLayerYPos;
+	}
+	public int getOutLayerSpread() {
+		return outLayerSpread;
+	}
+
+
+
+
 
 
 	/**
@@ -111,6 +133,9 @@ public class DrawNeuralNetwork extends JPanel {
 	
 	
 
+	public void addButtons() {
+		
+	}
 	public void setInputPanel(JPanel inputPanel) {
 		this.inputPanel = inputPanel;
 		this.add(this.inputPanel);
@@ -309,11 +334,23 @@ public class DrawNeuralNetwork extends JPanel {
 			if (layer.getNeurons().size() > 20) {
 
 			} else {
+				
 				for (Neuron nu : layer.getNeurons()) {
 
 					paintNeuron(g, nu, baseX + diffX, baseY + diffY);
 					diffY += neuronSpaceHeight;
 				}
+				if(layer.getLayerName().startsWith("out")) {
+					diffY  = shiftY;
+					for(JButton button: this.outButtons) {
+						button.setBounds(baseX + diffX + diffX, baseY + diffY, 100, 30);
+						diffY += neuronSpaceHeight;
+					}
+					this.outLayerSpread= neuronSpaceHeight;
+					this.outLayerXPos = baseX + diffX + diffX;
+					this.outLayerYPos= baseY + diffY;
+				}
+				
 			}
 			baseX += diffX;
 
@@ -368,7 +405,10 @@ public class DrawNeuralNetwork extends JPanel {
         	ln *= -1;
         }
         
-        
+    	String textStr =  String.format("%s-%s", getDBL(minSize), getDBL(maxSize));
+		char[] chararr = textStr.toCharArray();
+		g.setColor(Color.BLACK);
+		//g.drawChars(chararr, 0, chararr.length, baseX -100, baseY);
 		g.setColor(Color.WHITE);
 		int pictureHeight = neuron.getWeights().size() / pictureWidth;
 		pictureScale = neuronHeight/pictureHeight ;
@@ -475,6 +515,12 @@ public class DrawNeuralNetwork extends JPanel {
 		
 	}
 
+       
+    int outLayerXPos;
+    
+    int outLayerYPos;
+    int outLayerSpread;
+    
 	/**
 	 * Draw a circle for a neuron. Showing value and errorValue. Also Draw links to
 	 * input Neurons. If there are more than 20 inputs we just paint them as a
@@ -526,8 +572,8 @@ public class DrawNeuralNetwork extends JPanel {
 				chararr = textStr.toCharArray();
 				g2d.drawChars(chararr, 0, chararr.length, baseX -200 , baseY -10 );
 			}
-			paintInputsInSquare(g, neuron, baseX -100, baseY,true);
 			paintInputsInSquare(g, neuron, baseX -200, baseY,false);
+			paintInputsInSquare(g, neuron, baseX -100, baseY,false);
 			return;
 		}
 

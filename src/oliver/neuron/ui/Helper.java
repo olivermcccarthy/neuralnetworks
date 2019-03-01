@@ -61,6 +61,9 @@ public class Helper {
 				if (redC > 240) {
 					reds[index] = 1;
 				}
+				else {
+					reds[index] = 0;
+				}
                 index ++;
 			}
 		}

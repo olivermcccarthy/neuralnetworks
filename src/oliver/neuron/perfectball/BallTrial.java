@@ -28,10 +28,10 @@ public class BallTrial extends  TrialInfo{
 
 	
 		 panel = new BallDisplay();
-		NeuralNetwork neuralNetwork = new NeuralNetwork(16, 0, 0, 2, false);
-		DrawNeuralNetwork.showNeurons(neuralNetwork,4, 4);
+		NeuralNetwork neuralNetwork = new NeuralNetwork(100, 0, 0, 2, false);
+		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 10);
 		DrawNeuralNetwork.getNeuronPanel().setInputPanel(panel);
-	
+		panel.setDrawPanel(DrawNeuralNetwork.getNeuronPanel());
 		for (int x = 0; x < 400; x++) {
 			trainer.nextTrial(neuralNetwork);
 			
@@ -47,13 +47,23 @@ public class BallTrial extends  TrialInfo{
 		
 		for(int trial = 0; trial < this.numValues; trial ++) {
 				panel.newPoly();
-			double [] inputs = Helper.saveImageAsDouble(panel, 4, 4);
+			double [] inputs = Helper.saveImageAsDouble(panel, 10, 10);
 		
 		    if(inputs != null) {
 			neuralNetwork.setInput(inputs);
+		    }else {
+		    	try {
+					Thread.sleep(5000);
+					 drawPanel.repaint();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    	continue;
 		    }
 		    neuralNetwork.sigmoid();
 		    double[] values = neuralNetwork.getOutput();
+		    drawPanel.repaint();
 			double []expected = panel.like(values);
 		    
 		

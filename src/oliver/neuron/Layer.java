@@ -30,6 +30,12 @@ public class Layer implements Serializable{
 
 	private  List<Layer> layers = new ArrayList();
 
+	public String getLayerName() {
+		return layerName;
+	}
+
+
+
 	/*
 	 * sqrt(d) where d is the number of inputs to the neuron. The resulting weights
 	 * are normally distributed between [−1/d√,1/d√] s
