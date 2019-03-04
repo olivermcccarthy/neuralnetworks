@@ -19,7 +19,7 @@ public class BallTrial extends  TrialInfo{
 		// TODO Auto-generated constructor stub
 	}
 
-	static BallDisplay panel = null;
+	static WonkyLettersChoice panel = null;
 	
 
 	public static void main(String[] args) throws Exception {
@@ -27,11 +27,11 @@ public class BallTrial extends  TrialInfo{
 		BallTrial trainer = new BallTrial(1, 1, 10000, 1.2);
 
 	
-		 panel = new BallDisplay();
+		 panel = new WonkyLettersChoice();
 		NeuralNetwork neuralNetwork = new NeuralNetwork(100, 0, 0, 2, false);
 		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 10);
 		DrawNeuralNetwork.getNeuronPanel().setInputPanel(panel);
-		panel.setDrawPanel(DrawNeuralNetwork.getNeuronPanel());
+	
 		for (int x = 0; x < 400; x++) {
 			trainer.nextTrial(neuralNetwork);
 			
@@ -44,10 +44,10 @@ public class BallTrial extends  TrialInfo{
 		Cost theCost = new Cost(1);
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
 		drawPanel.setInputPanel(panel);
-		
+		int sleepTimeMs = drawPanel.getSleepTime();
 		for(int trial = 0; trial < this.numValues; trial ++) {
 				panel.newPoly();
-			double [] inputs = Helper.saveImageAsDouble(panel, 10, 10);
+			double [] inputs = Helper.saveImageAsDouble(panel.innerPanel, 10, 10);
 		
 		    if(inputs != null) {
 			neuralNetwork.setInput(inputs);
@@ -64,7 +64,7 @@ public class BallTrial extends  TrialInfo{
 		    neuralNetwork.sigmoid();
 		    double[] values = neuralNetwork.getOutput();
 		    drawPanel.repaint();
-			double []expected = panel.like(values);
+			double []expected = panel.like(drawPanel,values);
 		    
 		
 			
@@ -72,7 +72,7 @@ public class BallTrial extends  TrialInfo{
 			theCost.addResult(expected, values);
 			drawPanel.repaint();
 			
-			drawPanel.waitForUserClick(this, expected, values);
+			drawPanel.waitForUserClick(this, expected, values,false);
 		}
 		return theCost;
 	}

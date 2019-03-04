@@ -42,43 +42,16 @@ import oliver.neuron.neonnumbers.NeonTrial;
  */
 public class DrawNeuralNetwork extends JPanel {
 
-	
 	static DrawNeuralNetwork neuronPanel = null;
-	
+
 	NeuralNetwork neuralNetwork = null;
-	
-	
+
 	public static DrawNeuralNetwork getNeuronPanel() {
 		return neuronPanel;
 	}
 
-
-	HashSet<JButton> outButtons = new HashSet<JButton>();
-	
-    public void addButton(JButton button) {
-    	if(!outButtons.contains(button)) {
-    		this.add(button);
-    	}
-    	this.outButtons.add(button);
-    }
-
-	public int getOutLayerXPos() {
-		return outLayerXPos;
-	}
-	public int getOutLayerYPos() {
-		return outLayerYPos;
-	}
-	public int getOutLayerSpread() {
-		return outLayerSpread;
-	}
-
-
-
-
-
-
 	/**
-	 * Blutton to allow user click through training.
+	 * Buttons to allow user click through training.
 	 */
 	JButton button = new JButton("Run ");
 	JComboBox numTrials = new JComboBox();
@@ -86,9 +59,8 @@ public class DrawNeuralNetwork extends JPanel {
 	JComboBox sleepTime = new JComboBox();
 	JComboBox learningRate = new JComboBox();
 
-	
-	
 	private static JFrame frame;
+
 	/**
 	 * Type of input data. 1s and zeros or greyscale
 	 */
@@ -112,7 +84,7 @@ public class DrawNeuralNetwork extends JPanel {
 	/**
 	 * Type of input data
 	 */
-	 PICTURE_TYPE pictureType;
+	PICTURE_TYPE pictureType;
 
 	/**
 	 * When there are more than 20 inputs to a neuron . The weights will be painted
@@ -127,38 +99,33 @@ public class DrawNeuralNetwork extends JPanel {
 	int pictureScale = 1;
 
 	// We will draw the input Image in the top corner;
-	private  int[][] inputImage = null;
+	private int[][] inputImage = null;
 
+	// Place the input panel on the left hand side
 	private JPanel inputPanel = null;
-	
-	
 
-	public void addButtons() {
-		
-	}
 	public void setInputPanel(JPanel inputPanel) {
 		this.inputPanel = inputPanel;
 		this.add(this.inputPanel);
-		
+		Dimension prefr = inputPanel.getPreferredSize();
+		inputPanel.setBounds(0, 300, prefr.width, prefr.height);
 	}
-
-	
 
 	public void setInputImage(int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
 		neuronPanel.inputImage = inputImage;
 		pictureType = typeOfPicture;
-		
+
 	}
 
 	public DrawNeuralNetwork() {
-		ActionListener listener =new ActionListener() {
+		ActionListener listener = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				synchronized (waitForMe) {
 					waitForMe.notifyAll();
 					button.setText("STOP");
-					numTrialsToRun=0;
+					numTrialsToRun = 0;
 				}
 
 			}
@@ -166,65 +133,64 @@ public class DrawNeuralNetwork extends JPanel {
 		button.addActionListener(listener);
 		JTextPane heading = new JTextPane();
 		heading.setBackground(new Color(230, 255, 255));
-		 heading.setFont(this.getFont().deriveFont(15.0f));
-		heading.setText("Trials are broken up into batches. Sleep is to allow you see changes in Network for each trial");
+		heading.setFont(this.getFont().deriveFont(15.0f));
+		heading.setText(
+				"Trials are broken up into batches. Sleep is to allow you see changes in Network for each trial");
 		button.setBounds(350, 60, 100, 30);
-		button.setToolTipText("Each trial is one full run through the Network below producing a result. We are a child whose perfect ball is below right. When we get it we are 100 % happy. If its 5 percent off our perfect redness and 5 percent off our perfect roundness. Then expected value is 0.9. We pass 0.9 back to teh netwrok and it computes and error and adjusts its weights");
+		button.setToolTipText(
+				"Each trial is one full run through the Network below producing a result. We are a child whose perfect ball is below right. When we get it we are 100 % happy. If its 5 percent off our perfect redness and 5 percent off our perfect roundness. Then expected value is 0.9. We pass 0.9 back to teh netwrok and it computes and error and adjusts its weights");
 		numTrials.setBounds(250, 60, 100, 30);
 		numPerBatch.setBounds(150, 60, 100, 30);
 		sleepTime.setBounds(450, 60, 100, 30);
 		learningRate.setBounds(550, 60, 100, 30);
 		button.setFont(this.getFont().deriveFont(20.0f));
-        this.add(numPerBatch);
-        heading.setBounds(150, 00, 500, 55);
-        this.add(heading);
-        this.add(learningRate);
+		this.add(numPerBatch);
+		heading.setBounds(150, 00, 500, 55);
+		this.add(heading);
+		this.add(learningRate);
 		this.setLayout(null);
-		numPerBatch.addItem("100  per batch" );
+		numPerBatch.addItem("100  per batch");
 		numPerBatch.addItem("1000  per batch");
 		numPerBatch.addItem("5000  per batch");
 		numPerBatch.addItem("10000 per batch");
 		learningRate.addItem("1");
 		learningRate.addItem(".5");
-		learningRate.addItem(".1" );
+		learningRate.addItem(".1");
 		learningRate.addItem(".05");
 		learningRate.addItem(".01");
-		
-		
-		 
-		 numTrials.addItem("1 trials");
-		 numTrials.addItem("10 trials");
-		 numTrials.addItem("100 trials");
-		 numTrials.addItem("1000 trials");
-		 numTrials.addItem("10000 trials");
-		 numTrials.addItem("100000 trials ");
-		 numTrials.setSelectedIndex(0);
-		 
-		 sleepTime.addItem("1000ms sleep between trials");
-		 sleepTime.addItem("100ms sleep between trials");
-		 sleepTime.addItem("10ms sleep between trials");
-		 sleepTime.addItem("1ms sleep between trials");
-		
-		 
-		
-		 sleepTime.setSelectedIndex(0);
+
+		numTrials.addItem("1 trials");
+		numTrials.addItem("10 trials");
+		numTrials.addItem("100 trials");
+		numTrials.addItem("1000 trials");
+		numTrials.addItem("10000 trials");
+		numTrials.addItem("100000 trials ");
+		numTrials.setSelectedIndex(0);
+		sleepTime.addItem("10000ms sleep between trials");
+		sleepTime.addItem("5000ms sleep between trials");
+		sleepTime.addItem("2000ms sleep between trials");
+		sleepTime.addItem("1000ms sleep between trials");
+		sleepTime.addItem("100ms sleep between trials");
+		sleepTime.addItem("10ms sleep between trials");
+		sleepTime.addItem("1ms sleep between trials");
+
+		sleepTime.setSelectedIndex(0);
 		this.add(button);
 		this.add(numTrials);
 		this.add(sleepTime);
-		
-		
+
 	}
 
 	protected void paintInputImage(Graphics g, int baseY) {
-		
-		String textStr =  "Input Image ";
+
+		String textStr = "Input Image ";
 		char[] chararr = textStr.toCharArray();
 		g.setColor(Color.BLACK);
-		g.drawChars(chararr, 0, chararr.length, 0, baseY -5);
-		
+		g.drawChars(chararr, 0, chararr.length, 0, baseY - 5);
+
 		if (inputPanel != null) {
 			inputPanel.setBackground(new Color(230, 255, 255));
-			inputPanel.setBounds(0, baseY, 100, 100);
+
 			return;
 		}
 		if (inputImage != null) {
@@ -273,21 +239,19 @@ public class DrawNeuralNetwork extends JPanel {
 		int baseX = 300;
 		int baseY = 160;
 
-		
-		
 		Font existing = g.getFont();
 		g.setFont(g.getFont().deriveFont(15.0f));
-		
-		String textStr =  message;
+
+		String textStr = getMessage();
 		char[] chararr = textStr.toCharArray();
 		g.setColor(Color.BLACK);
 		g.drawChars(chararr, 0, chararr.length, 150, 130);
 		g.setFont(existing);
 		int maxLevelSize = 0;
-		
-		showLegend( g, this.getWidth() -200 , 20);
-		List<Layer> layers= this.neuralNetwork.getLayers();
-		for (Layer layer :  layers) {
+
+		showLegend(g, this.getWidth() - 200, 20);
+		List<Layer> layers = this.neuralNetwork.getLayers();
+		for (Layer layer : layers) {
 			if (layer.getNeurons().size() > 10) {
 				continue;
 			}
@@ -296,61 +260,51 @@ public class DrawNeuralNetwork extends JPanel {
 				maxLevelSize = size;
 			}
 		}
-		
+
 		int screenWidth = this.getWidth();
 		int screenHeight = this.getHeight();
-		
-		int diffX = screenWidth / layers.size();
-		if(diffX > 200) {
-			diffX=200;
-		}
-	    int shiftY = 0;
 
-	    // Space 
-	    int neuronSpaceHeight=  screenHeight/(maxLevelSize+1);
-	  
-	    if(neuronSpaceHeight > 100) {
-	    	neuronSpaceHeight = 100;
-	    }
-	    neuronHeight = (neuronSpaceHeight*9 )/10;
-        if( neuronHeight > 100) {
-        	neuronHeight = 100;
-	    }
-	     neuronWidth =  neuronHeight;
-	     int startLevel = (maxLevelSize - 1);
-		 shiftY = (startLevel * neuronSpaceHeight/2);
-			
-	      int diffY  = shiftY;
-	      paintInputImage(g, baseY + diffY);	
+		int diffX = screenWidth / layers.size();
+		if (diffX > 200) {
+			diffX = 200;
+		}
+		int shiftY = 0;
+
+		// Space
+		int neuronSpaceHeight = screenHeight / (maxLevelSize + 1);
+
+		if (neuronSpaceHeight > 100) {
+			neuronSpaceHeight = 100;
+		}
+		neuronHeight = (neuronSpaceHeight * 9) / 10;
+		if (neuronHeight > 100) {
+			neuronHeight = 100;
+		}
+		neuronWidth = neuronHeight;
+		int startLevel = (maxLevelSize - 1);
+		shiftY = (startLevel * neuronSpaceHeight / 2);
+
+		int diffY = shiftY;
+		paintInputImage(g, baseY + diffY);
 		for (Layer layer : layers) {
 			if (layer.getNeurons().size() > 10) {
 				continue;
 			}
-			
+
 			startLevel = (maxLevelSize - layer.getNeurons().size());
-			shiftY = (startLevel * neuronSpaceHeight/2);
-			
-			diffY  = shiftY;
+			shiftY = (startLevel * neuronSpaceHeight / 2);
+
+			diffY = shiftY;
 			if (layer.getNeurons().size() > 20) {
 
 			} else {
-				
+
 				for (Neuron nu : layer.getNeurons()) {
 
 					paintNeuron(g, nu, baseX + diffX, baseY + diffY);
 					diffY += neuronSpaceHeight;
 				}
-				if(layer.getLayerName().startsWith("out")) {
-					diffY  = shiftY;
-					for(JButton button: this.outButtons) {
-						button.setBounds(baseX + diffX + diffX, baseY + diffY, 100, 30);
-						diffY += neuronSpaceHeight;
-					}
-					this.outLayerSpread= neuronSpaceHeight;
-					this.outLayerXPos = baseX + diffX + diffX;
-					this.outLayerYPos= baseY + diffY;
-				}
-				
+
 			}
 			baseX += diffX;
 
@@ -385,12 +339,10 @@ public class DrawNeuralNetwork extends JPanel {
 			double weight = neuron.getWeights().get(x);
 			double input = neuron.getInputs().get(x).getValue();
 
-			double mult = weight ;
-			if(includeInput) {
+			double mult = weight;
+			if (includeInput) {
 				mult = weight * input;
 			}
-			
-			
 
 			if (mult > maxSize) {
 				maxSize = mult;
@@ -399,24 +351,24 @@ public class DrawNeuralNetwork extends JPanel {
 				minSize = mult;
 			}
 		}
-        double ln =  Math.log(maxSize);
-        
-        if(ln < 0) {
-        	ln *= -1;
-        }
-        
-    	String textStr =  String.format("%s-%s", getDBL(minSize), getDBL(maxSize));
+		double ln = Math.log(maxSize);
+
+		if (ln < 0) {
+			ln *= -1;
+		}
+
+		String textStr = String.format("%s-%s", getDBL(minSize), getDBL(maxSize));
 		char[] chararr = textStr.toCharArray();
 		g.setColor(Color.BLACK);
-		//g.drawChars(chararr, 0, chararr.length, baseX -100, baseY);
+		// g.drawChars(chararr, 0, chararr.length, baseX -100, baseY);
 		g.setColor(Color.WHITE);
 		int pictureHeight = neuron.getWeights().size() / pictureWidth;
-		pictureScale = neuronHeight/pictureHeight ;
+		pictureScale = neuronHeight / pictureHeight;
 		BufferedImage img = new BufferedImage(pictureWidth * pictureScale, pictureHeight * pictureScale,
 				BufferedImage.TYPE_INT_RGB);
 
 		int x = 0;
-		//showLegend(maxSize,minSize,g, baseX - 60,baseY);
+		// showLegend(maxSize,minSize,g, baseX - 60,baseY);
 		for (h = 0; h < pictureHeight * pictureScale; h++) {
 			x = (pictureWidth) * (h / pictureScale);
 			for (w = 0; w < pictureWidth; w++) {
@@ -426,13 +378,11 @@ public class DrawNeuralNetwork extends JPanel {
 
 				x++;
 				double currentValue = weight;
-				if(includeInput) {
-					 currentValue = weight * input;
+				if (includeInput) {
+					currentValue = weight * input;
 				}
-				
 
-			
-				int rgb = faderYellowToRed(maxSize, minSize,currentValue).getRGB();
+				int rgb = faderYellowToRed(maxSize, minSize, currentValue).getRGB();
 				for (int z = 0; z < pictureScale; z++) {
 					img.setRGB(w * pictureScale + z, h, rgb);
 				}
@@ -440,41 +390,40 @@ public class DrawNeuralNetwork extends JPanel {
 
 		}
 
-		g.drawImage(img, baseX , baseY, pictureWidth * pictureScale, pictureHeight * pictureScale,
-				new ImageObserver() {
+		g.drawImage(img, baseX, baseY, pictureWidth * pictureScale, pictureHeight * pictureScale, new ImageObserver() {
 
-					@Override
-					public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-						// TODO Auto-generated method stub
-						return false;
-					}
-				});
+			@Override
+			public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 
 		int df = 0;
 	}
 
+	static Color[] shadesPositive = new Color[] { new Color(255, 0, 0), new Color(225, 125, 125),
+			new Color(255, 255, 204) };
+	static Color[] shadesNegative = new Color[] { new Color(0, 0, 105), new Color(0, 0, 255),
+			new Color(153, 255, 255) };
 
-	
-	static Color[] shadesPositive = new Color[] {new Color(255,0,0), new Color(225,125,125),new Color(255,255,204)};
-	static Color[] shadesNegative = new Color[] {new Color(0,0,105), new Color(0,0,255),new Color(153,255,255)};
 	/**
-	 * Fade colour based of difference of LOg
-	 * fade from yellow to red
+	 * Fade colour based of difference of LOg fade from yellow to red
 	 *
 	 */
 	private Color faderYellowToRed(double maxValue, double minValue, double currentValue) {
 
-		if(maxValue == 0 &&  minValue == 0) {
+		if (maxValue == 0 && minValue == 0) {
 			return shadesNegative[0];
 		}
-		if(currentValue < 0) {
-			return faderYellowToRedMinSide(minValue *-1, currentValue*-1);
+		if (currentValue < 0) {
+			return faderYellowToRedMinSide(minValue * -1, currentValue * -1);
 		}
-		double fraction = currentValue/maxValue;
-		if(fraction > 0.5) {
+		double fraction = currentValue / maxValue;
+		if (fraction > 0.5) {
 			return shadesPositive[0];
 		}
-		if(fraction > 0.2) {
+		if (fraction > 0.2) {
 			return shadesPositive[1];
 		}
 		return shadesPositive[2];
@@ -482,45 +431,37 @@ public class DrawNeuralNetwork extends JPanel {
 
 	private Color faderYellowToRedMinSide(double minValue, double currentValue) {
 
-		
-		double fraction = currentValue/minValue;
-		if(fraction > 0.5) {
+		double fraction = currentValue / minValue;
+		if (fraction > 0.5) {
 			return shadesNegative[0];
 		}
-		if(fraction > 0.2) {
+		if (fraction > 0.2) {
 			return shadesNegative[1];
 		}
 		return shadesNegative[2];
 	}
-	  private void showLegend( Graphics g, int x, int y) { 
-		  
-		  showLegend(g,x,y, shadesPositive[0], "50 -> 100% of max weight");
-		  showLegend(g,x,y+20, shadesPositive[1], "20 -> 50% of max weight ");
-		  showLegend(g,x,y+40, shadesPositive[2], "0 -> 20% of max weight ");
-		  showLegend(g,x,y+60, shadesNegative[2], "0 -> 20% of min weight ");
-		  showLegend(g,x,y+80, shadesNegative[1], "20 -> 50% of min weight");
-		  showLegend(g,x,y+100, shadesNegative[0], "50 -> 100% of min weight ");
-		  
-		  
-	  }
-       private void showLegend( Graphics g, int x, int y,  Color color, String message) {
 
-		
-		
-		char[] chararr =  message.toCharArray();
-		g.setColor(Color.BLACK);
-		g.drawChars(chararr, 0, chararr.length, x, y+15);
-		g.setColor(color);
-		g.fillRect(x -20, y, 20, 20);
-		
+	private void showLegend(Graphics g, int x, int y) {
+
+		showLegend(g, x, y, shadesPositive[0], "50 -> 100% of max weight");
+		showLegend(g, x, y + 20, shadesPositive[1], "20 -> 50% of max weight ");
+		showLegend(g, x, y + 40, shadesPositive[2], "0 -> 20% of max weight ");
+		showLegend(g, x, y + 60, shadesNegative[2], "0 -> 20% of min weight ");
+		showLegend(g, x, y + 80, shadesNegative[1], "20 -> 50% of min weight");
+		showLegend(g, x, y + 100, shadesNegative[0], "50 -> 100% of min weight ");
+
 	}
 
-       
-    int outLayerXPos;
-    
-    int outLayerYPos;
-    int outLayerSpread;
-    
+	private void showLegend(Graphics g, int x, int y, Color color, String message) {
+
+		char[] chararr = message.toCharArray();
+		g.setColor(Color.BLACK);
+		g.drawChars(chararr, 0, chararr.length, x, y + 15);
+		g.setColor(color);
+		g.fillRect(x - 20, y, 20, 20);
+
+	}
+
 	/**
 	 * Draw a circle for a neuron. Showing value and errorValue. Also Draw links to
 	 * input Neurons. If there are more than 20 inputs we just paint them as a
@@ -537,12 +478,12 @@ public class DrawNeuralNetwork extends JPanel {
 		g2d.setColor(Color.BLACK);
 		String textStr = "  " + neuron.getName();
 		char[] chararr = textStr.toCharArray();
-		g2d.setColor(faderYellowToRed(1,0,neuron.getValue()));
-		float fontSize = neuronHeight/8;
-		//g.setFont(g.getFont().deriveFont(fontSize));
+		g2d.setColor(faderYellowToRed(1, 0, neuron.getValue()));
+		float fontSize = neuronHeight / 8;
+		// g.setFont(g.getFont().deriveFont(fontSize));
 		g2d.fillRect(baseX, baseY, neuronWidth, neuronHeight);
-		
-		int textSpace = neuronHeight/5;
+
+		int textSpace = neuronHeight / 5;
 		g2d.setColor(Color.BLACK);
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace);
 
@@ -550,14 +491,14 @@ public class DrawNeuralNetwork extends JPanel {
 
 		textStr = " b " + getDBL(neuron.getBias());
 		chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace*2);
+		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 2);
 		textStr = " err " + getDBL(neuron.getErrorVar());
 		chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace*3);
+		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 3);
 
 		textStr = " value " + getDBL(neuron.getValue());
 		chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace*4);
+		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 4);
 		// g2d.drawRect(baseX, baseY, neuronWidth, neuronHeight);
 		neuron.X = baseX + neuronWidth;
 		neuron.Y = baseY + (neuronHeight / 2);
@@ -567,13 +508,13 @@ public class DrawNeuralNetwork extends JPanel {
 
 		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
 		if (numInputs > 10) {
-			if(neuron.getName().endsWith("-0")) {
-				textStr = " Weights      Weights*input"; 
+			if (neuron.getName().endsWith("-0")) {
+				textStr = " Weights      Weights*input";
 				chararr = textStr.toCharArray();
-				g2d.drawChars(chararr, 0, chararr.length, baseX -200 , baseY -10 );
+				g2d.drawChars(chararr, 0, chararr.length, baseX - 200, baseY - 10);
 			}
-			paintInputsInSquare(g, neuron, baseX -200, baseY,false);
-			paintInputsInSquare(g, neuron, baseX -100, baseY,false);
+			paintInputsInSquare(g, neuron, baseX - 200, baseY, false);
+			paintInputsInSquare(g, neuron, baseX - 100, baseY, false);
 			return;
 		}
 
@@ -582,104 +523,200 @@ public class DrawNeuralNetwork extends JPanel {
 			int nI = 0;
 			double max = 0;
 			double min = 0;
-            // only max an min weights are shown 
-			int maxIndex= -1;
-			int minIndex= -1;
+			// only max an min weights are shown
+			int maxIndex = -1;
+			int minIndex = -1;
 			for (int x = 0; x < neuron.getWeights().size(); x++) {
 				double weight = neuron.getWeights().get(x);
 				double input = neuron.getInputs().get(x).getValue();
 				double value = weight * input;
-				
+
 				if (value > max) {
 					max = value;
 					maxIndex = x;
 				}
-				
-				
+
 				if (value < min) {
 					min = value;
 					minIndex = x;
 				}
 			}
-			
-			
-			
-			if(minIndex > -1) {
-			
-				showFullWeights( g2d, minIndex, min, max,baseX, baseY, neuron);
+
+			if (minIndex > -1) {
+
+				showFullWeights(g2d, minIndex, min, max, baseX, baseY, neuron);
 			}
-			if(maxIndex > -1) {
-				
-				showFullWeights( g2d, maxIndex, min, max,baseX, baseY, neuron);
+			if (maxIndex > -1) {
+
+				showFullWeights(g2d, maxIndex, min, max, baseX, baseY, neuron);
 			}
-			
+
 		}
 	}
 
-	
-	public void showFullWeights(Graphics g2d, int index, double min, double max,int baseX, int baseY, Neuron  neuron) {
-	
+	public void showFullWeights(Graphics g2d, int index, double min, double max, int baseX, int baseY, Neuron neuron) {
+
 		Neuron connNu = neuron.getInputs().get(index);
-		
+
 		double weight = neuron.getWeights().get(index);
 		double input = neuron.getInputs().get(index).getValue();
 		double value = weight * input;
-		
-		g2d.setColor(faderYellowToRed(max,min,value));
+
+		g2d.setColor(faderYellowToRed(max, min, value));
 		g2d.drawLine(connNu.X, connNu.Y, baseX, baseY + (neuronHeight / 2));
-		
-	
-			// print the weight along the sloped line between inout Neuron and this Neuron
-			int centerX = (baseX - connNu.X) / 2 + connNu.X;
-			int centerY = (baseY +(neuronHeight/2) - connNu.Y) / 2 + connNu.Y;
-			String textStr = " w " + getDBL(value);
-			char[]chararr = textStr.toCharArray();
-			Font existing = g2d.getFont();
-			AffineTransform affineTransform = new AffineTransform();
 
-			double rise = baseY - connNu.Y;
-			rise+= (neuronHeight / 2);
-			double length = baseX - connNu.X;
-			double slope = (rise) / (length);
+		// print the weight along the sloped line between inout Neuron and this Neuron
+		int centerX = (baseX - connNu.X) / 2 + connNu.X;
+		int centerY = (baseY + (neuronHeight / 2) - connNu.Y) / 2 + connNu.Y;
+		String textStr = " w " + getDBL(value);
+		char[] chararr = textStr.toCharArray();
+		Font existing = g2d.getFont();
+		AffineTransform affineTransform = new AffineTransform();
 
-			//affineTransform.setToScale(1.5, 1.5);
-			affineTransform.rotate(Math.atan(slope), 0, 0);
+		double rise = baseY - connNu.Y;
+		rise += (neuronHeight / 2);
+		double length = baseX - connNu.X;
+		double slope = (rise) / (length);
 
-			Font rotatedFont = g2d.getFont().deriveFont(affineTransform);
-			g2d.setFont(rotatedFont);
-			g2d.setColor(Color.black);
-			if(slope <=0) {
-			  g2d.drawChars(chararr, 0, chararr.length, centerX - 5, centerY );
-			}else {
-				 g2d.drawChars(chararr, 0, chararr.length, centerX + 5, centerY);	
-			}
-			g2d.setFont(existing);	
+		// affineTransform.setToScale(1.5, 1.5);
+		affineTransform.rotate(Math.atan(slope), 0, 0);
+
+		Font rotatedFont = g2d.getFont().deriveFont(affineTransform);
+		g2d.setFont(rotatedFont);
+		g2d.setColor(Color.black);
+		if (slope <= 0) {
+			g2d.drawChars(chararr, 0, chararr.length, centerX - 5, centerY);
+		} else {
+			g2d.drawChars(chararr, 0, chararr.length, centerX + 5, centerY);
+		}
+		g2d.setFont(existing);
 	}
-	 public void doRedraw(){
-         getTopLevelAncestor().revalidate();
-         getTopLevelAncestor().repaint();
-     }
-	static String message = "About to start Training";
 
-	static int numTrialsToRun =0;
-	static int numTrialsRun =0;
-	static int sleepTimeMs =100;
-	public  void waitForUserClick(TrialInfo info, double [] expected, double [] got) {
+	public void doRedraw() {
+		getTopLevelAncestor().revalidate();
+		getTopLevelAncestor().repaint();
+	}
+
+	private static String message = "About to start Training";
+
+	int numTrialsToRun = 0;
+	int numTrialsRun = 0;
+	int sleepTimeMs = 100;
+
+	public int getSleepTime() {
+		int selectedIndex = sleepTime.getSelectedIndex();
+		if (selectedIndex == 0) {
+			sleepTimeMs = 10000;
+		}
+		if (selectedIndex == 1) {
+			sleepTimeMs = 5000;
+		}
+		if (selectedIndex == 2) {
+			sleepTimeMs = 2000;
+		}
+		if (selectedIndex == 3) {
+			sleepTimeMs = 1000;
+		}
+		if (selectedIndex == 4) {
+			sleepTimeMs = 100;
+		}
+		if (selectedIndex == 5) {
+			sleepTimeMs = 10;
+		}
+		if (selectedIndex == 6) {
+			sleepTimeMs = 1;
+		}
+		
+		return sleepTimeMs;
+	}
+
+	public int getNumTrials() {
+		int selectedIndex = numTrials.getSelectedIndex();
+		if (selectedIndex == 0) {
+			numTrialsToRun = 1;
+		}
+		if (selectedIndex == 1) {
+			numTrialsToRun = 10;
+		}
+		if (selectedIndex == 2) {
+			numTrialsToRun = 100;
+		}
+		if (selectedIndex == 3) {
+			numTrialsToRun = 1000;
+		}
+		if (selectedIndex == 4) {
+			numTrialsToRun = 10000;
+		}
+		if (selectedIndex == 5) {
+			numTrialsToRun = 100000;
+		}
+		return numTrialsToRun;
+	}
+
+	public double getLearningRate() {
+		int selectedIndex = this.learningRate.getSelectedIndex();
+		double lr = 1;
+		if (selectedIndex == 0) {
+			lr = 1;
+		}
+		if (selectedIndex == 1) {
+			lr = 0.5;
+		}
+		if (selectedIndex == 2) {
+			lr = 0.1;
+		}
+		if (selectedIndex == 3) {
+			lr = 0.05;
+
+		}
+		if (selectedIndex == 4) {
+			lr = 0.01;
+
+		}
+		return lr;
+	}
+
+	public int getNumPerBatch() {
+		int selectedIndex = numPerBatch.getSelectedIndex();
+		int numPerBatch = 100;
+		if (selectedIndex == 0) {
+			numPerBatch = 500;
+		}
+		if (selectedIndex == 1) {
+			numPerBatch = 1000;
+		}
+		if (selectedIndex == 2) {
+			numPerBatch = 5000;
+		}
+		if (selectedIndex == 3) {
+			numPerBatch = 10000;
+		}
+		return numPerBatch;
+	}
+
+	public void waitForUserClick(TrialInfo info, double[] expected, double[] got) {
+		this.waitForUserClick(info, expected, got, true);
+	}
+
+	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep) {
 		numTrialsRun++;
-	
-		message = String.format("Trial %d  . Expected %s  Got %s Cost of last Bactch %s LearningRate %s",numTrialsRun,Neuron.toString(expected), Neuron.toString(got), getDBL(info.getBestCost()), getDBL(info.getLearningRate()));
-		tabs.invalidate();
-		tabs.repaint();
-		numTrialsToRun --;
+
+		setMessage(String.format("Trial %d  . Expected %s  Got %s Cost of last Batch %s LearningRate %s", numTrialsRun,
+				Neuron.toString(expected), Neuron.toString(got), getDBL(info.getBestCost()),
+				getDBL(info.getLearningRate())));
+
+		numTrialsToRun--;
 		frame.getContentPane().revalidate();
 		frame.getContentPane().repaint();
-		try {
-			Thread.sleep(sleepTimeMs);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		if (sleep) {
+			try {
+				Thread.sleep(sleepTimeMs);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
-		if(numTrialsToRun <=0) {
+		if (numTrialsToRun <= 0) {
 			button.setText("RUN");
 			synchronized (waitForMe) {
 				try {
@@ -689,99 +726,32 @@ public class DrawNeuralNetwork extends JPanel {
 					e.printStackTrace();
 				}
 			}
-			int selectedIndex = sleepTime.getSelectedIndex();
-			if(selectedIndex == 0) {
-				sleepTimeMs =1000;
-			}
-			if(selectedIndex == 1) {
-				sleepTimeMs =100;
-			}
-			if(selectedIndex == 2) {
-				sleepTimeMs = 10;
-			}
-			if(selectedIndex == 3) {
-				sleepTimeMs = 1;
-			}
-			selectedIndex = numTrials.getSelectedIndex();
-			if(selectedIndex == 0) {
-				numTrialsToRun =1;
-			}
-			if(selectedIndex == 1) {
-				numTrialsToRun =10;
-			}
-			if(selectedIndex == 2) {
-				numTrialsToRun = 100;
-			}
-			if(selectedIndex == 3) {
-				numTrialsToRun = 1000;
-			}
-			if(selectedIndex == 4) {
-				numTrialsToRun = 10000;
-			}
-			if(selectedIndex == 5) {
-				numTrialsToRun = 100000;
-			}
-			selectedIndex = numPerBatch.getSelectedIndex();
-			if(selectedIndex == 0) {
-				info.numValues = 500;
-			}
-			if(selectedIndex == 1) {
-				info.numValues = 1000;
-			}
-			if(selectedIndex == 2) {
-				info.numValues = 5000;
-			}
-			if(selectedIndex == 3) {
-				info.numValues = 10000;
-			}
-			selectedIndex = learningRate.getSelectedIndex();
-			if(selectedIndex == 0) {
-				info.setLearningRate(1);
-			}
-			if(selectedIndex == 1) {
-				info.setLearningRate(0.5);
-			}
-			if(selectedIndex == 2) {
-				info.setLearningRate(0.1);
-			}
-			if(selectedIndex == 3) {
-				info.setLearningRate(0.05);
-				
-			}
-			if(selectedIndex == 4) {
-				info.setLearningRate(0.01);
-				
-			}
-			if(selectedIndex == 4) {
-				numTrialsToRun = 10000;
-			}
-			if(selectedIndex == 5) {
-				numTrialsToRun = 100000;
-			}
-		}
-	}
-	
-	
+			getSleepTime();
+			getNumTrials();
 
-	
-	
-	static JTabbedPane tabs;
+			info.numValues = getNumPerBatch();
+			info.setLearningRate(getLearningRate());
+		
+		}
+
+	}
+
 	/**
 	 * Paint a picture of Neurons in all the layers
 	 * 
 	 * @param pictureWidth
 	 * @param pictureScale
 	 */
-	public static DrawNeuralNetwork showNeurons(NeuralNetwork neuralNetwork,int pictureWidth, int pictureScale) {
+	public static DrawNeuralNetwork showNeurons(NeuralNetwork neuralNetwork, int pictureWidth, int pictureScale) {
 
-		if(frame == null) {
+		if (frame == null) {
 			frame = new JFrame();
 			frame.setSize(1000, 1000);
 
 			neuronPanel = new DrawNeuralNetwork();
 			neuronPanel.pictureWidth = pictureWidth;
 			neuronPanel.pictureScale = pictureScale;
-		     tabs = new JTabbedPane(); 
+
 			JScrollPane scroll = new JScrollPane(neuronPanel);
 			neuronPanel.setPreferredSize(new Dimension(1000, 1000));
 			frame.setVisible(true);
@@ -789,23 +759,28 @@ public class DrawNeuralNetwork extends JPanel {
 			JScrollPane scroll2 = new JScrollPane(helpPanel);
 			helpPanel.setPreferredSize(new Dimension(1000, 1000));
 			neuronPanel.setBackground(new Color(230, 255, 255));
-			tabs.add("RunTrial", scroll);
-			tabs.add("Help", scroll2);
-			frame.getContentPane().add(tabs);
-		}
-		 neuronPanel.neuralNetwork = neuralNetwork;
 
-		 frame.repaint();
+			frame.getContentPane().add(scroll);
+		}
+		neuronPanel.neuralNetwork = neuralNetwork;
+
+		frame.repaint();
 
 		return neuronPanel;
 
 	}
 
-
-
 	public void waitForUserClick(TrialInfo info, double expected, int got) {
 		// TODO Auto-generated method stub
-		this.waitForUserClick(info, new double[] {expected}, new double[] {got});
-		
+		this.waitForUserClick(info, new double[] { expected }, new double[] { got });
+
+	}
+
+	public static String getMessage() {
+		return message;
+	}
+
+	public static void setMessage(String message) {
+		DrawNeuralNetwork.message = message;
 	}
 }
