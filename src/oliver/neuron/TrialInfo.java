@@ -13,8 +13,8 @@ import java.io.IOException;
 public abstract class TrialInfo {
 	protected int numTrialsBetweenSaves=100;
 	protected double learningRate = 1;
-	public int numValues =1000;
-	protected  int bestTrial = 0;
+	public int numPerBatch =1000;
+	protected  int bestBatch = 0;
 	protected  double bestCost = 1;
 	
 	public double getLearningRate() {
@@ -33,7 +33,7 @@ public abstract class TrialInfo {
 		this.bestCost = bestCost;
 	}
 
-	protected int trialNumber =-1;
+	protected int batchNumber =-1;
 	int savePoint;
 	protected  double savePointCost = 1;
 	protected  double currentCost = 1;
@@ -52,43 +52,43 @@ public abstract class TrialInfo {
 		super();
 		this.numTrialsBetweenSaves = numTrialsBetweenSaves;
 		this.learningRate = learningRate;
-		this.numValues = numValues;
+		this.numPerBatch = numValues;
 		this.learningRateChange = learningRateChange;
 	}
 
 	public String toString() {
-		return String.format("Trial Number %s cost %s Best trial %s Best cost %s  LearningRate %s numValues %s", this.trialNumber,currentCost,bestTrial, bestCost, this.learningRate,  numValues);
+		return String.format("Trial Number %s cost %s Best trial %s Best cost %s  LearningRate %s numValues %s", this.batchNumber,currentCost,bestBatch, bestCost, this.learningRate,  numPerBatch);
 	}
 	
-	public void nextTrial(NeuralNetwork neuralNetwork) throws Exception {
+	public void nextBatch(NeuralNetwork neuralNetwork) throws Exception {
 		if(this.currentCost > this.savePointCost || this.currentCost > this.bestCost) {
 			// we must run again
 			neuralNetwork.load();
-			this.trialNumber = this.savePoint;
+			this.batchNumber = this.savePoint;
 			learningRate = learningRate/learningRateChange;
 			System.out.println(String.format("Reducing learning rate to %s",learningRate));
 		
 			//learningRateChange = (learningRateChange -1 )*0.5 +1;
 			Neuron.learningRate = this.learningRate;	
-			if(this.bestTrial > this.savePoint) {
-				for(int trial = this.trialNumber; trial < this.bestTrial;trial ++) {
-					trialNumber ++;
+			if(this.bestBatch > this.savePoint) {
+				for(int trial = this.batchNumber; trial < this.bestBatch;trial ++) {
+					batchNumber ++;
 					System.out.println(this);
 					sendinBatch(neuralNetwork, true);
 				}
 				neuralNetwork.save();
-				this.savePoint = this.trialNumber;
+				this.savePoint = this.batchNumber;
 				this.savePointCost = this.currentCost;
 				System.out.println(String.format("Saving at save point %s learning rate is %s" ,savePoint, learningRate));
 			}
-			this.savePoint = this.trialNumber+1;
+			this.savePoint = this.batchNumber+1;
 		}
 		
-		trialNumber ++;
+		batchNumber ++;
 		Neuron.learningRate = this.learningRate;	
-		if(trialNumber - savePoint >= numTrialsBetweenSaves) {
+		if(batchNumber - savePoint >= numTrialsBetweenSaves) {
 			neuralNetwork.save();
-			this.savePoint = this.trialNumber -1;
+			this.savePoint = this.batchNumber -1;
 			this.savePointCost = this.currentCost;
 			learningRate = learningRate*learningRateChange;
 			System.out.println(String.format("Saving at save point %s Increasing learning rate to %s" ,savePoint, learningRate));
@@ -101,7 +101,7 @@ public abstract class TrialInfo {
 		this.currentCost = cost.getCost().getAverage();
 		if (currentCost <	bestCost) {
 			bestCost =currentCost;
-			bestTrial = trialNumber;
+			bestBatch = batchNumber;
 		}
 		System.out.println(this);
 	}

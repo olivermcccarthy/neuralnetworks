@@ -18,14 +18,14 @@ public class SimpleEquation2 extends TrialInfo{
 
 	
 		
-		double[] results = new double[numValues];
-		double[] xCoeffs = new double[numValues];
-		double[] yCoeffs = new double[numValues];
+		double[] results = new double[numPerBatch];
+		double[] xCoeffs = new double[numPerBatch];
+		double[] yCoeffs = new double[numPerBatch];
 		double max;
 	
 		SimpleEquation2() {
 			max = 0;
-			for (int r = 0; r < numValues; r++) {
+			for (int r = 0; r < numPerBatch; r++) {
 				xCoeffs[r] = (int) (Math.random() * 5);
 				yCoeffs[r] = (int) (Math.random() * 5);
 				double result = xCoeffs[r] * 13 + yCoeffs[r] * 7;
@@ -44,7 +44,7 @@ public class SimpleEquation2 extends TrialInfo{
 			Cost theCost = new Cost(1);
 	
 			
-			for (int r = 0; r < numValues; r++) {
+			for (int r = 0; r < numPerBatch; r++) {
 
 				double normalizedXCoeff = (xCoeffs[r]) / max;
 				double normalizedYCoeff = (yCoeffs[r]) / max;
@@ -82,11 +82,11 @@ public class SimpleEquation2 extends TrialInfo{
 		SimpleEquation2 trial = new SimpleEquation2();
 		NeuralNetwork neuralNetwork = new NeuralNetwork(2,0,0,2,true); 
 		trial.numTrialsBetweenSaves =300;
-		trial.numValues = 100;
+		trial.numPerBatch = 100;
 		neuralNetwork.runTrial(trial);
-		trial.numValues = 1000;
+		trial.numPerBatch = 1000;
 		 trial.sendinBatch(neuralNetwork, false);
-			System.out.println("Best trial" + trial.bestTrial+ "Best cost" + trial.bestCost  + "  best numWrong "+ trial.bestNumWrong  + " LearningRate" + trial.learningRate + " numValues "+ trial.numValues);
+			System.out.println("Best trial" + trial.bestBatch+ "Best cost" + trial.bestCost  + "  best numWrong "+ trial.bestNumWrong  + " LearningRate" + trial.learningRate + " numValues "+ trial.numPerBatch);
 			
 		
 	}

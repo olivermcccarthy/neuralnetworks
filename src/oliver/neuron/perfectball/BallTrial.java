@@ -29,13 +29,12 @@ public class BallTrial extends  TrialInfo{
 	
 		 panel = new WonkyLettersChoice();
 		NeuralNetwork neuralNetwork = new NeuralNetwork(100, 0, 0, 2, false);
-		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 10);
+		DrawNeuralNetwork.showNeurons(trainer,neuralNetwork,10, 10);
 		DrawNeuralNetwork.getNeuronPanel().setInputPanel(panel);
-	
-		for (int x = 0; x < 400; x++) {
-			trainer.nextTrial(neuralNetwork);
-			
-		}
+		DrawNeuralNetwork nP = DrawNeuralNetwork.getNeuronPanel();
+		
+		nP.run(trainer);
+		
 	}
 
 	@Override
@@ -45,7 +44,8 @@ public class BallTrial extends  TrialInfo{
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
 		drawPanel.setInputPanel(panel);
 		int sleepTimeMs = drawPanel.getSleepTime();
-		for(int trial = 0; trial < this.numValues; trial ++) {
+	
+		for(int trial = 0; trial < this.numPerBatch; trial ++) {
 				panel.newPoly();
 			double [] inputs = Helper.saveImageAsDouble(panel.innerPanel, 10, 10);
 		

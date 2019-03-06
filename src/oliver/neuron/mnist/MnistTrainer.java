@@ -58,7 +58,7 @@ public class MnistTrainer extends TrialInfo {
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
-		for (int image = 0; image < this.numValues; image++) {
+		for (int image = 0; image < this.numPerBatch; image++) {
 
 			double[] input = inputData.get(image);
 			// DrawPanel.input = images.get(image);
@@ -114,10 +114,10 @@ public class MnistTrainer extends TrialInfo {
 		NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28, 15, 0, 10, false);
 		DrawNeuralNetwork.showNeurons(neuralNetwork,28, 4);
 		for (int x = 0; x < 4000; x++) {
-			trainer.nextTrial(neuralNetwork);
+			trainer.nextBatch(neuralNetwork);
 		}
 
-		trainer.numValues = 60000;
+		trainer.numPerBatch = 60000;
 
 		stopAMinute = true;
 		trainer.sendinBatch(neuralNetwork, false);

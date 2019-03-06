@@ -50,15 +50,8 @@ public class DrawNeuralNetwork extends JPanel {
 		return neuronPanel;
 	}
 
-	/**
-	 * Buttons to allow user click through training.
-	 */
-	JButton button = new JButton("Run ");
-	JComboBox numTrials = new JComboBox();
-	JComboBox numPerBatch = new JComboBox();
-	JComboBox sleepTime = new JComboBox();
-	JComboBox learningRate = new JComboBox();
-
+	ControlPanel panel ;
+	
 	private static JFrame frame;
 
 	/**
@@ -71,9 +64,8 @@ public class DrawNeuralNetwork extends JPanel {
 	/**
 	 * Allow user click through training
 	 */
-	static Object waitForMe = new Object();
+	
 
-	static boolean dontStop = false;
 
 	/**
 	 * How large to paint each Neuron
@@ -116,68 +108,22 @@ public class DrawNeuralNetwork extends JPanel {
 		pictureType = typeOfPicture;
 
 	}
-
-	public DrawNeuralNetwork() {
-		ActionListener listener = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				synchronized (waitForMe) {
-					waitForMe.notifyAll();
-					button.setText("STOP");
-					numTrialsToRun = 0;
-				}
-
-			}
-		};
-		button.addActionListener(listener);
+	TrialInfo trialInfo;
+	public DrawNeuralNetwork(TrialInfo trialInfo) {
+		this.trialInfo = trialInfo;
+		panel = new ControlPanel(trialInfo);
+		panel.setBounds(0,0,100,150);
+		this.add(panel);
 		JTextPane heading = new JTextPane();
 		heading.setBackground(new Color(230, 255, 255));
 		heading.setFont(this.getFont().deriveFont(15.0f));
 		heading.setText(
-				"Trials are broken up into batches. Sleep is to allow you see changes in Network for each trial");
-		button.setBounds(350, 60, 100, 30);
-		button.setToolTipText(
-				"Each trial is one full run through the Network below producing a result. We are a child whose perfect ball is below right. When we get it we are 100 % happy. If its 5 percent off our perfect redness and 5 percent off our perfect roundness. Then expected value is 0.9. We pass 0.9 back to teh netwrok and it computes and error and adjusts its weights");
-		numTrials.setBounds(250, 60, 100, 30);
-		numPerBatch.setBounds(150, 60, 100, 30);
-		sleepTime.setBounds(450, 60, 100, 30);
-		learningRate.setBounds(550, 60, 100, 30);
-		button.setFont(this.getFont().deriveFont(20.0f));
-		this.add(numPerBatch);
+				"Trials are broken into batches. Sleep is to allow you see changes in Network for each trial");
+		
 		heading.setBounds(150, 00, 500, 55);
-		this.add(heading);
-		this.add(learningRate);
 		this.setLayout(null);
-		numPerBatch.addItem("100  per batch");
-		numPerBatch.addItem("1000  per batch");
-		numPerBatch.addItem("5000  per batch");
-		numPerBatch.addItem("10000 per batch");
-		learningRate.addItem("1");
-		learningRate.addItem(".5");
-		learningRate.addItem(".1");
-		learningRate.addItem(".05");
-		learningRate.addItem(".01");
-
-		numTrials.addItem("1 trials");
-		numTrials.addItem("10 trials");
-		numTrials.addItem("100 trials");
-		numTrials.addItem("1000 trials");
-		numTrials.addItem("10000 trials");
-		numTrials.addItem("100000 trials ");
-		numTrials.setSelectedIndex(0);
-		sleepTime.addItem("10000ms sleep between trials");
-		sleepTime.addItem("5000ms sleep between trials");
-		sleepTime.addItem("2000ms sleep between trials");
-		sleepTime.addItem("1000ms sleep between trials");
-		sleepTime.addItem("100ms sleep between trials");
-		sleepTime.addItem("10ms sleep between trials");
-		sleepTime.addItem("1ms sleep between trials");
-
-		sleepTime.setSelectedIndex(0);
-		this.add(button);
-		this.add(numTrials);
-		this.add(sleepTime);
+		this.add(heading);
+		
 
 	}
 
@@ -599,113 +545,44 @@ public class DrawNeuralNetwork extends JPanel {
 
 	private static String message = "About to start Training";
 
-	int numTrialsToRun = 0;
-	int numTrialsRun = 0;
-	int sleepTimeMs = 100;
-
+	
+    int sleepTimeMs;
 	public int getSleepTime() {
-		int selectedIndex = sleepTime.getSelectedIndex();
-		if (selectedIndex == 0) {
-			sleepTimeMs = 10000;
-		}
-		if (selectedIndex == 1) {
-			sleepTimeMs = 5000;
-		}
-		if (selectedIndex == 2) {
-			sleepTimeMs = 2000;
-		}
-		if (selectedIndex == 3) {
-			sleepTimeMs = 1000;
-		}
-		if (selectedIndex == 4) {
-			sleepTimeMs = 100;
-		}
-		if (selectedIndex == 5) {
-			sleepTimeMs = 10;
-		}
-		if (selectedIndex == 6) {
-			sleepTimeMs = 1;
-		}
-		
-		return sleepTimeMs;
+		sleepTimeMs = this.panel.getSleepTime();
+		return this.panel.getSleepTime();
 	}
 
-	public int getNumTrials() {
-		int selectedIndex = numTrials.getSelectedIndex();
-		if (selectedIndex == 0) {
-			numTrialsToRun = 1;
-		}
-		if (selectedIndex == 1) {
-			numTrialsToRun = 10;
-		}
-		if (selectedIndex == 2) {
-			numTrialsToRun = 100;
-		}
-		if (selectedIndex == 3) {
-			numTrialsToRun = 1000;
-		}
-		if (selectedIndex == 4) {
-			numTrialsToRun = 10000;
-		}
-		if (selectedIndex == 5) {
-			numTrialsToRun = 100000;
-		}
-		return numTrialsToRun;
+	public int getNumBatches() {
+		numBatchesI = this.panel.getNumBatches();
+		return numBatchesI;
 	}
 
 	public double getLearningRate() {
-		int selectedIndex = this.learningRate.getSelectedIndex();
-		double lr = 1;
-		if (selectedIndex == 0) {
-			lr = 1;
-		}
-		if (selectedIndex == 1) {
-			lr = 0.5;
-		}
-		if (selectedIndex == 2) {
-			lr = 0.1;
-		}
-		if (selectedIndex == 3) {
-			lr = 0.05;
-
-		}
-		if (selectedIndex == 4) {
-			lr = 0.01;
-
-		}
-		return lr;
+		return this.panel.getLearningRate();
 	}
 
 	public int getNumPerBatch() {
-		int selectedIndex = numPerBatch.getSelectedIndex();
-		int numPerBatch = 100;
-		if (selectedIndex == 0) {
-			numPerBatch = 500;
-		}
-		if (selectedIndex == 1) {
-			numPerBatch = 1000;
-		}
-		if (selectedIndex == 2) {
-			numPerBatch = 5000;
-		}
-		if (selectedIndex == 3) {
-			numPerBatch = 10000;
-		}
-		return numPerBatch;
+		
+		return this.panel.getNumPerBatch();
 	}
 
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got) {
 		this.waitForUserClick(info, expected, got, true);
 	}
-
+	int numBatchesI;
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep) {
-		numTrialsRun++;
-
-		setMessage(String.format("Trial %d  . Expected %s  Got %s Cost of last Batch %s LearningRate %s", numTrialsRun,
+		
+		String message= String.format("Trial %d  . Expected %s  Got %s Cost of last Batch %s LearningRate %s", this.numBatchesI,
 				Neuron.toString(expected), Neuron.toString(got), getDBL(info.getBestCost()),
-				getDBL(info.getLearningRate())));
+				getDBL(info.getLearningRate()));
+		this.waitForUserClick(info,message,sleep);
+	}
+	public void waitForUserClick(TrialInfo info, String message, boolean sleep) {
 
-		numTrialsToRun--;
+
+		setMessage(message);
+
+	
 		frame.getContentPane().revalidate();
 		frame.getContentPane().repaint();
 		if (sleep) {
@@ -716,20 +593,12 @@ public class DrawNeuralNetwork extends JPanel {
 				e1.printStackTrace();
 			}
 		}
-		if (numTrialsToRun <= 0) {
-			button.setText("RUN");
-			synchronized (waitForMe) {
-				try {
-					waitForMe.wait(100000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		if (numBatchesI <= 0) {
+			this.panel.waitForMe();
 			getSleepTime();
-			getNumTrials();
+			getNumBatches();
 
-			info.numValues = getNumPerBatch();
+			info.numPerBatch = getNumPerBatch();
 			info.setLearningRate(getLearningRate());
 		
 		}
@@ -742,13 +611,13 @@ public class DrawNeuralNetwork extends JPanel {
 	 * @param pictureWidth
 	 * @param pictureScale
 	 */
-	public static DrawNeuralNetwork showNeurons(NeuralNetwork neuralNetwork, int pictureWidth, int pictureScale) {
+	public static DrawNeuralNetwork showNeurons(TrialInfo trialInfo,NeuralNetwork neuralNetwork, int pictureWidth, int pictureScale) {
 
 		if (frame == null) {
 			frame = new JFrame();
 			frame.setSize(1000, 1000);
 
-			neuronPanel = new DrawNeuralNetwork();
+			neuronPanel = new DrawNeuralNetwork(trialInfo);
 			neuronPanel.pictureWidth = pictureWidth;
 			neuronPanel.pictureScale = pictureScale;
 
@@ -782,5 +651,19 @@ public class DrawNeuralNetwork extends JPanel {
 
 	public static void setMessage(String message) {
 		DrawNeuralNetwork.message = message;
+	}
+	
+	public void run(TrialInfo trainer) throws Exception {
+		this.waitForUserClick( trainer, "Cick run to start ", false);
+		while(true) {
+			
+			
+			while(numBatchesI > 0) {
+				trainer.nextBatch(neuralNetwork);
+				numBatchesI --;
+				
+			}
+			this.waitForUserClick( trainer, "Cick run to start ", false);
+		}
 	}
 }

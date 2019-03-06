@@ -28,7 +28,7 @@ public class NeonTrial extends TrialInfo {
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
 	
 	
-			for (int y = 0; y < this.numValues; y++) {
+			for (int y = 0; y < this.numPerBatch; y++) {
 
 				int image = (int)(Math.random()*10);
 				double[] input = inputData.get(image);
@@ -41,7 +41,7 @@ public class NeonTrial extends TrialInfo {
 					double[] output = neuralNetwork.getOutput();
 					double expected2 = labels.get(image);
 					NeonDisplay.number = (int)expected2;
-					this.trialNumber ++;
+					this.batchNumber ++;
 					double max = 0;
 					int maxI = 0;
 					for (int x = 0; x < 10; x++) {
@@ -97,11 +97,11 @@ public class NeonTrial extends TrialInfo {
 		
 
 		for (int x = 0; x < 400; x++) {
-			trainer.nextTrial(neuralNetwork);
+			trainer.nextBatch(neuralNetwork);
 			
 		}
 
-		trainer.numValues = 10;
+		trainer.numPerBatch = 10;
 
 		trainer.sendinBatch(neuralNetwork, false);
 
