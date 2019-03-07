@@ -37,7 +37,12 @@ public class NeonDisplay extends JPanel {
 	}
 	static int number = 0;
     static NeonDisplay me;
+    public NeonDisplay (){
+    	this.setPreferredSize(new Dimension(200,260));
+    }
 	protected void paintComponent(Graphics g) {
+		
+		
 		super.paintComponent(g);
 		Dimension dimension = this.getSize();
 		int height = dimension.height;

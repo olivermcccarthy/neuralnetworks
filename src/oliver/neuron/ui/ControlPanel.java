@@ -182,7 +182,7 @@ public class ControlPanel extends JPanel {
 		button.setText("RUN");
 		synchronized (waitForMe) {
 			try {
-				waitForMe.wait(100000);
+				waitForMe.wait();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

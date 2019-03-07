@@ -112,16 +112,9 @@ public class MnistTrainer extends TrialInfo {
 
 		
 		NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28, 15, 0, 10, false);
-		DrawNeuralNetwork.showNeurons(neuralNetwork,28, 4);
-		for (int x = 0; x < 4000; x++) {
-			trainer.nextBatch(neuralNetwork);
-		}
-
-		trainer.numPerBatch = 60000;
-
-		stopAMinute = true;
-		trainer.sendinBatch(neuralNetwork, false);
-
+		DrawNeuralNetwork.showNeurons(trainer,neuralNetwork,28, 4);
+		
+		DrawNeuralNetwork.getNeuronPanel().run(trainer);
 	}
 
 	public int bufAsInt(byte[] buffer, int startIndex, int length) {

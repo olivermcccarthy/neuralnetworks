@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Polygon;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -175,6 +176,7 @@ public class DrawNeuralNetwork extends JPanel {
 		}
 	}
 
+	public static final int NUM_NURONS_TODRAW=20;
 	/**
 	 * Draw input Image in top corner Draw each layer. Starting with input layer on
 	 * the Left.
@@ -198,7 +200,7 @@ public class DrawNeuralNetwork extends JPanel {
 		showLegend(g, this.getWidth() - 200, 20);
 		List<Layer> layers = this.neuralNetwork.getLayers();
 		for (Layer layer : layers) {
-			if (layer.getNeurons().size() > 10) {
+			if (layer.getNeurons().size() > NUM_NURONS_TODRAW) {
 				continue;
 			}
 			int size = layer.getNeurons().size();
@@ -233,7 +235,7 @@ public class DrawNeuralNetwork extends JPanel {
 		int diffY = shiftY;
 		paintInputImage(g, baseY + diffY);
 		for (Layer layer : layers) {
-			if (layer.getNeurons().size() > 10) {
+			if (layer.getNeurons().size() > NUM_NURONS_TODRAW) {
 				continue;
 			}
 
@@ -241,17 +243,14 @@ public class DrawNeuralNetwork extends JPanel {
 			shiftY = (startLevel * neuronSpaceHeight / 2);
 
 			diffY = shiftY;
-			if (layer.getNeurons().size() > 20) {
-
-			} else {
-
+			
 				for (Neuron nu : layer.getNeurons()) {
 
 					paintNeuron(g, nu, baseX + diffX, baseY + diffY);
 					diffY += neuronSpaceHeight;
 				}
 
-			}
+			
 			baseX += diffX;
 
 		}
@@ -309,6 +308,9 @@ public class DrawNeuralNetwork extends JPanel {
 		// g.drawChars(chararr, 0, chararr.length, baseX -100, baseY);
 		g.setColor(Color.WHITE);
 		int pictureHeight = neuron.getWeights().size() / pictureWidth;
+		if(pictureHeight == 0) {
+			int debugME =0;
+		}
 		pictureScale = neuronHeight / pictureHeight;
 		BufferedImage img = new BufferedImage(pictureWidth * pictureScale, pictureHeight * pictureScale,
 				BufferedImage.TYPE_INT_RGB);
@@ -453,17 +455,37 @@ public class DrawNeuralNetwork extends JPanel {
 		int newY = baseY + 15;
 
 		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
-		if (numInputs > 10) {
+		if (numInputs > NUM_NURONS_TODRAW) {
 			if (neuron.getName().endsWith("-0")) {
 				textStr = " Weights      Weights*input";
 				chararr = textStr.toCharArray();
 				g2d.drawChars(chararr, 0, chararr.length, baseX - 200, baseY - 10);
 			}
 			paintInputsInSquare(g, neuron, baseX - 200, baseY, false);
-			paintInputsInSquare(g, neuron, baseX - 100, baseY, false);
+			paintInputsInSquare(g, neuron, baseX - 100, baseY, true);
 			return;
 		}
+         if(numInputs > 5) {
+        	 double max = 0;
+ 			double min = 0;
+        	 for (int x = 0; x < neuron.getWeights().size(); x++) {
+ 				double weight = neuron.getWeights().get(x);
+ 				double input = neuron.getInputs().get(x).getValue();
+ 				double value = weight * input;
 
+ 				if (value > max) {
+ 					max = value;
+ 					
+ 				}
+
+ 				if (value < min) {
+ 					min = value;
+ 				
+ 				}
+ 			}
+        	 drawFanOut(g2d, min, max, baseX, baseY, neuron);
+        	 return;
+         }
 		if (numInputs > 0) {
 
 			int nI = 0;
@@ -500,6 +522,27 @@ public class DrawNeuralNetwork extends JPanel {
 		}
 	}
 
+	
+	protected void drawFanOut(Graphics g2d,  double min, double max, int baseX, int baseY, Neuron neuron) {
+		
+		int fanoutXPos = baseX -100;
+		int fandoutYChange = this.neuronHeight/neuron.getInputs().size();
+		for (int x = 0; x < neuron.getWeights().size(); x++) {
+			double weight = neuron.getWeights().get(x);
+			double input = neuron.getInputs().get(x).getValue();
+			double value = weight * 1;
+			Color rgb = faderYellowToRed(max, min, value);
+			g2d.setColor(rgb);
+			Polygon poly = new Polygon();
+			poly.addPoint(baseX , baseY + this.neuronHeight/2);
+			int yPoint = baseY + (x * fandoutYChange);
+			poly.addPoint(fanoutXPos , yPoint);
+			yPoint += fandoutYChange;
+			poly.addPoint(fanoutXPos , yPoint);
+			g2d.drawPolygon(poly);
+		}
+		
+	}
 	public void showFullWeights(Graphics g2d, int index, double min, double max, int baseX, int baseY, Neuron neuron) {
 
 		Neuron connNu = neuron.getInputs().get(index);

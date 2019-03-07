@@ -76,13 +76,13 @@ public class NeonTrial extends TrialInfo {
 	
 		
 		NeuralNetwork neuralNetwork = new NeuralNetwork(10 * 20, 0, 0, 10, false);
-		DrawNeuralNetwork.showNeurons(neuralNetwork,10, 4);
+		DrawNeuralNetwork.showNeurons(trainer,neuralNetwork,10, 4);
 
 	
 		NeonDisplay display = new NeonDisplay();
 		DrawNeuralNetwork.getNeuronPanel().setInputPanel(display);
 		DrawNeuralNetwork.getNeuronPanel().repaint();
-		Thread.sleep(20000);
+		
 		images =display.drawImages(labels);
 		for (int d = 0; d < images.size(); d++) {
 			NeonDisplay.number = d;
@@ -95,15 +95,8 @@ public class NeonTrial extends TrialInfo {
 		tenBitArray = asTenBitArray(labels);
 
 		
-
-		for (int x = 0; x < 400; x++) {
-			trainer.nextBatch(neuralNetwork);
-			
-		}
-
-		trainer.numPerBatch = 10;
-
-		trainer.sendinBatch(neuralNetwork, false);
+		DrawNeuralNetwork.getNeuronPanel().run(trainer);
+		
 
 	}
 
