@@ -177,6 +177,9 @@ public class DrawNeuralNetwork extends JPanel {
 	}
 
 	public static final int NUM_NURONS_TODRAW=20;
+	
+	private static int maxRedraws =10;
+	int numRedraws =0;
 	/**
 	 * Draw input Image in top corner Draw each layer. Starting with input layer on
 	 * the Left.
@@ -184,7 +187,11 @@ public class DrawNeuralNetwork extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		int baseX = 300;
+		this.numRedraws++;
+		if(numRedraws > 10) {
+		//	return;
+		}
+		int baseX = 0;
 		int baseY = 160;
 
 		Font existing = g.getFont();
@@ -213,17 +220,14 @@ public class DrawNeuralNetwork extends JPanel {
 		int screenHeight = this.getHeight();
 
 		int diffX = screenWidth / layers.size();
-		if (diffX > 200) {
-			diffX = 200;
-		}
+		diffX = 250;
+	
 		int shiftY = 0;
 
 		// Space
-		int neuronSpaceHeight = screenHeight / (maxLevelSize + 1);
-
-		if (neuronSpaceHeight > 100) {
-			neuronSpaceHeight = 100;
-		}
+		
+	    int neuronSpaceHeight = 80;
+		
 		neuronHeight = (neuronSpaceHeight * 9) / 10;
 		if (neuronHeight > 100) {
 			neuronHeight = 100;
@@ -246,7 +250,8 @@ public class DrawNeuralNetwork extends JPanel {
 			
 				for (Neuron nu : layer.getNeurons()) {
 
-					paintNeuron(g, nu, baseX + diffX, baseY + diffY);
+					NeuronInAPanel.setCords(nu, this,  baseX + diffX,  baseY + diffY, neuronHeight);
+					
 					diffY += neuronSpaceHeight;
 				}
 
@@ -257,98 +262,14 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 
-	public static String getDBL(double value) {
+	public static String formatDouble(double value) {
 
 		String doubleStr = "" + (Math.floor(value * 1000) / 1000);
 
 		return doubleStr;
 	}
 
-	/**
-	 * Paint a picture of the inputs neurons contribution to this neurons sigmoid If
-	 * we have 100 input neurons we can paint a ten by ten picture where the first
-	 * row is neuron 0 to 9. The neurons with the biggest contribution get the
-	 * brightest color.
-	 * 
-	 * @param g
-	 * @param neuron
-	 * @param baseX
-	 * @param baseY
-	 */
-	protected void paintInputsInSquare(Graphics g, Neuron neuron, int baseX, int baseY, boolean includeInput) {
-		int w = 0;
-		int h = 0;
-		double maxSize = 0;
-		double minSize = 0;
-		for (int x = 0; x < neuron.getWeights().size(); x++) {
-			double weight = neuron.getWeights().get(x);
-			double input = neuron.getInputs().get(x).getValue();
-
-			double mult = weight;
-			if (includeInput) {
-				mult = weight * input;
-			}
-
-			if (mult > maxSize) {
-				maxSize = mult;
-			}
-			if (mult < minSize) {
-				minSize = mult;
-			}
-		}
-		double ln = Math.log(maxSize);
-
-		if (ln < 0) {
-			ln *= -1;
-		}
-
-		String textStr = String.format("%s-%s", getDBL(minSize), getDBL(maxSize));
-		char[] chararr = textStr.toCharArray();
-		g.setColor(Color.BLACK);
-		// g.drawChars(chararr, 0, chararr.length, baseX -100, baseY);
-		g.setColor(Color.WHITE);
-		int pictureHeight = neuron.getWeights().size() / pictureWidth;
-		if(pictureHeight == 0) {
-			int debugME =0;
-		}
-		pictureScale = neuronHeight / pictureHeight;
-		BufferedImage img = new BufferedImage(pictureWidth * pictureScale, pictureHeight * pictureScale,
-				BufferedImage.TYPE_INT_RGB);
-
-		int x = 0;
-		// showLegend(maxSize,minSize,g, baseX - 60,baseY);
-		for (h = 0; h < pictureHeight * pictureScale; h++) {
-			x = (pictureWidth) * (h / pictureScale);
-			for (w = 0; w < pictureWidth; w++) {
-
-				double weight = neuron.getWeights().get(x);
-				double input = neuron.getInputs().get(x).getValue();
-
-				x++;
-				double currentValue = weight;
-				if (includeInput) {
-					currentValue = weight * input;
-				}
-
-				int rgb = faderYellowToRed(maxSize, minSize, currentValue).getRGB();
-				for (int z = 0; z < pictureScale; z++) {
-					img.setRGB(w * pictureScale + z, h, rgb);
-				}
-			}
-
-		}
-
-		g.drawImage(img, baseX, baseY, pictureWidth * pictureScale, pictureHeight * pictureScale, new ImageObserver() {
-
-			@Override
-			public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
-
-		int df = 0;
-	}
+	
 
 	static Color[] shadesPositive = new Color[] { new Color(255, 0, 0), new Color(225, 125, 125),
 			new Color(255, 255, 204) };
@@ -359,7 +280,7 @@ public class DrawNeuralNetwork extends JPanel {
 	 * Fade colour based of difference of LOg fade from yellow to red
 	 *
 	 */
-	private Color faderYellowToRed(double maxValue, double minValue, double currentValue) {
+	protected static Color faderYellowToRed(double maxValue, double minValue, double currentValue) {
 
 		if (maxValue == 0 && minValue == 0) {
 			return shadesNegative[0];
@@ -377,7 +298,7 @@ public class DrawNeuralNetwork extends JPanel {
 		return shadesPositive[2];
 	}
 
-	private Color faderYellowToRedMinSide(double minValue, double currentValue) {
+	private static Color faderYellowToRedMinSide(double minValue, double currentValue) {
 
 		double fraction = currentValue / minValue;
 		if (fraction > 0.5) {
@@ -410,176 +331,8 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 
-	/**
-	 * Draw a circle for a neuron. Showing value and errorValue. Also Draw links to
-	 * input Neurons. If there are more than 20 inputs we just paint them as a
-	 * Square
-	 * 
-	 * @param g
-	 * @param neuron
-	 * @param baseX
-	 * @param baseY
-	 */
-	protected void paintNeuron(Graphics g, Neuron neuron, int baseX, int baseY) {
-
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.BLACK);
-		String textStr = "  " + neuron.getName();
-		char[] chararr = textStr.toCharArray();
-		g2d.setColor(faderYellowToRed(1, 0, neuron.getValue()));
-		float fontSize = neuronHeight / 8;
-		// g.setFont(g.getFont().deriveFont(fontSize));
-		g2d.fillRect(baseX, baseY, neuronWidth, neuronHeight);
-
-		int textSpace = neuronHeight / 5;
-		g2d.setColor(Color.BLACK);
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace);
-
-		;
-
-		textStr = " b " + getDBL(neuron.getBias());
-		chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 2);
-		textStr = " err " + getDBL(neuron.getErrorVar());
-		chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 3);
-
-		textStr = " value " + getDBL(neuron.getValue());
-		chararr = textStr.toCharArray();
-		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 4);
-		// g2d.drawRect(baseX, baseY, neuronWidth, neuronHeight);
-		neuron.X = baseX + neuronWidth;
-		neuron.Y = baseY + (neuronHeight / 2);
-
-		int numInputs = neuron.getInputs().size();
-		int newY = baseY + 15;
-
-		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
-		if (numInputs > NUM_NURONS_TODRAW) {
-			if (neuron.getName().endsWith("-0")) {
-				textStr = " Weights      Weights*input";
-				chararr = textStr.toCharArray();
-				g2d.drawChars(chararr, 0, chararr.length, baseX - 200, baseY - 10);
-			}
-			paintInputsInSquare(g, neuron, baseX - 200, baseY, false);
-			paintInputsInSquare(g, neuron, baseX - 100, baseY, true);
-			return;
-		}
-         if(numInputs > 5) {
-        	 double max = 0;
- 			double min = 0;
-        	 for (int x = 0; x < neuron.getWeights().size(); x++) {
- 				double weight = neuron.getWeights().get(x);
- 				double input = neuron.getInputs().get(x).getValue();
- 				double value = weight * input;
-
- 				if (value > max) {
- 					max = value;
- 					
- 				}
-
- 				if (value < min) {
- 					min = value;
- 				
- 				}
- 			}
-        	 drawFanOut(g2d, min, max, baseX, baseY, neuron);
-        	 return;
-         }
-		if (numInputs > 0) {
-
-			int nI = 0;
-			double max = 0;
-			double min = 0;
-			// only max an min weights are shown
-			int maxIndex = -1;
-			int minIndex = -1;
-			for (int x = 0; x < neuron.getWeights().size(); x++) {
-				double weight = neuron.getWeights().get(x);
-				double input = neuron.getInputs().get(x).getValue();
-				double value = weight * input;
-
-				if (value > max) {
-					max = value;
-					maxIndex = x;
-				}
-
-				if (value < min) {
-					min = value;
-					minIndex = x;
-				}
-			}
-
-			if (minIndex > -1) {
-
-				showFullWeights(g2d, minIndex, min, max, baseX, baseY, neuron);
-			}
-			if (maxIndex > -1) {
-
-				showFullWeights(g2d, maxIndex, min, max, baseX, baseY, neuron);
-			}
-
-		}
-	}
-
 	
-	protected void drawFanOut(Graphics g2d,  double min, double max, int baseX, int baseY, Neuron neuron) {
-		
-		int fanoutXPos = baseX -100;
-		int fandoutYChange = this.neuronHeight/neuron.getInputs().size();
-		for (int x = 0; x < neuron.getWeights().size(); x++) {
-			double weight = neuron.getWeights().get(x);
-			double input = neuron.getInputs().get(x).getValue();
-			double value = weight * 1;
-			Color rgb = faderYellowToRed(max, min, value);
-			g2d.setColor(rgb);
-			Polygon poly = new Polygon();
-			poly.addPoint(baseX , baseY + this.neuronHeight/2);
-			int yPoint = baseY + (x * fandoutYChange);
-			poly.addPoint(fanoutXPos , yPoint);
-			yPoint += fandoutYChange;
-			poly.addPoint(fanoutXPos , yPoint);
-			g2d.drawPolygon(poly);
-		}
-		
-	}
-	public void showFullWeights(Graphics g2d, int index, double min, double max, int baseX, int baseY, Neuron neuron) {
-
-		Neuron connNu = neuron.getInputs().get(index);
-
-		double weight = neuron.getWeights().get(index);
-		double input = neuron.getInputs().get(index).getValue();
-		double value = weight * input;
-
-		g2d.setColor(faderYellowToRed(max, min, value));
-		g2d.drawLine(connNu.X, connNu.Y, baseX, baseY + (neuronHeight / 2));
-
-		// print the weight along the sloped line between inout Neuron and this Neuron
-		int centerX = (baseX - connNu.X) / 2 + connNu.X;
-		int centerY = (baseY + (neuronHeight / 2) - connNu.Y) / 2 + connNu.Y;
-		String textStr = " w " + getDBL(value);
-		char[] chararr = textStr.toCharArray();
-		Font existing = g2d.getFont();
-		AffineTransform affineTransform = new AffineTransform();
-
-		double rise = baseY - connNu.Y;
-		rise += (neuronHeight / 2);
-		double length = baseX - connNu.X;
-		double slope = (rise) / (length);
-
-		// affineTransform.setToScale(1.5, 1.5);
-		affineTransform.rotate(Math.atan(slope), 0, 0);
-
-		Font rotatedFont = g2d.getFont().deriveFont(affineTransform);
-		g2d.setFont(rotatedFont);
-		g2d.setColor(Color.black);
-		if (slope <= 0) {
-			g2d.drawChars(chararr, 0, chararr.length, centerX - 5, centerY);
-		} else {
-			g2d.drawChars(chararr, 0, chararr.length, centerX + 5, centerY);
-		}
-		g2d.setFont(existing);
-	}
+	
 
 	public void doRedraw() {
 		getTopLevelAncestor().revalidate();
@@ -616,8 +369,8 @@ public class DrawNeuralNetwork extends JPanel {
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep) {
 		
 		String message= String.format("Trial %d  . Expected %s  Got %s Cost of last Batch %s LearningRate %s", this.numBatchesI,
-				Neuron.toString(expected), Neuron.toString(got), getDBL(info.getBestCost()),
-				getDBL(info.getLearningRate()));
+				Neuron.toString(expected), Neuron.toString(got), formatDouble(info.getBestCost()),
+				formatDouble(info.getLearningRate()));
 		this.waitForUserClick(info,message,sleep);
 	}
 	public void waitForUserClick(TrialInfo info, String message, boolean sleep) {
@@ -627,7 +380,9 @@ public class DrawNeuralNetwork extends JPanel {
 
 	
 		frame.getContentPane().revalidate();
+		forceRedraw();
 		frame.getContentPane().repaint();
+		
 		if (sleep) {
 			try {
 				Thread.sleep(sleepTimeMs);
@@ -708,5 +463,8 @@ public class DrawNeuralNetwork extends JPanel {
 			}
 			this.waitForUserClick( trainer, "Cick run to start ", false);
 		}
+	}
+	public void forceRedraw() {
+		NeuronInAPanel.forceRedraw();
 	}
 }
