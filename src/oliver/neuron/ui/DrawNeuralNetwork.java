@@ -454,19 +454,20 @@ public class DrawNeuralNetwork extends JPanel {
 			while (messages.size() >= 10) {
 				messages.remove(messages.size() -1);
 			}
-			messages.add(message);
+			messages.add(0,message);
 			this.message="";
 			for(String msg : messages) {
 				this.message+= msg + "\n";	
 			}
 			 this.runInfoPane.setText(this.message);
+			 this.runInfoPane.repaint();
 		}
 	}
 	
 	public void run(TrialInfo trainer) throws Exception {
 		trainer.nextBatch(neuralNetwork);
 		trainer.numPerBatch =1;
-		this.waitForUserClick( trainer, "Cick run to start ", false);
+		this.waitForUserClick( trainer, "Click run to start ", false);
 		while(true) {
 			
 			
@@ -475,7 +476,7 @@ public class DrawNeuralNetwork extends JPanel {
 				numBatchesI --;
 				
 			}
-			this.waitForUserClick( trainer, "Cick run to start ", false);
+			this.waitForUserClick( trainer, "Click run to start ", false);
 		}
 	}
 	public void forceRedraw() {

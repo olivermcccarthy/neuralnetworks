@@ -64,6 +64,7 @@ public class ControlPanel extends JPanel {
 		this.add(learningRate);
         this.setLayout(null);
 		numPerBatch.addItem("100  per batch");
+		numPerBatch.addItem("500  per batch");
 		numPerBatch.addItem("1000  per batch");
 		numPerBatch.addItem("5000  per batch");
 		numPerBatch.addItem("10000 per batch");
@@ -74,7 +75,7 @@ public class ControlPanel extends JPanel {
 		learningRate.addItem(".05");
 		learningRate.addItem(".01");
 		learningRate.setToolTipText("Speed at which network learns/adjusts is waits");
-		numBatches.addItem("1 batches");
+		numBatches.addItem("1 batch");
 		numBatches.addItem("10  batches");
 		numBatches.addItem("100  batches");
 		numBatches.addItem("1000  batches");
@@ -172,15 +173,18 @@ public class ControlPanel extends JPanel {
 		int selectedIndex = numPerBatch.getSelectedIndex();
 		int numPerBatch = 100;
 		if (selectedIndex == 0) {
-			numPerBatch = 500;
+			numPerBatch = 100;
 		}
 		if (selectedIndex == 1) {
-			numPerBatch = 1000;
+			numPerBatch = 500;
 		}
 		if (selectedIndex == 2) {
-			numPerBatch = 5000;
+			numPerBatch = 1000;
 		}
 		if (selectedIndex == 3) {
+			numPerBatch = 5000;
+		}
+		if (selectedIndex == 4) {
 			numPerBatch = 10000;
 		}
 		return numPerBatch;
