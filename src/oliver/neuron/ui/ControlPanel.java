@@ -34,9 +34,17 @@ public class ControlPanel extends JPanel {
 					waitForMe.notifyAll();
 					if (button.getText().equals("RUN")) {
 						button.setText("STOP");
+						numBatches.setEnabled(false);
+						numPerBatch.setEnabled(false);
+						sleepTime.setEnabled(false);
+						learningRate.setEnabled(false);
 
 					} else {
 						button.setText("RUN");
+						numBatches.setEnabled(true);
+						numPerBatch.setEnabled(true);
+						sleepTime.setEnabled(true);
+						learningRate.setEnabled(true);
 						trialInfo.numPerBatch = 0;
 					}
 
@@ -179,6 +187,10 @@ public class ControlPanel extends JPanel {
 	}
 	
 	public void waitForMe() {
+		numBatches.setEnabled(true);
+		numPerBatch.setEnabled(true);
+		sleepTime.setEnabled(true);
+		learningRate.setEnabled(true);
 		button.setText("RUN");
 		synchronized (waitForMe) {
 			try {
@@ -188,5 +200,9 @@ public class ControlPanel extends JPanel {
 				e.printStackTrace();
 			}
 		}
+		numBatches.setEnabled(false);
+		numPerBatch.setEnabled(false);
+		sleepTime.setEnabled(false);
+		learningRate.setEnabled(false);
 	}
 }

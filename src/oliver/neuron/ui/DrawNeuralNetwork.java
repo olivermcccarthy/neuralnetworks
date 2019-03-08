@@ -362,11 +362,14 @@ public class DrawNeuralNetwork extends JPanel {
 		this.waitForUserClick(info, expected, got, true);
 	}
 	int numBatchesI;
+	int trialNumber =0;
+	int numWrongThisBatch  =0;
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep) {
 		
-		String message= String.format("Trial %d  . Expected %s  Got %s Cost of last Batch %s LearningRate %s", this.numBatchesI,
-				Neuron.toString(expected), Neuron.toString(got), formatDouble(info.getBestCost()),
-				formatDouble(info.getLearningRate()));
+		trialNumber ++;
+		String message= String.format("Run %d . Expected %s  Got %s . Num Wrong this batch %s of %s run. LearningRate %s. Cost of previous batch %s", this.trialNumber,
+				Neuron.toString(expected), Neuron.toString(got), info.getNumNumWrong(), info.numRun,
+				formatDouble(info.getLearningRate()),formatDouble(info.getBestCost()));
 		this.waitForUserClick(info,message,sleep);
 	}
 	public void waitForUserClick(TrialInfo info, String message, boolean sleep) {
@@ -447,6 +450,8 @@ public class DrawNeuralNetwork extends JPanel {
 	}
 	
 	public void run(TrialInfo trainer) throws Exception {
+		trainer.nextBatch(neuralNetwork);
+		trainer.numPerBatch =1;
 		this.waitForUserClick( trainer, "Cick run to start ", false);
 		while(true) {
 			

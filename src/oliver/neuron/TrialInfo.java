@@ -111,4 +111,11 @@ public abstract class TrialInfo {
 		// TODO Auto-generated method stub
 		return "ui";
 	}
+
+	public int numWrong =0;
+	public int numRun =0;
+	public int getNumNumWrong() {
+		// TODO Auto-generated method stub
+		return this.numWrong;
+	}
 }
