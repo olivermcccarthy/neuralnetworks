@@ -116,15 +116,11 @@ public class DrawNeuralNetwork extends JPanel {
 		panel = new ControlPanel(trialInfo);
 		panel.setBounds(0,0,100,150);
 		this.add(panel);
-		JTextPane heading = new JTextPane();
-		//heading.setBackground(new Color(230, 255, 255));
-		heading.setFont(this.getFont().deriveFont(15.0f));
-		heading.setText(trialInfo.getHelp());
-		heading.setFont(getFont().deriveFont(12.0f));
 		
-		
-		JScrollPane scroll = new JScrollPane(heading);
-		scroll.setBounds(150, 10, SCREEN_SIZE -500 , 100);
+		HelpPanel helpPanel = new HelpPanel(trialInfo.getPackageS());
+		JScrollPane scroll = new JScrollPane(helpPanel);
+		helpPanel.setFont(getFont().deriveFont(12.0f));
+		scroll.setBounds(150, 10, SCREEN_SIZE -300 , 100);
 	
 		this.setLayout(null);
 		this.add(scroll);
@@ -422,7 +418,7 @@ public class DrawNeuralNetwork extends JPanel {
 			JScrollPane scroll = new JScrollPane(neuronPanel);
 			neuronPanel.setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE*2));
 			frame.setVisible(true);
-			HelpPanel helpPanel = new HelpPanel();
+		
 			
 			neuronPanel.setBackground(new Color(230, 255, 255));
 

@@ -12,11 +12,11 @@ import javax.swing.text.html.StyleSheet;
 
 public class HelpPanel extends JEditorPane {
 
-	public HelpPanel() {
+	public HelpPanel(String packageS) {
 		HTMLEditorKit kit = new HTMLEditorKit();
 		this.setEditorKit(kit);
 		StyleSheet styleSheet = kit.getStyleSheet();
-		styleSheet.addRule("body {color:#000; font-family:times; margin: 4px; }");
+		styleSheet.addRule("body {color:#000; font-family:times; margin: 4px; font-size:12;}");
 		styleSheet.addRule("h1 {color: blue;}");
 		styleSheet.addRule("h2 {color: #ff0000;}");
 		styleSheet.addRule("pre {font : 10px monaco; color : black; background-color : #fafafa; }");
@@ -25,28 +25,16 @@ public class HelpPanel extends JEditorPane {
 		styleSheet.addRule("tr:nth-child(n+1) {background-color: lightblue;}");
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();// 6 oliver.action.AssignAction
 
-		InputStream is2 = classloader.getResourceAsStream("oliver/neuron/ui/SimpleNeuron.html");// 14
+		InputStream is2 = classloader.getResourceAsStream("oliver/neuron/"+packageS+"/SimpleNeuron.html");// 14
 																								// oliver.action.AssignAction
 		BufferedReader bufReader = new BufferedReader(new InputStreamReader(is2));// 30 oliver.action.AssignAction
 		String lien;
 
-		double w1= -0.205;
-		double w2 = 0.84;
-		double i1= 0.34;
-		double i2 = 0.67;
-		double b = 0.0;
-		double z = w1 *i1 + w2 *i2 -b;
-		double sigmoid = 1/(1 + Math.exp(z*-1));
-		double T=1;
-		double Error= (sigmoid - T) * (1 -sigmoid) * (sigmoid);
-		double learningRate = 1;
-		w1 = w1 - learningRate *Error *i1;
-		w2 = w2 - learningRate *Error *i2;
 		String text= "";
 		try {
 			lien = bufReader.readLine();
 			while (lien != null) {
-				text += lien;
+				text += lien.trim();
 				lien = bufReader.readLine();
 			}
 		} catch (IOException e) {
@@ -58,7 +46,7 @@ public class HelpPanel extends JEditorPane {
 	public static void main(String[] args) throws Exception {
 		
 		JFrame frame = new JFrame("test");
-		HelpPanel panel = new HelpPanel();
+		HelpPanel panel = new HelpPanel("ui");
 		frame.add(panel);
 		frame.setVisible(true);
 	}
