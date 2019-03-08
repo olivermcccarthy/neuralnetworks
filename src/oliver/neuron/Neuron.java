@@ -52,9 +52,7 @@ public class Neuron implements Serializable{
 	// Where z is the sum across all input nodes of weight*input value 
 	double sigMoid = 0.5;
 
-	public int X;
-
-	public int Y;
+	
 
 	/**
 	 * Create a neuron with a given bias

@@ -29,6 +29,11 @@ public class MnistTrainer extends TrialInfo {
 		tenBitArray = asTenBitArray(labels);
 	}
 
+	static String HELP=" This shows how a neural network can be trained to recognize hand written digits. This jar contains all the training digits from http://yann.lecun.com/exdb/mnist/(60000 plus).  We knows the expected output for each image. "
+			+ "This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). Each hidden neuron is connected to each output Neuron. "
+			+ "In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of them to the left of the Neurons ranging from most positive(Red) to most Negative(Dark Blue). For each trial an input image is loaded It is passed through the network.( Ye thats a lot of computations). Each Neuron in the hidden layer calculates its output based on input*weight. Then each Neuron in the output layer calculates its output based on input*weight. If output 3 is the highest then network is telling us the digit is 3. Which only has a 10 percent chnage of being right"
+			+ "But we expected 5. Then each Neuron in the output layer is passed the expected value (1 to neuron 5, 0 to all other Neurons). Each output Neuron adjusts its weights(A tiny bit) based on this expected value. Then each Neuron in teh hidden layer adjusts its weights. "
+			+ "And thats just one trial. For the Netork to learn with any degree of accuracy we would need to run 100000 trials. You can watch as the Network Learns And see it geting bteer at predicting the digit";
 	static boolean stopAMinute = true;
 	List<int[][]> images;
 	int[] labels;
@@ -146,5 +151,11 @@ public class MnistTrainer extends TrialInfo {
 			tenBitArray[image][labels[image]] = 1;
 		}
 		return tenBitArray;
+	}
+	
+	public String getHelp() {
+		String help = super.getHelp();
+		help += HELP;
+		return help;
 	}
 }

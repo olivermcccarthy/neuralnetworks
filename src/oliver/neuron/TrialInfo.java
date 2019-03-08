@@ -105,4 +105,8 @@ public abstract class TrialInfo {
 		}
 		System.out.println(this);
 	}
+	
+	public String getHelp() {
+		return "Trials are broken into batches. Sleep is to allow you see changes in Network for each trial";
+	}
 }

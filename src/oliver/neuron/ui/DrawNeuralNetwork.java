@@ -55,6 +55,7 @@ public class DrawNeuralNetwork extends JPanel {
 	
 	private static JFrame frame;
 
+	private static int SCREEN_SIZE=1000;
 	/**
 	 * Type of input data. 1s and zeros or greyscale
 	 */
@@ -71,11 +72,11 @@ public class DrawNeuralNetwork extends JPanel {
 	/**
 	 * How large to paint each Neuron
 	 */
-	int neuronWidth = 100;
-	int neuronHeight = 100;
-
+	static final int neuronSizeInPixels = 80;
+	
+	static final int neuronSpaceHeight = neuronSizeInPixels + 20;
 	/**
-	 * Type of input data
+	 * Type of input dataFTrials are b
 	 */
 	PICTURE_TYPE pictureType;
 
@@ -116,14 +117,17 @@ public class DrawNeuralNetwork extends JPanel {
 		panel.setBounds(0,0,100,150);
 		this.add(panel);
 		JTextPane heading = new JTextPane();
-		heading.setBackground(new Color(230, 255, 255));
+		//heading.setBackground(new Color(230, 255, 255));
 		heading.setFont(this.getFont().deriveFont(15.0f));
-		heading.setText(
-				"Trials are broken into batches. Sleep is to allow you see changes in Network for each trial");
+		heading.setText(trialInfo.getHelp());
+		heading.setFont(getFont().deriveFont(12.0f));
 		
-		heading.setBounds(150, 00, 500, 55);
+		
+		JScrollPane scroll = new JScrollPane(heading);
+		scroll.setBounds(150, 10, SCREEN_SIZE -500 , 100);
+	
 		this.setLayout(null);
-		this.add(heading);
+		this.add(scroll);
 		
 
 	}
@@ -194,17 +198,17 @@ public class DrawNeuralNetwork extends JPanel {
 		int baseX = 0;
 		int baseY = 160;
 
-		Font existing = g.getFont();
-		g.setFont(g.getFont().deriveFont(15.0f));
-
+		//Font existing = g.getFont();
+		//g.setFont(g.getFont().deriveFont(12.0f));
+         this.setFont(g.getFont().deriveFont(12.0f));
 		String textStr = getMessage();
 		char[] chararr = textStr.toCharArray();
 		g.setColor(Color.BLACK);
 		g.drawChars(chararr, 0, chararr.length, 150, 130);
-		g.setFont(existing);
+		//g.setFont(existing);
 		int maxLevelSize = 0;
 
-		showLegend(g, this.getWidth() - 200, 20);
+		showLegend(g, 20, 200);
 		List<Layer> layers = this.neuralNetwork.getLayers();
 		for (Layer layer : layers) {
 			if (layer.getNeurons().size() > NUM_NURONS_TODRAW) {
@@ -226,15 +230,11 @@ public class DrawNeuralNetwork extends JPanel {
 
 		// Space
 		
-	    int neuronSpaceHeight = 80;
+	   
 		
-		neuronHeight = (neuronSpaceHeight * 9) / 10;
-		if (neuronHeight > 100) {
-			neuronHeight = 100;
-		}
-		neuronWidth = neuronHeight;
+		
 		int startLevel = (maxLevelSize - 1);
-		shiftY = (startLevel * neuronSpaceHeight / 2);
+		shiftY = (startLevel * neuronSpaceHeight / 3);
 
 		int diffY = shiftY;
 		paintInputImage(g, baseY + diffY);
@@ -250,7 +250,7 @@ public class DrawNeuralNetwork extends JPanel {
 			
 				for (Neuron nu : layer.getNeurons()) {
 
-					NeuronInAPanel.setCords(nu, this,  baseX + diffX,  baseY + diffY, neuronHeight);
+					NeuronInAPanel.placeNuronOnScreen(nu, this,  baseX + diffX,  baseY + diffY, this.neuronSizeInPixels);
 					
 					diffY += neuronSpaceHeight;
 				}
@@ -413,18 +413,17 @@ public class DrawNeuralNetwork extends JPanel {
 
 		if (frame == null) {
 			frame = new JFrame();
-			frame.setSize(1000, 1000);
+			frame.setSize(SCREEN_SIZE, SCREEN_SIZE);
 
 			neuronPanel = new DrawNeuralNetwork(trialInfo);
 			neuronPanel.pictureWidth = pictureWidth;
 			neuronPanel.pictureScale = pictureScale;
 
 			JScrollPane scroll = new JScrollPane(neuronPanel);
-			neuronPanel.setPreferredSize(new Dimension(1000, 1000));
+			neuronPanel.setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE*2));
 			frame.setVisible(true);
 			HelpPanel helpPanel = new HelpPanel();
-			JScrollPane scroll2 = new JScrollPane(helpPanel);
-			helpPanel.setPreferredSize(new Dimension(1000, 1000));
+			
 			neuronPanel.setBackground(new Color(230, 255, 255));
 
 			frame.getContentPane().add(scroll);
