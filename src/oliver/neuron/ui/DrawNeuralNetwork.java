@@ -111,6 +111,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 	TrialInfo trialInfo;
+	JTextPane runInfoPane= new JTextPane();
 	public DrawNeuralNetwork(TrialInfo trialInfo) {
 		this.trialInfo = trialInfo;
 		panel = new ControlPanel(trialInfo);
@@ -121,10 +122,15 @@ public class DrawNeuralNetwork extends JPanel {
 		JScrollPane scroll = new JScrollPane(helpPanel);
 		helpPanel.setFont(getFont().deriveFont(12.0f));
 		scroll.setBounds(150, 10, SCREEN_SIZE -300 , 100);
-	
+		
+		JScrollPane scroll2 = new JScrollPane(runInfoPane);
+		runInfoPane.setFont(getFont().deriveFont(12.0f));
+		runInfoPane.setEditable(false);
+		runInfoPane.setCaretPosition(0);
+		scroll2.setBounds(150, 130, SCREEN_SIZE -300 , 50);
 		this.setLayout(null);
 		this.add(scroll);
-		
+		this.add(scroll2);
 
 	}
 
@@ -194,14 +200,11 @@ public class DrawNeuralNetwork extends JPanel {
 		int baseX = 0;
 		int baseY = 160;
 
-		//Font existing = g.getFont();
+		Font existing = g.getFont();
 		//g.setFont(g.getFont().deriveFont(12.0f));
          this.setFont(g.getFont().deriveFont(12.0f));
-		String textStr = getMessage();
-		char[] chararr = textStr.toCharArray();
-		g.setColor(Color.BLACK);
-		g.drawChars(chararr, 0, chararr.length, 150, 130);
-		//g.setFont(existing);
+		
+        
 		int maxLevelSize = 0;
 
 		showLegend(g, 20, 200);
@@ -335,7 +338,7 @@ public class DrawNeuralNetwork extends JPanel {
 		getTopLevelAncestor().repaint();
 	}
 
-	private static String message = "About to start Training";
+	private String message = "About to start Training";
 
 	
     int sleepTimeMs;
@@ -441,12 +444,23 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 
-	public static String getMessage() {
+	public  String getMessage() {
 		return message;
 	}
 
-	public static void setMessage(String message) {
-		DrawNeuralNetwork.message = message;
+	ArrayList<String> messages = new ArrayList<String>();
+	public  void setMessage(String message) {
+		if(!message.startsWith("Click")) {
+			while (messages.size() >= 10) {
+				messages.remove(messages.size() -1);
+			}
+			messages.add(message);
+			this.message="";
+			for(String msg : messages) {
+				this.message+= msg + "\n";	
+			}
+			 this.runInfoPane.setText(this.message);
+		}
 	}
 	
 	public void run(TrialInfo trainer) throws Exception {
