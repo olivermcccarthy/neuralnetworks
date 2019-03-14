@@ -160,4 +160,11 @@ public class MnistTrainer extends TrialInfo {
 		// TODO Auto-generated method stub
 		return "mnist";
 	}
+
+
+	@Override
+	public String getHelp() {
+		// TODO Auto-generated method stub
+		return "help";
+	}
 }

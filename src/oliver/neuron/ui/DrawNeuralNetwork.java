@@ -74,7 +74,7 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	static final int neuronSizeInPixels = 80;
 	
-	static final int neuronSpaceHeight = neuronSizeInPixels + 20;
+	static final int neuronSpaceHeight = neuronSizeInPixels + 40;
 	/**
 	 * Type of input dataFTrials are b
 	 */
@@ -228,33 +228,27 @@ public class DrawNeuralNetwork extends JPanel {
 			}
 		}
 
-		int screenWidth = this.getWidth();
-		int screenHeight = this.getHeight();
-
-		int diffX = screenWidth / layers.size();
-		diffX = 250;
-	
-		int shiftY = 0;
-
-		// Space
 		
+
+		int diffX = 350;
+	
 	   
 		
 		
-		int startLevel = (maxLevelSize - 1);
-		shiftY = (startLevel * neuronSpaceHeight / 3);
 
-		int diffY = shiftY;
-		paintInputImage(g, baseY + diffY);
+		
+
+		int diffY = 0;
+		
+		paintInputImage(g, 400);
 		for (Layer layer : layers) {
 			if (layer.getNeurons().size() > NUM_NURONS_TODRAW) {
 				continue;
 			}
 
-			startLevel = (maxLevelSize - layer.getNeurons().size());
-			shiftY = (startLevel * neuronSpaceHeight / 2);
+			
 
-			diffY = shiftY;
+			diffY = 0;
 			
 				for (Neuron nu : layer.getNeurons()) {
 
