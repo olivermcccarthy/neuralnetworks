@@ -87,7 +87,7 @@ public class NeuronInAPanel extends JPanel {
 			existing.setBackground( parent.getBackground());
 			//existing.setBorder(BorderFactory.createBevelBorder(1));
 		}
-		existing.widthOfPanelInPixels=  neuronSizeInPixels*3 +40;
+		existing.widthOfPanelInPixels=  neuronSizeInPixels*5/2 ;
 		existing.setBounds(baseX , baseY, existing.widthOfPanelInPixels, neuronSizeInPixels +30);
 		existing.setCords(neuronSizeInPixels);
 		existing.repaint();
@@ -146,7 +146,7 @@ public class NeuronInAPanel extends JPanel {
 				
 			}
 			paintInputsInSquare(g, 0, baseY, false);
-			paintInputsInSquare(g,neuronSizeInPixels +20, baseY, true);
+			paintInputsInSquare(g,neuronSizeInPixels*2/3 +20, baseY, true);
 			return;
 		}
 		if (numInputs > 5) {
@@ -214,7 +214,7 @@ public class NeuronInAPanel extends JPanel {
 	 * @param baseX
 	 * @param baseY
 	 */
-	protected Image createImage(int baseX, int baseY, boolean includeInput) {
+	protected Image createImage( boolean includeInput) {
 		int w = 0;
 		int h = 0;
 		double maxSize = 0;
@@ -244,14 +244,14 @@ public class NeuronInAPanel extends JPanel {
 		
 
 		int numInputsPerImageRow = (int) Math.sqrt(neuron.getWeights().size());
-		int scale = this.neuronSizeInPixels / numInputsPerImageRow;
+		int scale = this.neuronSizeInPixels / numInputsPerImageRow*2/3;
 	
 		if (numInputsPerImageRow < 3) {
 			scale= scale/numInputsPerImageRow;
 			numInputsPerImageRow =1;
 		}
 		int numRows = neuron.getWeights().size()/numInputsPerImageRow;
-		int scaleHeight= this.neuronSizeInPixels/numRows;
+		int scaleHeight= this.neuronSizeInPixels/numRows*2/3;
 		if(scaleHeight < scale) {
 			scale= scaleHeight;
 		}
@@ -311,7 +311,7 @@ public class NeuronInAPanel extends JPanel {
 		
 		if (includeInput) {
 			if(this.imageWithInputs == null) {
-				this.imageWithInputs=this.createImage(baseX, baseY, includeInput);
+				this.imageWithInputs=this.createImage(includeInput);
 			}
 			if(neuron.getName().endsWith("-0")) {
 				String textStr = "Weights* input";
@@ -319,7 +319,7 @@ public class NeuronInAPanel extends JPanel {
 				g.setColor(Color.black);
 				g.drawChars(chararr, 0, chararr.length, baseX, baseY );
 				}	
-			g.drawImage(this.imageWithInputs, baseX, baseY, this.weightImageWidthPixels, this.weightImageHeightPixels, new ImageObserver() {
+			g.drawImage(this.imageWithInputs, baseX, baseY +20, this.weightImageWidthPixels, this.weightImageHeightPixels, new ImageObserver() {
 
 				@Override
 				public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
@@ -330,7 +330,7 @@ public class NeuronInAPanel extends JPanel {
 		}
 		if (includeInput == false) {
 			if( this.imageWeightsOnly == null) {
-				this.imageWeightsOnly=this.createImage(baseX, baseY, includeInput);
+				this.imageWeightsOnly=this.createImage( includeInput);
 				}
 			if(neuron.getName().endsWith("-0")) {
 			String textStr = "Weights only";
@@ -338,7 +338,7 @@ public class NeuronInAPanel extends JPanel {
 			g.setColor(Color.black);
 			g.drawChars(chararr, 0, chararr.length, baseX, baseY );
 			}
-				g.drawImage(this.imageWeightsOnly, baseX, baseY, this.weightImageWidthPixels, this.weightImageHeightPixels, new ImageObserver() {
+				g.drawImage(this.imageWeightsOnly, baseX, baseY+20, this.weightImageWidthPixels, this.weightImageHeightPixels, new ImageObserver() {
 
 					@Override
 					public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {

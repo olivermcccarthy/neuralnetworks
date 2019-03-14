@@ -206,7 +206,7 @@ public class DrawNeuralNetwork extends JPanel {
 		if(numRedraws > 10) {
 		//	return;
 		}
-		int baseX = 0;
+		int baseX = -100;
 		int baseY = 220;
 
 		Font existing = g.getFont();
