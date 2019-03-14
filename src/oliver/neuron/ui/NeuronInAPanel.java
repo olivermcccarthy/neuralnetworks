@@ -87,6 +87,7 @@ public class NeuronInAPanel extends JPanel {
 			existing.setBackground( parent.getBackground());
 			//existing.setBorder(BorderFactory.createBevelBorder(1));
 		}
+		existing.neuron = neuron;
 		existing.widthOfPanelInPixels=  neuronSizeInPixels*5/2 ;
 		existing.setBounds(baseX , baseY, existing.widthOfPanelInPixels, neuronSizeInPixels +30);
 		existing.setCords(neuronSizeInPixels);
@@ -117,7 +118,7 @@ public class NeuronInAPanel extends JPanel {
 		String textStr = "  " + neuron.getName();
 		char[] chararr = textStr.toCharArray();
 		g2d.setColor(DrawNeuralNetwork.faderYellowToRed(1, 0, neuron.getValue()));
-	
+	    this.setBackground(Color.LIGHT_GRAY);
 		g2d.fillRect(baseX, baseY, neuronSizeInPixels, neuronSizeInPixels);
 
 		int textSpace = neuronSizeInPixels / 5;
@@ -125,7 +126,7 @@ public class NeuronInAPanel extends JPanel {
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace);
 
 		;
-
+        this.setToolTipText(textStr +" Neuron value = " + neuron.getValue() );
 		textStr = " b " + DrawNeuralNetwork.formatDouble(neuron.getBias());
 		chararr = textStr.toCharArray();
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 2);
@@ -145,7 +146,7 @@ public class NeuronInAPanel extends JPanel {
 			if (neuron.getName().endsWith("-0")) {
 				
 			}
-			paintInputsInSquare(g, 0, baseY, false);
+			paintInputsInSquare(g, 20, baseY, false);
 			paintInputsInSquare(g,neuronSizeInPixels*2/3 +20, baseY, true);
 			return;
 		}
@@ -313,7 +314,7 @@ public class NeuronInAPanel extends JPanel {
 			if(this.imageWithInputs == null) {
 				this.imageWithInputs=this.createImage(includeInput);
 			}
-			if(neuron.getName().endsWith("-0")) {
+			if(neuron.getName().endsWith("-000")) {
 				String textStr = "Weights* input";
 				char [] chararr = textStr.toCharArray();
 				g.setColor(Color.black);
@@ -332,7 +333,7 @@ public class NeuronInAPanel extends JPanel {
 			if( this.imageWeightsOnly == null) {
 				this.imageWeightsOnly=this.createImage( includeInput);
 				}
-			if(neuron.getName().endsWith("-0")) {
+			if(neuron.getName().endsWith("-000")) {
 			String textStr = "Weights only";
 			char [] chararr = textStr.toCharArray();
 			g.setColor(Color.black);

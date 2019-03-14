@@ -15,6 +15,7 @@ public class Cost implements Comparable<Cost>{
 	int tupleSize =0;
 	Tuple cost;
     public int numWrong =0;
+    public int numTuples =0;
 	/**
 	 * Get the root mean square of the difference between actual and expected
 	 * @param tupleSize
@@ -24,7 +25,7 @@ public class Cost implements Comparable<Cost>{
 	}
 	public void addResult(double [] expected, double [] actual) {
 		
-		
+		numTuples ++;
 		double [] meanSq = new double[expected.length];
 		for(int x =0; x < expected.length; x++) {
 			meanSq[x]= (expected[x] - actual[x])* (expected[x] - actual[x]);

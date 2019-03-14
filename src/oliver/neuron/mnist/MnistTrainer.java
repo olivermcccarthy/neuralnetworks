@@ -62,11 +62,15 @@ public class MnistTrainer extends TrialInfo {
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
 	    this.numWrong =0;
 	    this.numRun =0;
-		for (int image = 0; image < this.numPerBatch; image++) {
+	    int sleepTime =drawPanel.getSleepTime();
+		for (int u = 0; u < this.numPerBatch; u++) {
 
+			int image = (int)(Math.random()*images.size());
 			double[] input = inputData.get(image);
 			// DrawPanel.input = images.get(image);
 			neuralNetwork.setInput(input);
+			
+			
 			for (int innerTrial = 0; innerTrial < 1; innerTrial++) {
 
 				neuralNetwork.sigmoid();
@@ -89,8 +93,15 @@ public class MnistTrainer extends TrialInfo {
 					this.numWrong++;
 				}
 				if (stopAMinute) {
+					boolean redraw = true;
+					if(sleepTime ==1 && numPerBatch > 1000) {
+					    if(u%100 != 0) {
+					    	redraw = false;
+					    }
+					}
 					drawPanel.setInputImage(images.get(image), 10, DrawNeuralNetwork.PICTURE_TYPE.GREYSCALE);
-					drawPanel.waitForUserClick(this, expected2, maxI);
+					drawPanel.waitForUserClick(this, expected2, maxI, false, redraw);
+					
 				}
 				theCost.addResult(expected, output);
 				neuralNetwork.handleTopError(expected);
@@ -99,6 +110,7 @@ public class MnistTrainer extends TrialInfo {
 
 		}
 		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.numWrong);
+		drawPanel.addCost(theCost);
 		return theCost;
 	}
 
@@ -165,6 +177,16 @@ public class MnistTrainer extends TrialInfo {
 	@Override
 	public String getHelp() {
 		// TODO Auto-generated method stub
-		return "help";
+		return "Train a network to recogize hadn written digits from the mnist training set \n"
+		+ "The network learns each time a digit is passed through as we know the expected digit for each image\n"
+		+ "The input image contains 28*28 pixels.  \n"
+		+ "784 input Neurons that are connected to each of the Hidden Neurons \n"
+	    + "Each of the Hidden Neurons is connected to each of the output Neurons\n"
+		+ "Weights are shown in a sqaure. Red for positive weights,blue for negative weights \n"
+		+ "Watch as the weights change color as the network learns \n"
+		+ "It will take many iterations for teh nwtrok to learn with any degree of accuracy.\n"
+		+" Set Batch size to 10000 and run through X number of batches\n"
+		+" Watch as the number of wrong digits decreases per batch\n"
+		;
 	}
 }

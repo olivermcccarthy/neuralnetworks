@@ -59,7 +59,7 @@ public class NeonTrial extends TrialInfo {
 					neuralNetwork.handleTopError(expected);
 				//	drawPanel.setInputImage(images.get(image), 4,DrawNeuralNetwork.PICTURE_TYPE.BINARY);
 					
-					drawPanel.waitForUserClick(this, expected2, maxI);
+					drawPanel.waitForUserClick(this, expected2, maxI, true,true);
 
 				}
 

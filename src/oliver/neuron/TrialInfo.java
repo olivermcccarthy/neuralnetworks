@@ -38,6 +38,16 @@ public abstract class TrialInfo {
 	protected  double savePointCost = 1;
 	protected  double currentCost = 1;
 	double learningRateChange = 1.2;
+	
+	
+	public double getCurrentCost() {
+		return currentCost;
+	}
+
+	public void setCurrentCost(double currentCost) {
+		this.currentCost = currentCost;
+	}
+
 	public abstract Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) ;
 	
 	public abstract String getHelp();
