@@ -83,11 +83,16 @@ public class BallTrial extends  TrialInfo{
 	public String getHelp() {
 		// TODO Auto-generated method stub
 		return "Train a network to recognize wonky letters. "
-				+ "The network learns each time you click teh correct letter. "
+				+ "The network learns each time you click the correct letter. "
 				+ "The input panel is broken into 10 by 10 squares.  100 input Neurons that are connected to each of the output Neurons "
 				+ "Weights are shown in a sqaure. Red for positive weights,blue for negative weights  "
 				+ "Watch as the weights change color as the network learns"
 				;
 		
+	}
+	
+	public String getPackageS() {
+		// TODO Auto-generated method stub
+		return "perfectball";
 	}
 }

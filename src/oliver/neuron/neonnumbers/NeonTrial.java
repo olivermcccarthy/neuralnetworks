@@ -123,4 +123,11 @@ public class NeonTrial extends TrialInfo {
 		}
 		return tenBitArray;
 	}
+
+
+	@Override
+	public String getHelp() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

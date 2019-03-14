@@ -115,7 +115,7 @@ public class DrawNeuralNetwork extends JPanel {
 	TrialInfo trialInfo;
 	JTextPane runInfoPane= new JTextPane();
 	JTextPane batchInfoPane= new JTextPane();
-	JTextPane overallInfo= new JTextPane();
+	HelpPanel overallInfo= null;
 	static final Color BGColor = new Color(230, 255, 255);
 	static JTabbedPane tabbed = new JTabbedPane();
 	public DrawNeuralNetwork(TrialInfo trialInfo) {
@@ -125,8 +125,8 @@ public class DrawNeuralNetwork extends JPanel {
 		this.add(panel);
 		setBackground(BGColor);
 		
-	
-		overallInfo.setText(trialInfo.getHelp());
+		overallInfo= new HelpPanel(trialInfo.getPackageS());
+		
 		
 		
 		JScrollPane scroll3 = new JScrollPane(overallInfo);
@@ -151,7 +151,7 @@ public class DrawNeuralNetwork extends JPanel {
 		scroll4.setBounds(450, 120,300 , 50);
 		this.add(scroll4);
 		this.add(scroll2);
-		HelpPanel helpPanel = new HelpPanel(trialInfo.getPackageS());
+		HelpPanel helpPanel = new HelpPanel("ui");
 		JScrollPane scroll = new JScrollPane( helpPanel);
 		helpPanel.setFont(getFont().deriveFont(12.0f));
 		
