@@ -102,7 +102,8 @@ public class DrawNeuralNetwork extends JPanel {
 		this.inputPanel = inputPanel;
 		this.add(this.inputPanel);
 		Dimension prefr = inputPanel.getPreferredSize();
-		inputPanel.setBounds(0, 300, prefr.width, prefr.height);
+		inputPanel.setBounds(0, 330, prefr.width, prefr.height);
+		inputPanel.setBackground(this.getBackground());
 	}
 
 	public void setInputImage(int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
@@ -112,37 +113,45 @@ public class DrawNeuralNetwork extends JPanel {
 	}
 	TrialInfo trialInfo;
 	JTextPane runInfoPane= new JTextPane();
+	JTextPane overallInfo= new JTextPane();
+	static final Color BGColor = new Color(230, 255, 255);
+	static JTabbedPane tabbed = new JTabbedPane();
 	public DrawNeuralNetwork(TrialInfo trialInfo) {
 		this.trialInfo = trialInfo;
 		panel = new ControlPanel(trialInfo);
 		panel.setBounds(0,0,100,150);
 		this.add(panel);
+		setBackground(BGColor);
 		
-		HelpPanel helpPanel = new HelpPanel(trialInfo.getPackageS());
-		JScrollPane scroll = new JScrollPane(helpPanel);
-		helpPanel.setFont(getFont().deriveFont(12.0f));
-		scroll.setBounds(150, 10, SCREEN_SIZE -300 , 100);
+	
+		overallInfo.setText(trialInfo.getHelp());
 		
+		overallInfo.setBounds(150, 10, SCREEN_SIZE -200 , 100);
+		
+		this.add(overallInfo);
 		JScrollPane scroll2 = new JScrollPane(runInfoPane);
 		runInfoPane.setFont(getFont().deriveFont(12.0f));
 		runInfoPane.setEditable(false);
 		runInfoPane.setCaretPosition(0);
-		scroll2.setBounds(150, 130, SCREEN_SIZE -300 , 50);
+		runInfoPane.setBackground(this.getBackground());
+		overallInfo.setBackground(this.getBackground());
+		scroll2.setBounds(150, 120, SCREEN_SIZE -200 , 50);
 		this.setLayout(null);
-		this.add(scroll);
+		//this.add(scroll);
 		this.add(scroll2);
+		HelpPanel helpPanel = new HelpPanel(trialInfo.getPackageS());
+		JScrollPane scroll = new JScrollPane( helpPanel);
+		helpPanel.setFont(getFont().deriveFont(12.0f));
+		
+		tabbed.add("Help",scroll);
 
 	}
 
 	protected void paintInputImage(Graphics g, int baseY) {
 
-		String textStr = "Input Image ";
-		char[] chararr = textStr.toCharArray();
-		g.setColor(Color.BLACK);
-		g.drawChars(chararr, 0, chararr.length, 0, baseY - 5);
-
+		
 		if (inputPanel != null) {
-			inputPanel.setBackground(new Color(230, 255, 255));
+			inputPanel.setBackground(this.getBackground());
 
 			return;
 		}
@@ -198,7 +207,7 @@ public class DrawNeuralNetwork extends JPanel {
 		//	return;
 		}
 		int baseX = 0;
-		int baseY = 160;
+		int baseY = 220;
 
 		Font existing = g.getFont();
 		//g.setFont(g.getFont().deriveFont(12.0f));
@@ -416,7 +425,7 @@ public class DrawNeuralNetwork extends JPanel {
 		if (frame == null) {
 			frame = new JFrame();
 			frame.setSize(SCREEN_SIZE, SCREEN_SIZE);
-
+            
 			neuronPanel = new DrawNeuralNetwork(trialInfo);
 			neuronPanel.pictureWidth = pictureWidth;
 			neuronPanel.pictureScale = pictureScale;
@@ -426,9 +435,9 @@ public class DrawNeuralNetwork extends JPanel {
 			frame.setVisible(true);
 		
 			
-			neuronPanel.setBackground(new Color(230, 255, 255));
-
-			frame.getContentPane().add(scroll);
+			
+            tabbed.add("Run", scroll);
+			frame.getContentPane().add(tabbed);
 		}
 		neuronPanel.neuralNetwork = neuralNetwork;
 

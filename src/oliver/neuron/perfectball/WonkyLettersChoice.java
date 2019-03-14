@@ -6,7 +6,9 @@ import java.awt.Graphics;
 import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,101 +29,96 @@ public class WonkyLettersChoice extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -985471666659201980L;
-	
-	static String [] LETTERS= new String[] {"E","F","H"}; 
-	JButton agreeButton;
-	JComboBox chosen = new JComboBox();
-	
-	
+
+	static String[] LETTERS = new String[] { "E", "F", "H" };
+
 	Object waitForMe = "";
 	static WonkyLettersChoice me;
 	ButtonGroup group = new ButtonGroup();
 	String message;
 	WonkyLetters innerPanel = new WonkyLetters();
-	
-	boolean agreeWithNeuron = false;
-	static int preferedWidth=200;
-	public WonkyLettersChoice() {
-		agreeButton = new JButton("Agree or change ");
+	JTextPane resultPane = new JTextPane();
 
-		
+	int selectedCoice = -1;
+	static int preferedWidth = 200;
+
+	public WonkyLettersChoice() {
+
 		this.setLayout(null);
 		this.add(innerPanel);
-		this.setPreferredSize(new Dimension(preferedWidth,260));
-		
-		
-		
-		agreeButton.addActionListener(new ActionListener() {
+		this.add(resultPane);
+		this.setPreferredSize(new Dimension(preferedWidth, 280));
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				synchronized (waitForMe) {
-					waitForMe.notifyAll();
-					agreeWithNeuron=true;
-
-				}
-
-			}
-		});
-		
-		
-		
-        this.add(agreeButton);
-        this.add(chosen);
+		// this.add(chosen);
 		this.setLayout(null);
-	
-		chosen.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				synchronized (waitForMe) {
-					waitForMe.notifyAll();
-					
+		int w = 0;
+		int id = 0;
+		for (String letter : LETTERS) {
+
+			JButton but = new JButton(letter);
+			final int oID = 0;
+			but.setBounds(w, 60, 50, 30);
+			this.add(but);
+			group.add(but);
+			but.addActionListener(new ActionListener() {
+
+				int ourID = oID;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					synchronized (waitForMe) {
+						waitForMe.notifyAll();
+						selectedCoice = ourID;
+
+					}
+
 				}
+			});
+			id++;
 
-			}
-		});
-		
-		for(String letter : LETTERS) {
-			chosen.addItem(letter);
+			w += 50;
 		}
-		chosen.setBounds(preferedWidth*2/3, 0, preferedWidth/3, 30);
-		agreeButton.setBounds(0, 0, preferedWidth*2/3, 30);
-		innerPanel.setBounds(0, 60, preferedWidth, 200);
+
+		// chosen.setBounds(preferedWidth * 2 / 3, 0, preferedWidth / 3, 30);
+
+		resultPane.setBounds(0, 0, preferedWidth, 60);
 		
-		
-		//this.add(dont);
+		innerPanel.setBounds(0, 90, preferedWidth, 200);
+
+		// this.add(dont);
 	}
 
 	public void setDrawPanel(DrawNeuralNetwork dN) {
-	
-		//dN.addButton(this.dont);
+
+		// dN.addButton(this.dont);
 	}
-	
 
 	/**
-	 * User agrees we set expected[neuronChoce] to 1 and all others to 0
-	 * User changes choice  we set expected[userChoice] to 1 and all others to 0
-	 * User does nothing we set expected to in for all values and nothing is learned
+	 * User agrees we set expected[neuronChoce] to 1 and all others to 0 User
+	 * changes choice we set expected[userChoice] to 1 and all others to 0 User does
+	 * nothing we set expected to in for all values and nothing is learned
+	 * 
 	 * @param overallPanel
 	 * @param in
 	 * @return
 	 */
-	public double[] like(DrawNeuralNetwork overallPanel, double[] in) {
-		
-		this.agreeWithNeuron = false;
+	public double[] like(BallTrial trial, DrawNeuralNetwork overallPanel, double[] in) {
+		resultPane.setBackground(this.getBackground());
 		double[] expected = new double[2];
-		int neuronChoice =-1;
-		double max =0;
-		for(int x =0; x < in.length; x++) {
-			if(in[x] > max) {
+		int neuronChoice = -1;
+		double max = 0;
+		for (int x = 0; x < in.length; x++) {
+			if (in[x] > max) {
 				max = in[x];
-				neuronChoice= x;
+				neuronChoice = x;
 			}
 		}
-		this.chosen.setSelectedIndex(neuronChoice);
-		
-		
+
+		String text = String.format("Network says the letter is %s, CLick the letter you think it is",
+				LETTERS[neuronChoice]);
+		this.resultPane.setText(text);
+		selectedCoice = -1;
 		synchronized (waitForMe) {
 			try {
 				waitForMe.wait(overallPanel.getSleepTime());
@@ -131,42 +128,35 @@ public class WonkyLettersChoice extends JPanel {
 			}
 		}
 
-		if(this.agreeWithNeuron) {
-			for(int x =0; x < in.length; x++) {
-				expected[x]=0;
-				if(x == neuronChoice) {
-					expected[x]=1;
+		if (selectedCoice != -1) {
+			if (this.selectedCoice != neuronChoice) {
+				trial.numWrong++;
+
+			}
+			neuronChoice = this.selectedCoice;
+			for (int x = 0; x < in.length; x++) {
+				expected[x] = 0;
+				if (x == neuronChoice) {
+					expected[x] = 1;
 				}
 			}
-		}else {
-			if(this.chosen.getSelectedIndex() != neuronChoice) {
-				neuronChoice=this.chosen.getSelectedIndex() ;
-				for(int x =0; x < in.length; x++) {
-					expected[x]=0;
-					if(x == neuronChoice) {
-						expected[x]=1;
-					}
-				}	
-			}else {
-				// No choice nothing to learn
-				for(int x =0; x < in.length; x++) {
-					expected[x]=in[x];
-				}
+
+		} else {
+			// No choice nothing to learn
+			for (int x = 0; x < in.length; x++) {
+				expected[x] = in[x];
 			}
 		}
+
 		return expected;
 	}
 
-	
-
-	
 	protected void newPoly() {
 		this.innerPanel.newPoly();
 	}
+
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
-	
 
 	}
 
@@ -178,5 +168,16 @@ public class WonkyLettersChoice extends JPanel {
 		frame.add(panel);
 		frame.setVisible(true);
 
+	}
+	
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		Enumeration<AbstractButton> enumk =group.getElements();
+		while (enumk.hasMoreElements()) {
+			enumk.nextElement().setEnabled(enabled);
+		}
+		if(!enabled) {
+			this.resultPane.setText("Please  start runs above");
+		}
 	}
 }

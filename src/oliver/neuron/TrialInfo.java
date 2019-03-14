@@ -40,6 +40,8 @@ public abstract class TrialInfo {
 	double learningRateChange = 1.2;
 	public abstract Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) ;
 	
+	public abstract String getHelp();
+	
 	/**
 	 * 
 	 * @param numTrialsBetweenSaves Save the network every x number of saves 

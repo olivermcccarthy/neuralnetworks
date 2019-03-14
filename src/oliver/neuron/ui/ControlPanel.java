@@ -16,14 +16,69 @@ public class ControlPanel extends JPanel {
 	 * Buttons to allow user click through training.
 	 */
 	JButton button = new JButton("Run ");
+	
+	/**
+	 * Allow user choose number of batches to run
+	 */
 	JComboBox numBatches = new JComboBox();
-	JComboBox numPerBatch = new JComboBox();
-	JComboBox sleepTime = new JComboBox();
+	
+	/**
+	 * Allow user choose number of runs per batch
+	 */
+	JComboBox numRunsPerBatch = new JComboBox();
+	
+	/**
+	 * Allow user choose sleep time between runs
+	 */
+	JComboBox sleepTimeBetweenRuns = new JComboBox();
+	
+	/**
+	 * Allow user choose learning rate
+	 */
 	JComboBox learningRate = new JComboBox();
+	
+	
+	/**
+	 * Choice of how many batches to run
+	 */
+	static int[] numBatchesChoice= new int[] {1,10,100,1000};
+	
+	/**
+	 * Choice of how many batches to run
+	 */
+	static int[] numRunsPerBatchesChoice= new int[] {100,1000,5000,10000,50000};
+	
+	/**
+	 * Choice of ms to sleep between runs
+	 */
+	static int[] sleepChoice= new int[] {10000,5000,1000,100,10,1};
+	
+	
+	/**
+	 * Choice of learning rate
+	 */
+	static double[] learningRateChoice= new double[] {1,0.5,0.1,0.05,0.01};
+	
+	/**
+	 * Pointer to Trial Information 
+	 */
 	TrialInfo trialInfo;
+	
+	/**
+	 * Object use to wait for user to click run/stop
+	 */
 	Object waitForMe = new String("");
-    int sleepTimeMs;
-    int numBatchesI;
+    
+	/**
+	 * Sleep time between runs
+	 */
+	int sleepTimeMs;
+    
+	/**
+	 * Counts down umber of batches to run
+	 */
+	int numBatchesI;
+	
 	public ControlPanel(TrialInfo trialInfo) {
 
 		ActionListener listener = new ActionListener() {
@@ -35,15 +90,15 @@ public class ControlPanel extends JPanel {
 					if (button.getText().equals("RUN")) {
 						button.setText("STOP");
 						numBatches.setEnabled(false);
-						numPerBatch.setEnabled(false);
-						sleepTime.setEnabled(false);
+						numRunsPerBatch.setEnabled(false);
+						sleepTimeBetweenRuns.setEnabled(false);
 						learningRate.setEnabled(false);
 
 					} else {
 						button.setText("RUN");
 						numBatches.setEnabled(true);
-						numPerBatch.setEnabled(true);
-						sleepTime.setEnabled(true);
+						numRunsPerBatch.setEnabled(true);
+						sleepTimeBetweenRuns.setEnabled(true);
 						learningRate.setEnabled(true);
 						trialInfo.numPerBatch = 0;
 					}
@@ -55,145 +110,78 @@ public class ControlPanel extends JPanel {
 		button.addActionListener(listener);
 		button.setBounds(0, 0, 100, 30);
 		numBatches.setBounds(0, 30, 100, 30);
-		numPerBatch.setBounds(0, 60, 100, 30);
-		sleepTime.setBounds(0, 90, 100, 30);
+		numRunsPerBatch.setBounds(0, 60, 100, 30);
+		sleepTimeBetweenRuns.setBounds(0, 90, 100, 30);
 		learningRate.setBounds(0, 120, 100, 30);
 		this.setPreferredSize(new Dimension(100, 120));
 		button.setFont(this.getFont().deriveFont(20.0f));
-		this.add(numPerBatch);
+		this.add(numRunsPerBatch);
 		this.add(learningRate);
         this.setLayout(null);
-		numPerBatch.addItem("100  per batch");
-		numPerBatch.addItem("500  per batch");
-		numPerBatch.addItem("1000  per batch");
-		numPerBatch.addItem("5000  per batch");
-		numPerBatch.addItem("10000 per batch");
-		numPerBatch.setToolTipText("Number of runs per batch. Cost is calclated at teh end of each batch");
-		learningRate.addItem("1");
-		learningRate.addItem(".5");
-		learningRate.addItem(".1");
-		learningRate.addItem(".05");
-		learningRate.addItem(".01");
+       
+        for (int i :  numRunsPerBatchesChoice) {
+        	numRunsPerBatch.addItem(i + " runs per batch");	
+		}
+		
+		numRunsPerBatch.setToolTipText("Number of runs per batch. Cost is calclated at the end of each batch");
+		
 		learningRate.setToolTipText("Speed at which network learns/adjusts is waits");
-		numBatches.addItem("1 batch");
-		numBatches.addItem("10  batches");
-		numBatches.addItem("100  batches");
-		numBatches.addItem("1000  batches");
-		numBatches.addItem("10000  batches");
-		numBatches.addItem("100000  batches");
-		numBatches.setToolTipText("Number of batches to run. 100 batches ");
+		for (int i : numBatchesChoice) {
+			numBatches.addItem(i + "batches");	
+		}
+		
+		numBatches.setToolTipText("Number of batches to run");
 		numBatches.setSelectedIndex(0);
-		sleepTime.addItem("10000ms sleep ");
-		sleepTime.addItem("5000ms sleep ");
-		sleepTime.addItem("2000ms sleep");
-		sleepTime.addItem("1000ms sleep");
-		sleepTime.addItem("100ms sleep");
-		sleepTime.addItem("10ms sleep");
-		sleepTime.addItem("1ms sleep");
-		sleepTime.setToolTipText("sleep between each run ");
-		sleepTime.setSelectedIndex(0);
+		  for (int i :  numRunsPerBatchesChoice) {
+	        	numRunsPerBatch.addItem(i + "batches");	
+			}
+		for (int i :   sleepChoice) {
+			sleepTimeBetweenRuns.addItem(i + "ms sleep ");	
+	     }
+		 
+		for (double i :   learningRateChoice) {
+			learningRate.addItem(i + "  ");	
+	     }  
+		
+		sleepTimeBetweenRuns.setToolTipText("sleep between each run ");
+		sleepTimeBetweenRuns.setSelectedIndex(0);
 		this.add(button);
 		this.add(numBatches);
-		this.add(sleepTime);
+		this.add(sleepTimeBetweenRuns);
 		this.add(learningRate);
 	}
 	
 	public int getSleepTime() {
-		int selectedIndex = sleepTime.getSelectedIndex();
+		int selectedIndex = sleepTimeBetweenRuns.getSelectedIndex();
+		sleepTimeMs = sleepChoice[selectedIndex];
 		
-		if (selectedIndex == 0) {
-			sleepTimeMs = 10000;
-		}
-		if (selectedIndex == 1) {
-			sleepTimeMs = 5000;
-		}
-		if (selectedIndex == 2) {
-			sleepTimeMs = 2000;
-		}
-		if (selectedIndex == 3) {
-			sleepTimeMs = 1000;
-		}
-		if (selectedIndex == 4) {
-			sleepTimeMs = 100;
-		}
-		if (selectedIndex == 5) {
-			sleepTimeMs = 10;
-		}
-		if (selectedIndex == 6) {
-			sleepTimeMs = 1;
-		}
 		
 		return sleepTimeMs;
 	}
 	public int getNumBatches() {
 		int selectedIndex = numBatches.getSelectedIndex();
-		if (selectedIndex == 0) {
-			numBatchesI = 1;
-		}
-		if (selectedIndex == 1) {
-			numBatchesI = 10;
-		}
-		if (selectedIndex == 2) {
-			numBatchesI = 100;
-		}
-		if (selectedIndex == 3) {
-			numBatchesI = 1000;
-		}
-		if (selectedIndex == 4) {
-			numBatchesI = 10000;
-		}
-		
+		numBatchesI = numBatchesChoice[selectedIndex];
 		return numBatchesI;
 	}
 
 	public double getLearningRate() {
 		int selectedIndex = this.learningRate.getSelectedIndex();
-		double lr = 1;
-		if (selectedIndex == 0) {
-			lr = 1;
-		}
-		if (selectedIndex == 1) {
-			lr = 0.5;
-		}
-		if (selectedIndex == 2) {
-			lr = 0.1;
-		}
-		if (selectedIndex == 3) {
-			lr = 0.05;
-
-		}
-		if (selectedIndex == 4) {
-			lr = 0.01;
-
-		}
+		double lr = learningRateChoice[selectedIndex];
+		
 		return lr;
 	}
 
 	public int getNumPerBatch() {
-		int selectedIndex = numPerBatch.getSelectedIndex();
-		int numPerBatch = 100;
-		if (selectedIndex == 0) {
-			numPerBatch = 100;
-		}
-		if (selectedIndex == 1) {
-			numPerBatch = 500;
-		}
-		if (selectedIndex == 2) {
-			numPerBatch = 1000;
-		}
-		if (selectedIndex == 3) {
-			numPerBatch = 5000;
-		}
-		if (selectedIndex == 4) {
-			numPerBatch = 10000;
-		}
+		int selectedIndex = numRunsPerBatch.getSelectedIndex();
+		int numPerBatch =  numRunsPerBatchesChoice[selectedIndex];
+		
 		return numPerBatch;
 	}
 	
 	public void waitForMe() {
 		numBatches.setEnabled(true);
-		numPerBatch.setEnabled(true);
-		sleepTime.setEnabled(true);
+		numRunsPerBatch.setEnabled(true);
+		sleepTimeBetweenRuns.setEnabled(true);
 		learningRate.setEnabled(true);
 		button.setText("RUN");
 		synchronized (waitForMe) {
@@ -205,8 +193,8 @@ public class ControlPanel extends JPanel {
 			}
 		}
 		numBatches.setEnabled(false);
-		numPerBatch.setEnabled(false);
-		sleepTime.setEnabled(false);
+		numRunsPerBatch.setEnabled(false);
+		sleepTimeBetweenRuns.setEnabled(false);
 		learningRate.setEnabled(false);
 	}
 }

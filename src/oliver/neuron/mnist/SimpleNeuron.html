@@ -1,0 +1,30 @@
+<html>
+
+<ul>
+Each Neuron calculates an output based on its inputs and weights using the Sigmoid function. This shows how a neural network can be trained to recognize hand written digits.  
+<br>
+
+This jar contains all the training digits from the "http://yann.lecun.com/exdb/mnist/" mnist training set  (60000 plus images).
+It know the expected output for each image. So we use this info to train our network. One pass through the network is 
+referred to as one run.  
+ 
+<li> This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). 
+<li> Each hidden neuron is connected to each output Neuron. 
+<li> In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of the weights ranging from most positive(Red) to most Negative(Dark Blue).
+ 
+<li> For each trial an input image is loaded and  passed through the network
+<ul>
+<li> Each Neuron in the hidden layer calculates its output based on input*weight. 
+<li> Then each Neuron in the output layer calculates its output based on input(output from hidden Layer)*weight. 
+<li> If output 3 is the highest then network is telling us the digit is 3. So we then need to train the network by passing it the expected value.
+<li> But we know the digit should be 5. 
+<li> Each Neuron in the output layer is passed the expected value (1 to neuron 5, 0 to all other Neurons). As in we expected 1 at output neuron 5 and 0 at other neurons
+<li> Each output Neuron adjusts its weights(A tiny bit) based on this expected value.
+<li> Then each Neuron in the hidden layer adjusts its weights.
+<ul>   
+<li> And thats just one trial. 
+<li> For the Network to learn with any degree of accuracy we would need to run 100000 trials. 
+<br>     
+ You can watch as the Network Learns And see it getting better at predicting the digit
+</ul>      
+</html>

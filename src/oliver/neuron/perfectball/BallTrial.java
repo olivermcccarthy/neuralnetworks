@@ -64,10 +64,12 @@ public class BallTrial extends  TrialInfo{
 		    neuralNetwork.sigmoid();
 		    double[] values = neuralNetwork.getOutput();
 		    drawPanel.repaint();
-			double []expected = panel.like(drawPanel,values);
+		    this.numRun ++;
+		    panel.setEnabled(true);
+			double []expected = panel.like(this,drawPanel,values);
 		    
 		
-			
+			panel.setEnabled(false);
 			neuralNetwork.handleTopError(expected);
 			theCost.addResult(expected, values);
 			drawPanel.repaint();
@@ -75,5 +77,21 @@ public class BallTrial extends  TrialInfo{
 			drawPanel.waitForUserClick(this, expected, values,false);
 		}
 		return theCost;
+	}
+
+	@Override
+	public String getHelp() {
+		// TODO Auto-generated method stub
+		return "Train a network to recognize wonky letters. "
+				+ "The netwok learns each time you tell it what the letter should be. "
+				+ "The input panel is broken into 10 by 10 squares. thats 100 input Neurons. "
+				+ "A random Letter is drawn on teh panel. "
+				+ "Then the panel is mapped to 10 by 10 binary array. "
+				+ "If a square is red the value is 1 if the square is not red the value is zero. "
+				+ "If output-0 is higest then network is telling us the Letter is E. "
+				+ "You can see the weights becoming more red or more blue."
+				+ " A red area means the Neuron is starting to consider that when this area is set in the input image the letter is more likely its letter"
+				+ " A blue area means the Neuron is starting to consider that when this area is set in the input image the letter is less likely its letter";
+		
 	}
 }
