@@ -44,9 +44,8 @@ Then each Neuron in the output layer calculates its sigmoid based on input(outpu
 
 - Each output Neuron adjusts its weights(A tiny bit) based on this expected value.
 - Then each Neuron in the hidden layer adjusts its weights.
-- And thats just one trial. 
 
-For the Network to learn with any degree of accuracy we would need to run thousands of runs passing expected value each time so that the network can learn a little each time. 
+And thats just one trial. For the Network to learn with any degree of accuracy we would need to run thousands of runs passing expected value each time so that the network can learn a little each time. 
    
  You can watch as the Network Learns And see it getting better at predicting the digit
 

@@ -59,9 +59,18 @@ public class WikiToHtml {
 		 
 		 String line = reader.readLine();
 		 FileWriter writer = new FileWriter(fileOut);
-		 boolean inTable = false;
+		 
 		 while(line != null) {
-			 if(line.trim().contains("#")) {
+			 if(line.trim().startsWith("-")) {
+				 writer.write("<br><br>");
+				 while(line.trim().startsWith("-")) {
+					 line =line.replaceFirst("-","");
+					 writer.write("<li>" + line + "");
+					 line = reader.readLine(); 
+				 }
+				 writer.write("<br><br>");
+			 }
+			 if(line.trim().startsWith("#")) {
 				 line = line.trim();
 				 int hLevel=0;
 				 for(int c=0;c < line.length(); c++) {
@@ -77,11 +86,14 @@ public class WikiToHtml {
 				 continue;
 			 }
 			 if(line.trim().contains("![d](")) {
-				 while(line.trim().contains("![d](")) {
-				   line = line.replace("![d](", "<img src=\"");
-				   int startIndex = line.indexOf("<img src=\"") + 8;
-				   line = line.replaceFirst(" \\)", "\">");
+				 if(line.contains("(http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20  )")) {
+					 int debugMe =0;
 				 }
+				
+				 line = line.replace("![d](", "<img src=\"");
+				
+				 line = line.replace(" )", "\">");
+				
 				 writer.write(line + "\n");
 				 writer.write("<br>\n");
 				 line = reader.readLine();
