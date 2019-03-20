@@ -115,7 +115,6 @@ public class WikiToHtml {
 				 writer.write("</table>\n"); 
 			 }
 			 writer.write( line + "\n");
-			 writer.write("<br>\n");
 			 line = reader.readLine();
 		 }
 		 writer.close();
