@@ -30,8 +30,8 @@ public class BallTrial extends  TrialInfo{
 		 panel = new WonkyLettersChoice();
 		NeuralNetwork neuralNetwork = new NeuralNetwork(100, 0, 0, 2, false);
 		DrawNeuralNetwork.showNeurons(trainer,neuralNetwork,10, 10);
-		DrawNeuralNetwork.getNeuronPanel().setInputPanel(panel);
-		DrawNeuralNetwork nP = DrawNeuralNetwork.getNeuronPanel();
+		DrawNeuralNetwork.getNeuronPanel(trainer.getName()).setInputPanel(panel);
+		DrawNeuralNetwork nP = DrawNeuralNetwork.getNeuronPanel(trainer.getName());
 		
 		nP.run(trainer);
 		
@@ -41,7 +41,7 @@ public class BallTrial extends  TrialInfo{
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		// TODO Auto-generated method stub
 		Cost theCost = new Cost(1);
-		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
+		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(getName());
 		drawPanel.setInputPanel(panel);
 		int sleepTimeMs = drawPanel.getSleepTime();
 	
@@ -94,5 +94,10 @@ public class BallTrial extends  TrialInfo{
 	public String getPackageS() {
 		// TODO Auto-generated method stub
 		return "perfectball";
+	}
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "WonkyLetters";
 	}
 }

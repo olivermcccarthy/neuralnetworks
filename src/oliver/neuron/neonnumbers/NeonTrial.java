@@ -25,7 +25,7 @@ public class NeonTrial extends TrialInfo {
 	@Override
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
-		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
+		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(this.getName());
 	
 	
 			for (int y = 0; y < this.numPerBatch; y++) {
@@ -80,8 +80,8 @@ public class NeonTrial extends TrialInfo {
 
 	
 		NeonDisplay display = new NeonDisplay();
-		DrawNeuralNetwork.getNeuronPanel().setInputPanel(display);
-		DrawNeuralNetwork.getNeuronPanel().repaint();
+		DrawNeuralNetwork.getNeuronPanel(trainer.getName()).setInputPanel(display);
+	
 		
 		images =display.drawImages(labels);
 		for (int d = 0; d < images.size(); d++) {
@@ -95,7 +95,7 @@ public class NeonTrial extends TrialInfo {
 		tenBitArray = asTenBitArray(labels);
 
 		
-		DrawNeuralNetwork.getNeuronPanel().run(trainer);
+		DrawNeuralNetwork.getNeuronPanel(trainer.getName()).run(trainer);
 		
 
 	}
@@ -129,5 +129,12 @@ public class NeonTrial extends TrialInfo {
 	public String getHelp() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "NeonNumbers";
 	}
 }

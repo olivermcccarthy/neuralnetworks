@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.Raster;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -44,12 +45,12 @@ import oliver.neuron.neonnumbers.NeonTrial;
  */
 public class DrawNeuralNetwork extends JPanel {
 
-	static DrawNeuralNetwork neuronPanel = null;
+	static HashMap<String,DrawNeuralNetwork> neuronPanels = new HashMap<String,DrawNeuralNetwork>();
 
 	NeuralNetwork neuralNetwork = null;
 
-	public static DrawNeuralNetwork getNeuronPanel() {
-		return neuronPanel;
+	public static DrawNeuralNetwork getNeuronPanel(String name) {
+		return neuronPanels.get(name);
 	}
 
 	ControlPanel panel ;
@@ -69,6 +70,7 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	
 
+	HashMap<String, NeuronInAPanel> panels = new HashMap<String, NeuronInAPanel>();
 
 	/**
 	 * How large to paint each Neuron
@@ -107,15 +109,15 @@ public class DrawNeuralNetwork extends JPanel {
 		inputPanel.setBackground(this.getBackground());
 	}
 
-	public void setInputImage(int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
-		neuronPanel.inputImage = inputImage;
+	public void setInputImage( int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
+		this.inputImage = inputImage;
 		pictureType = typeOfPicture;
 
 	}
 	TrialInfo trialInfo;
 	JTextPane runInfoPane= new JTextPane();
 	JTextPane batchInfoPane= new JTextPane();
-	HelpPanel overallInfo= null;
+	JTextPane overallInfo= null;
 	static final Color BGColor = new Color(230, 255, 255);
 	static JTabbedPane tabbed = new JTabbedPane();
 	public DrawNeuralNetwork(TrialInfo trialInfo) {
@@ -125,8 +127,8 @@ public class DrawNeuralNetwork extends JPanel {
 		this.add(panel);
 		setBackground(BGColor);
 		
-		overallInfo= new HelpPanel(trialInfo.getPackageS());
-		
+		overallInfo= new JTextPane();
+		overallInfo.setText(trialInfo.getHelp());
 		
 		
 		JScrollPane scroll3 = new JScrollPane(overallInfo);
@@ -151,11 +153,7 @@ public class DrawNeuralNetwork extends JPanel {
 		scroll4.setBounds(450, 120,300 , 50);
 		this.add(scroll4);
 		this.add(scroll2);
-		HelpPanel helpPanel = new HelpPanel("ui");
-		JScrollPane scroll = new JScrollPane( helpPanel);
-		helpPanel.setFont(getFont().deriveFont(12.0f));
 		
-		tabbed.add("Help",scroll);
 
 	}
 
@@ -428,26 +426,32 @@ public class DrawNeuralNetwork extends JPanel {
 	 * @param pictureScale
 	 */
 	public static DrawNeuralNetwork showNeurons(TrialInfo trialInfo,NeuralNetwork neuralNetwork, int pictureWidth, int pictureScale) {
-
+	
+		DrawNeuralNetwork neuronPanel = new DrawNeuralNetwork(trialInfo);
+		JScrollPane scroll = new JScrollPane(neuronPanel);
+		neuronPanel.setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE*2));
+		tabbed.add(trialInfo.getName(),scroll);
 		if (frame == null) {
 			frame = new JFrame();
 			frame.setSize(SCREEN_SIZE, SCREEN_SIZE);
             
-			neuronPanel = new DrawNeuralNetwork(trialInfo);
-			neuronPanel.pictureWidth = pictureWidth;
-			neuronPanel.pictureScale = pictureScale;
+			
+			
 
-			JScrollPane scroll = new JScrollPane(neuronPanel);
-			neuronPanel.setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE*2));
+			
 			frame.setVisible(true);
 		
 			
+			HelpPanel helpPanel = new HelpPanel("ui");
+			JScrollPane scroll2 = new JScrollPane( helpPanel);
 			
-            tabbed.add("Run", scroll);
+			
+			tabbed.add("Help",scroll2);
+            tabbed.add(trialInfo.getName(), scroll);
 			frame.getContentPane().add(tabbed);
 		}
 		neuronPanel.neuralNetwork = neuralNetwork;
-
+		neuronPanels.put(trialInfo.getName(), neuronPanel);
 		frame.repaint();
 
 		return neuronPanel;
@@ -518,6 +522,6 @@ public class DrawNeuralNetwork extends JPanel {
 		}
 	}
 	public void forceRedraw() {
-		NeuronInAPanel.forceRedraw();
+		
 	}
 }

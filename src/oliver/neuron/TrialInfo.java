@@ -130,4 +130,6 @@ public abstract class TrialInfo {
 		// TODO Auto-generated method stub
 		return this.numWrong;
 	}
+
+	abstract public String getName() ;
 }

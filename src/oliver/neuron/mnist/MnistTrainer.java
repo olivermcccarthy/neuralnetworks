@@ -59,7 +59,7 @@ public class MnistTrainer extends TrialInfo {
 
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
-		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel();
+		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(this.getName());
 	    this.numWrong =0;
 	    this.numRun =0;
 	    int sleepTime =drawPanel.getSleepTime();
@@ -132,7 +132,7 @@ public class MnistTrainer extends TrialInfo {
 		NeuralNetwork neuralNetwork = new NeuralNetwork(28 * 28, 15, 0, 10, false);
 		DrawNeuralNetwork.showNeurons(trainer,neuralNetwork,28, 4);
 		
-		DrawNeuralNetwork.getNeuronPanel().run(trainer);
+		DrawNeuralNetwork.getNeuronPanel(trainer.getName()).run(trainer);
 	}
 
 	public int bufAsInt(byte[] buffer, int startIndex, int length) {
@@ -188,5 +188,10 @@ public class MnistTrainer extends TrialInfo {
 		+" Set Batch size to 10000 and run through X number of batches\n"
 		+" Watch as the number of wrong digits decreases per batch\n"
 		;
+	}
+	
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "HandWritten digits";
 	}
 }

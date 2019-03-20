@@ -61,8 +61,7 @@ public class NeuronInAPanel extends JPanel {
 	/**
 	 * Save all panels in a static HashMap
 	 */
-	static HashMap<String, NeuronInAPanel> panels = new HashMap<String, NeuronInAPanel>();
-
+	
 	public NeuronInAPanel(Neuron neuron) {
 		this.neuron = neuron;
 	}
@@ -72,21 +71,19 @@ public class NeuronInAPanel extends JPanel {
 
 	}
 
-	public static void forceRedraw() {
-		for(NeuronInAPanel panel : panels.values()) {
-			panel.imageWithInputs = null;
-		}
-	}
+	
+	 DrawNeuralNetwork parent;
 	public static void placeNuronOnScreen(Neuron neuron, DrawNeuralNetwork parent, int baseX, int baseY, int neuronSizeInPixels) {
-		NeuronInAPanel existing = panels.get(neuron.getName());
+		NeuronInAPanel existing = parent.panels.get(neuron.getName());
 		
 		if (existing == null) {
 			existing = new NeuronInAPanel(neuron);
-			panels.put(neuron.getName(), existing);
+			parent.panels.put(neuron.getName(), existing);
 			parent.add(existing);
 			existing.setBackground( parent.getBackground());
 			//existing.setBorder(BorderFactory.createBevelBorder(1));
 		}
+		existing.parent = parent;
 		existing.neuron = neuron;
 		existing.widthOfPanelInPixels=  neuronSizeInPixels*5/2 ;
 		existing.setBounds(baseX , baseY, existing.widthOfPanelInPixels, neuronSizeInPixels +30);
