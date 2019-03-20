@@ -25,7 +25,7 @@ public class HelpPanel extends JEditorPane {
 		styleSheet.addRule("tr:nth-child(n+1) {background-color: lightblue;}");
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();// 6 oliver.action.AssignAction
 
-		InputStream is2 = classloader.getResourceAsStream("oliver/neuron/"+packageS+"/SimpleNeuron.html");// 14
+		InputStream is2 = classloader.getResourceAsStream("oliver/neuron/ui/SimpleNeuron.html");// 14
 																								// oliver.action.AssignAction
 		BufferedReader bufReader = new BufferedReader(new InputStreamReader(is2));// 30 oliver.action.AssignAction
 		String lien;

@@ -2,16 +2,65 @@
 # neuralnetworks
 
 
+
+
 ### Using Sigmoid to calculate neurons Results
 
-We could use a neuron equation like
- ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20  ) 
-
-. But then result would vary too much.
+Neural Networks don't use simple equations. for calculating a neurons output. 
  
- ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20  ) 
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20Output=%20Z%20=%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20  ) 
 
-Is used instead  be used to calculate the result of a Neuron. It is used because its value varies between 0 and 1. With the greatest change( most learning occurring around 0.5)
+.Instead they use complex Ones like 
+ 
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20  )
+ where Z is as above 
+
+Sigmoid is used to calculate the result of a Neuron, because its value varies between 0 and 1. Its value changes very little with small changes in weights. With the greatest change( most learning occurring around 0.5). This means we can make tiny improvements in Overall Cost with small changes.
+ 
+
+
+ 
+
+# Recoginizing Wonky Letters
+Train a network to recognize wonky letters.</h1>  
+Equation for each Neuron
+ ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20  )
+
+The network learns each time you click the correct letter. 
+The input panel is broken into 10 by 10 squares.  100 input Neurons that are connected to each of the output Neurons <br> 
+Weights are shown in a sqaure. Red for positive weights,blue for negative weights  <br>
+Watch as the weights change color as the network learns 
+
+
+# Processing many hand written digits
+
+
+Each Neuron calculates an output based on its inputs and weights using the Sigmoid function.   
+
+This shows how a neural network can be trained to recognize hand written digits.
+This jar contains all the training digits from the "http://yann.lecun.com/exdb/mnist/" mnist training set  (60000 plus images).
+It knows the expected output for each image. So we use this info to train our network. One pass through the network is 
+referred to as one run.  
+ 
+- This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). 
+- Each hidden neuron is connected to each output Neuron. 
+- In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of the weights ranging from most positive(Red) to most Negative(Dark Blue). 
+- For each trial an input image is loaded and  passed through the network
+
+
+Each Neuron in the hidden layer calculates its sigmoid based on input*weight. 
+Then each Neuron in the output layer calculates its sigmoid based on input(output from hidden Layer)*weight.
+ 
+If output X has the highest value then network has computed the digit to be X the digit is X. Which has a 90% chance of being incorrect. So we then need to train the network by passing it the expected value. If we know the digit to be 5 then we pass expected value of 0 to all output neurons expect output-5 to which we pass expected value of 1. The next time it processes an image which is close to this image it will have a better chance of predicting its a 5. Of course everybody's handwriting is different so there are numerous   ways an image can be intepreted  as a 5. Our brain can do this in a few millisecs. But we have to train our network.   
+
+
+- Each output Neuron adjusts its weights(A tiny bit) based on this expected value.
+- Then each Neuron in the hidden layer adjusts its weights.
+- And thats just one trial. 
+
+For the Network to learn with any degree of accuracy we would need to run thousands of runs passing expected value each time so that the network can learn a little each time. 
+   
+ You can watch as the Network Learns And see it getting better at predicting the digit
 
  
 ###  Variable Definitions
@@ -105,17 +154,4 @@ Of course ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%
  ![d](http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20  )
   
   This is useful because we can easily calculate the derivative of Sigmoid
-
-# 3 Layer Network . How 
-
-How one run works through a 3 layer network works
-- We set each neuron in the input layer to a value
-- Each neuron in the hidden layer calculates its result based on inputs and weights 
-- Each neuron in the output layer calculates its result based on outputs of the hidden and Weights  
-- By compared the result with Expected we get An Error (Also known as Cost)
-- The goal is to reduce this cost. 
-- Using the Error each neuron in the output layers adjusts its weights and bias based on the Partial derivative of  Weight/bias versus Cost. 
-- Then each neuron in the hidden Layer adjust its weights and bias. 
-- And we repeat the process over and over.  
-
  

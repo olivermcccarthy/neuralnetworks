@@ -123,7 +123,7 @@ public class WikiToHtml {
 	
 	public static void main(String[] args) {
 		 try {
-			parseFile("README.md","README.html");
+			parseFile("README.md","src/oliver/neuron/ui/SimpleNeuron.html");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

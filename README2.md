@@ -1,290 +1,157 @@
 
-<br>
-<h1> neuralnetworks</h1>
+# neuralnetworks
 
-<br>
 
-<br>
 
-<br>
 
-<br>
-<h3> Using Sigmoid to calculate neurons Results</h3>
+### Using Sigmoid to calculate neurons Results
 
-<br>
 Neural Networks don't use simple equations. for calculating a neurons output. 
-<br>
  
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20Output=%20Z%20=%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20 "> 
-<br>
+ mmm  Output= Z = w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias nnn 
 
-<br>
 .Instead they use complex Ones like 
-<br>
  
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
-<br>
+ mmm Signoid = (1)/(1 + e^-Z^) nnn
  where Z is as above 
-<br>
 
-<br>
 Sigmoid is used to calculate the result of a Neuron, because its value varies between 0 and 1. Its value changes very little with small changes in weights. With the greatest change( most learning occurring around 0.5). This means we can make tiny improvements in Overall Cost with small changes.
-<br>
  
-<br>
 
-<br>
 
-<br>
  
-<br>
 
-<br>
-<h1> Recoginizing Wonky Letters</h1>
+# Recoginizing Wonky Letters
 Train a network to recognize wonky letters.</h1>  
-<br>
 Equation for each Neuron
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
-<br>
+ mmm Signoid = (1)/(1 + e^-Z^) nnn
 
-<br>
 The network learns each time you click the correct letter. 
-<br>
 The input panel is broken into 10 by 10 squares.  100 input Neurons that are connected to each of the output Neurons <br> 
-<br>
 Weights are shown in a sqaure. Red for positive weights,blue for negative weights  <br>
-<br>
 Watch as the weights change color as the network learns 
-<br>
 
-<br>
 
-<br>
-<h1> Processing many hand written digits</h1>
+# Processing many hand written digits
 
-<br>
 
-<br>
 Each Neuron calculates an output based on its inputs and weights using the Sigmoid function.   
-<br>
 
-<br>
 This shows how a neural network can be trained to recognize hand written digits.
-<br>
 This jar contains all the training digits from the "http://yann.lecun.com/exdb/mnist/" mnist training set  (60000 plus images).
-<br>
 It knows the expected output for each image. So we use this info to train our network. One pass through the network is 
-<br>
 referred to as one run.  
-<br>
  
-<br>
 - This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). 
-<br>
 - Each hidden neuron is connected to each output Neuron. 
-<br>
 - In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of the weights ranging from most positive(Red) to most Negative(Dark Blue). 
-<br>
 - For each trial an input image is loaded and  passed through the network
-<br>
 
-<br>
 
-<br>
 Each Neuron in the hidden layer calculates its sigmoid based on input*weight. 
-<br>
 Then each Neuron in the output layer calculates its sigmoid based on input(output from hidden Layer)*weight.
-<br>
  
-<br>
 If output X has the highest value then network has computed the digit to be X the digit is X. Which has a 90% chance of being incorrect. So we then need to train the network by passing it the expected value. If we know the digit to be 5 then we pass expected value of 0 to all output neurons expect output-5 to which we pass expected value of 1. The next time it processes an image which is close to this image it will have a better chance of predicting its a 5. Of course everybody's handwriting is different so there are numerous   ways an image can be intepreted  as a 5. Our brain can do this in a few millisecs. But we have to train our network.   
-<br>
 
-<br>
 
-<br>
 - Each output Neuron adjusts its weights(A tiny bit) based on this expected value.
-<br>
 - Then each Neuron in the hidden layer adjusts its weights.
-<br>
 - And thats just one trial. 
-<br>
 
-<br>
 For the Network to learn with any degree of accuracy we would need to run thousands of runs passing expected value each time so that the network can learn a little each time. 
-<br>
    
-<br>
  You can watch as the Network Learns And see it getting better at predicting the digit
-<br>
 
-<br>
  
-<br>
-<h3>  Variable Definitions</h3>
+###  Variable Definitions
    
-<br>
-<table>
-<tr><th> Name </th><th> Description </th></tr>
-<tr><td>Sigmoid </td><td>        Function to calculate output of neuron  1/(1 + e^-Z) </td></tr>
-<tr><td> w(x) </td><td>      weight a neuron assigns to input(x)</td></tr>
-<tr><td>Z  </td><td>     Sum of    w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias</td></tr>
-<tr><td> bias </td><td>  This neuron also has a bias</td></tr>
-<tr><td> T   </td><td>            Expected value </td></tr>
-<tr><td>Cost</td><td>            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 </td></tr>
-<tr><td>Cost</td><td> If we expect .9 and neuron returns .8 then cost = 0.5( .9 -.8)^2 = 0.05</td></tr>
-<tr><td>pdW(x)-Cost</td><td>     Partial derivative  of weight with respect  to Cost  <br></td></tr>
-<tr><td>pdW(x)-Z</td><td>        Partial derivative  of weight with respect  to Z</td></tr>
-<tr><td>pdZ-Sigmoid</td><td>     Partial derivative  of Z with respect  to Sigmoid</td></tr>
-<tr><td>pdSigmoid-Cost</td><td>  Partial derivative  of Sigmoid  respect  to Cost</td></tr>
-<tr><td>Error </td><td>          Useful variable  pdZ-Sigmoid *  pdSigmoid-Cost</td></tr>
-</table>
+| Name | Description |
+| --- | --- |
+|Sigmoid |        Function to calculate output of neuron  1/(1 + e^-Z) |
+| w(x) |      weight a neuron assigns to input(x) 
+|Z  |     Sum of    w(1)*input(1) + w(2)*input(2) + .. + w(x)*input(x) + ... + w(n)  - bias 
+| bias |  This neuron also has a bias|  
+| T   |            Expected value |
+|Cost|            Squared difference between expected and actual(Sigmoid)   0.5 *( T - Sigmoid)^2 |
+|Cost| If we expect .9 and neuron returns .8 then cost = 0.5( .9 -.8)^2 = 0.05|
+|pdW(x)-Cost|     Partial derivative  of weight with respect  to Cost  <br>
+|pdW(x)-Z|        Partial derivative  of weight with respect  to Z
+|pdZ-Sigmoid|     Partial derivative  of Z with respect  to Sigmoid
+|pdSigmoid-Cost|  Partial derivative  of Sigmoid  respect  to Cost
+|Error |          Useful variable  pdZ-Sigmoid *  pdSigmoid-Cost
 
-<br>
 Maths is hard but a small change in each weight causes a small improvement in the cost
-<br>
 So we calculate the partial derivative  of each weight with respect  to Cost
-<br>
 Then adjust this weight by a multiple of this  partial derivative 
-<br>
 Derivative rules here https://www.mathsisfun.com/calculus/derivatives-rules.html
-<br>
 
-<br>
 
-<br>
 
-<br>
 
-<br>
 
-<br>
 We need to find a small change in each weight that will improve the cost the most
-<br>
 We change them in proportion to pdW(x)-Cost ( Partial Derivative of Weight with respect to Cost) 
-<br>
 
-<br>
 There are some funky maths to prove this but for the outputlayer
-<br>
 
-<br>
  pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
-<br>
 
-<br>
 
-<br>
        
-<br>
-<h3> Proof of pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)</h3>
+### Proof of pdW(x)-Cost = input(x) *(sigMoid - T) * sigMoid * (1 - sigMoid)
 
-<br>
 We want to see what improvement in cost a small change in Weight(x) will bring.
-<br>
     
-<br>
 Using chain rule pdW(x)-Cost =  
-<br>
  pdW(x)-Sigmoid * pSigmoid-Cost  = 
-<br>
  pdW(x)-Z  *  pdZ-Sigmoid * pdSigmoid-Cost
-<br>
  
-<br>
  As in a small change in weight produces a small change in Z which produces a small change in Sigmoid which reduces the cost.  
-<br>
 
-<br>
 
-<br>
-<table>
-<tr><th>Name</th><th>Derivative</th><th>Description</th></tr>
-<tr><td> pdW(x)-Z </td><td> input(x)</td><td>  as we can treat the other coeffs in Z as constants)</td></tr>
-<tr><td> pdZ-Sigmoid</td><td>  Sigmoid*(1 - Sigmoid) </td><td>  Proof below</td></tr>
-<tr><td> pdSigmoid-Cost</td><td>Sigmoid - Expected</td></tr>
-</table>
+|Name|Derivative|Description|
+| --- | --- |--- |
+| pdW(x)-Z | input(x)|  as we can treat the other coeffs in Z as constants)|
+| pdZ-Sigmoid|  Sigmoid*(1 - Sigmoid) |  Proof below| 
+| pdSigmoid-Cost|Sigmoid - Expected|
  
-<br>
-<h3> Proof of pdZ-Sigmoid = sigMoid * (1 - sigMoid)</h3>
+### Proof of pdZ-Sigmoid = sigMoid * (1 - sigMoid)
  
-<br>
  
-<br>
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
-<br>
+  mmm Sigmoid = (1)/(1 + e^-Z^) nnn
  Reciprocal Rule  derivative of
-<br>
   
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20 "> 
-<br>
+ mmm d({1}/{f}) =   -df/(f^2^) nnn 
      
-<br>
  here    
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20 ">  and  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20  ) and <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20  ) 
-<br>
+ mmm f =  1 + e^-Z^ nnn  and  mmm  df = -e^-Z^ nnn and mmm f^2^ = (1 + e ^-Z^)^2^ nnn 
  
-<br>
  Thus
-<br>
  
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
-<br>
+ mmm {-df}/{f^2^} = {e ^-Z^ }/{(1 + e^-Z^)^2^} nnn
    
-<br>
  For fun and to get what we are looking for we add and subtract 1 above the line
-<br>
  
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20 "> 
-<br>
+ mmm {-df}/{f^2^} ={1 + e ^-Z^ -1}/{(1 + e^-Z^)^2^} nnn 
  
-<br>
  Rewriting this we get  
-<br>
  
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20 "> 
-<br>
+ mmm {-df}/{f^2^} = {1 + e ^-Z^}/{(1 + e^-Z^)^2^} - {1}/{(1 + e^-Z^)^2^} nnn 
  
-<br>
  Then we take out the following from first and second part 
-<br>
  
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 "> 
-<br>
+ mmm {1}/{(1 + e^-Z^)} nnn 
  
-<br>
  Giving us
-<br>
 =
-<br>
-<img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20 ">
-<br>
+mmm {-df}/{f^2^} =({1}/{(1 + e^-Z^)})(1 -{1}/{(1 + e^-Z^)})  nnn
   
-<br>
 
-<br>
   
-<br>
-Of course <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 "> Is Sigmoid 
-<br>
+Of course mmm {1}/{(1 + e^-Z^)} nnn Is Sigmoid 
   Therefore the partial derivative of Sigmoid with respect to Z is  
-<br>
   
-<br>
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20 ">
-<br>
+ mmm  {&Sigmoid}/{&Z} = Sigmoid*(1 - Sigmoid) nnn
   
-<br>
   This is useful because we can easily calculate the derivative of Sigmoid
-<br>
  
-<br>
