@@ -3,13 +3,15 @@
 
 Neural Networks don't use simple equations. for calculating a neurons output. 
  
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20Output=%20Z%20=%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20 "> 
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20Output=%20Z%20=%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20 ">
 <br>
+ <br> 
 
 .Instead they use complex Ones like 
  
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
 <br>
+ <br>
  where Z is as above 
 
 Sigmoid is used to calculate the result of a Neuron, because its value varies between 0 and 1. Its value changes very little with small changes in weights. With the greatest change( most learning occurring around 0.5). This means we can make tiny improvements in Overall Cost with small changes.
@@ -18,8 +20,9 @@ Sigmoid is used to calculate the result of a Neuron, because its value varies be
 Train a network to recognize wonky letters. A wonky letter is drawn on the panel and you tell the network what it is. After a few iterations it gets better and better and recognizing the letter.
   
 Equation for each Neuron
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
 <br>
+ <br>
 
 The network learns each time you click the correct letter. 
 The input panel is broken into 10 by 10 squares.  100 input Neurons that are connected to each of the output Neurons  
@@ -81,8 +84,9 @@ We change them in proportion to pdW(x)-Cost ( Partial Derivative of Weight with 
 
 There are some funky maths to prove this but for the outputlayer
 
-<img src="http://chart.apis.google.com/chart?cht=tx&chl=%20pdW(x%29-Cost%20=%20input(x%29%20*(sigMoid%20-%20T%29%20*%20sigMoid%20*%20(1%20-%20sigMoid%29%20 ">n
+ <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20pdW(x%29-Cost%20=%20input(x%29%20*(sigMoid%20-%20T%29%20*%20sigMoid%20*%20(1%20-%20sigMoid%29%20 ">
 <br>
+ <br>n
 
 
        
@@ -106,48 +110,62 @@ Using chain rule pdW(x)-Cost =
 <h2> Proof of pdZ-Sigmoid = sigMoid * (1 - sigMoid)</h2>
  
  
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
 <br>
+ <br>
  Reciprocal Rule  derivative of 
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20 "> 
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20 ">
 <br>
+ <br> 
  here    
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20 ">  and  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20 "> and <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20 "> 
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20 ">
 <br>
+ <br>  and   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20 ">
+<br>
+ <br> and  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20 ">
+<br>
+ <br> 
  
  Thus
  
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
 <br>
+ <br>
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20 "> 
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
 <br>
+ <br> 
  
  Rewriting this we get  
  
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20 "> 
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
 <br>
+ <br> 
  
  Then we take out the following from first and second part 
  
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 "> 
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 ">
 <br>
+ <br> 
  
  Giving us
 =
-<img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20 ">
+ <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20 ">
 <br>
+ <br>
   
 
   
-Of course <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 "> Is Sigmoid 
+Of course  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 ">
 <br>
+ <br> Is Sigmoid 
   Therefore the partial derivative of Sigmoid with respect to Z is  
   
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20 ">
+  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20 ">
 <br>
+ <br>
   
   This is useful because we can easily calculate the derivative of Sigmoid
  

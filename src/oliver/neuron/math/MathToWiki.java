@@ -114,7 +114,7 @@ public class MathToWiki {
 		    		
 		    		String startString = test.substring(0, startMath);
 		    		String ret = startString;
-		    		ret += "![d](" + "http://chart.apis.google.com/chart?cht=tx&chl="+thisPart.toString() +"  )";
+		    		ret += " ![d](" + "http://chart.apis.google.com/chart?cht=tx&chl="+thisPart.toString() +"  )\n <br>";
 		    		if(test.length() > startMath+ mathEnd +3) {
 		    			ret +=  test.substring(startMath+mathEnd +6);
 		    		}
