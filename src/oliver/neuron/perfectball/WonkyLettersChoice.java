@@ -37,7 +37,7 @@ public class WonkyLettersChoice extends JPanel {
 	ButtonGroup group = new ButtonGroup();
 	String message;
 	WonkyLetters innerPanel = new WonkyLetters();
-	JTextPane resultPane = new JTextPane();
+	//JTextPane resultPane = new JTextPane();
 
 	int selectedCoice = -1;
 	static int preferedWidth = 200;
@@ -46,7 +46,7 @@ public class WonkyLettersChoice extends JPanel {
 
 		this.setLayout(null);
 		this.add(innerPanel);
-		this.add(resultPane);
+	//	this.add(resultPane);
 		this.setPreferredSize(new Dimension(preferedWidth, 280));
 
 		// this.add(chosen);
@@ -58,7 +58,7 @@ public class WonkyLettersChoice extends JPanel {
 
 			JButton but = new JButton(letter);
 			final int oID = id;
-			but.setBounds(w, 60, 50, 30);
+			but.setBounds(0, w, 200, 30);
 			this.add(but);
 			group.add(but);
 			but.addActionListener(new ActionListener() {
@@ -77,12 +77,12 @@ public class WonkyLettersChoice extends JPanel {
 			});
 			id++;
 
-			w += 50;
+			w += 30;
 		}
 
 		// chosen.setBounds(preferedWidth * 2 / 3, 0, preferedWidth / 3, 30);
 
-		resultPane.setBounds(0, 0, preferedWidth, 60);
+		//resultPane.setBounds(0, 0, preferedWidth, 60);
 		
 		innerPanel.setBounds(0, 90, preferedWidth, 200);
 
@@ -104,7 +104,7 @@ public class WonkyLettersChoice extends JPanel {
 	 * @return
 	 */
 	public double[] like(BallTrial trial, DrawNeuralNetwork overallPanel, double[] in) {
-		resultPane.setBackground(this.getBackground());
+		//resultPane.setBackground(this.getBackground());
 		double[] expected = new double[2];
 		int neuronChoice = -1;
 		double max = 0;
@@ -114,11 +114,23 @@ public class WonkyLettersChoice extends JPanel {
 				neuronChoice = x;
 			}
 		}
+		
+		Enumeration<AbstractButton> enumk =group.getElements();
+		int y=0;
+		while (enumk.hasMoreElements()) {
+			if(y == neuronChoice) {
+			enumk.nextElement().setText(LETTERS[y] + "- Network is correct" );
+			}else {
+				enumk.nextElement().setText(LETTERS[y] + "- Network is wrong" );
+			}
+			y ++;
+		}
+		
         String gotLetter = LETTERS[neuronChoice];
 		String text = String.format("Is it a %s? \n  ",
 				LETTERS[neuronChoice]);
-		this.resultPane.setText(text);
-		this.resultPane.setFont(this.resultPane.getFont().deriveFont(18.0f));
+		//this.resultPane.setText(text);
+		//this.resultPane.setFont(this.resultPane.getFont().deriveFont(18.0f));
 		selectedCoice = -1;
 		synchronized (waitForMe) {
 			try {
@@ -178,8 +190,6 @@ public class WonkyLettersChoice extends JPanel {
 		while (enumk.hasMoreElements()) {
 			enumk.nextElement().setEnabled(enabled);
 		}
-		if(!enabled) {
-			this.resultPane.setText("Please  start runs above");
-		}
+		
 	}
 }
