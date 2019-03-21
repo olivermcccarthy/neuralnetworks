@@ -382,15 +382,15 @@ public class DrawNeuralNetwork extends JPanel {
 	int numWrongThisBatch  =0;
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep, boolean redraw) {
 		
-		trialNumber ++;
-		String message= String.format("Run %d . Expected %s  Got %s ", this.trialNumber,
+		
+		String message= String.format("Expected %s  Got %s ", this.trialNumber,
 				Neuron.toString(expected), Neuron.toString(got));
 		this.waitForUserClick(info,message,sleep,redraw);
 	}
 	public void waitForUserClick(TrialInfo info, String message, boolean sleep, boolean redraw) {
 
-
-		setMessage(message);
+		trialNumber ++;
+		setMessage(String.format("Run %s %s", trialNumber,message));
         if(!redraw) {
         	return;
         }
@@ -507,19 +507,32 @@ public class DrawNeuralNetwork extends JPanel {
 	}
 	
 	public void run(TrialInfo trainer) throws Exception {
-		trainer.nextBatch(neuralNetwork);
-		trainer.numPerBatch =1;
-		this.waitForUserClick( trainer, "Click run to start ", false,true);
-		while(true) {
-			
-			
-			while(numBatchesI > 0) {
+		Runnable r = new Runnable() {
+
+			@Override
+			public void run() {
+				try {
 				trainer.nextBatch(neuralNetwork);
-				numBatchesI --;
+				trainer.numPerBatch =1;
+				waitForUserClick( trainer, "Click run to start ", false,true);
+				while(true) {
+					
+					
+					while(numBatchesI > 0) {
+						trainer.nextBatch(neuralNetwork);
+						numBatchesI --;
+						
+					}
+					waitForUserClick( trainer, "Click run to start ", false,true);
+				}
+				}catch (Throwable t) {
+					t.printStackTrace();
+				}
 				
-			}
-			this.waitForUserClick( trainer, "Click run to start ", false,true);
-		}
+			}};
+		Thread t = new Thread(r);
+		t.start();
+
 	}
 	public void forceRedraw() {
 		

@@ -74,7 +74,7 @@ public class BallTrial extends  TrialInfo{
 			theCost.addResult(expected, values);
 			drawPanel.repaint();
 			
-			drawPanel.waitForUserClick(this, expected, values,false,true);
+			
 		}
 		return theCost;
 	}

@@ -57,7 +57,7 @@ public class WonkyLettersChoice extends JPanel {
 		for (String letter : LETTERS) {
 
 			JButton but = new JButton(letter);
-			final int oID = 0;
+			final int oID = id;
 			but.setBounds(w, 60, 50, 30);
 			this.add(but);
 			group.add(but);
@@ -114,10 +114,11 @@ public class WonkyLettersChoice extends JPanel {
 				neuronChoice = x;
 			}
 		}
-
-		String text = String.format("Network says the letter is %s, CLick the letter you think it is",
+        String gotLetter = LETTERS[neuronChoice];
+		String text = String.format("Is it a %s? \n  ",
 				LETTERS[neuronChoice]);
 		this.resultPane.setText(text);
+		this.resultPane.setFont(this.resultPane.getFont().deriveFont(18.0f));
 		selectedCoice = -1;
 		synchronized (waitForMe) {
 			try {
@@ -147,7 +148,8 @@ public class WonkyLettersChoice extends JPanel {
 				expected[x] = in[x];
 			}
 		}
-
+		String expectedLetter = LETTERS[neuronChoice];
+		overallPanel.waitForUserClick(trial, String.format("Expected %s , Got %s", expectedLetter,gotLetter),false,true);
 		return expected;
 	}
 

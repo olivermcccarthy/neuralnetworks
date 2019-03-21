@@ -115,7 +115,7 @@ public class NeuronInAPanel extends JPanel {
 		String textStr = "  " + neuron.getName();
 		char[] chararr = textStr.toCharArray();
 		g2d.setColor(DrawNeuralNetwork.faderYellowToRed(1, 0, neuron.getValue()));
-	    this.setBackground(Color.LIGHT_GRAY);
+	
 		g2d.fillRect(baseX, baseY, neuronSizeInPixels, neuronSizeInPixels);
 
 		int textSpace = neuronSizeInPixels / 5;
@@ -140,11 +140,9 @@ public class NeuronInAPanel extends JPanel {
 	
 		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
 		if (numInputs > 10) {
-			if (neuron.getName().endsWith("-0")) {
-				
-			}
-			paintInputsInSquare(g, 20, baseY, false);
-			paintInputsInSquare(g,neuronSizeInPixels*2/3 +20, baseY, true);
+			
+			paintInputsInSquare(g, 0, baseY, false);
+			paintInputsInSquare(g,neuronSizeInPixels*2/3 +10 , baseY, true);
 			return;
 		}
 		if (numInputs > 5) {
