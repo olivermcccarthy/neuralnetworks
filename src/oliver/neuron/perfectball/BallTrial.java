@@ -28,7 +28,7 @@ public class BallTrial extends  TrialInfo{
 
 	
 		 panel = new WonkyLettersChoice();
-		NeuralNetwork neuralNetwork = new NeuralNetwork(100, 0, 0, 2, false);
+		NeuralNetwork neuralNetwork = new NeuralNetwork(100, 0, 0, 3, false);
 		DrawNeuralNetwork.showNeurons(trainer,neuralNetwork,10, 10);
 		DrawNeuralNetwork.getNeuronPanel(trainer.getName()).setInputPanel(panel);
 		DrawNeuralNetwork nP = DrawNeuralNetwork.getNeuronPanel(trainer.getName());

@@ -40,7 +40,10 @@ public class WonkyLetters extends JPanel {
      * Routes the polygon can follow
      */
 	static String[] routes = new String[] { "A0-A7-B7-B1-C1-D1-D7-E7-E1-F1-G1-G7-H7-H0-A0", // Wonky E
-			"A0-A7-B7-B1-C1-D1-D7-E7-E1-F1-G1-H1-H0-A0" }; // WonkyF 
+			"A0-A7-B7-B1-C1-D1-D7-E7-E1-F1-G1-H1-H0-A0" 
+			, // Wonky E
+			"A0-A1-D1-D6-A6-A7-H7-H6-E6-E2-H2-H0-A0" // Wonky H		
+	}; // WonkyF 
 	
 	
 	public WonkyLetters() {

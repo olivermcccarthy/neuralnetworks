@@ -105,7 +105,7 @@ public class WonkyLettersChoice extends JPanel {
 	 */
 	public double[] like(BallTrial trial, DrawNeuralNetwork overallPanel, double[] in) {
 		//resultPane.setBackground(this.getBackground());
-		double[] expected = new double[2];
+		double[] expected = new double[in.length];
 		int neuronChoice = -1;
 		double max = 0;
 		for (int x = 0; x < in.length; x++) {
@@ -119,6 +119,7 @@ public class WonkyLettersChoice extends JPanel {
 		int y=0;
 		while (enumk.hasMoreElements()) {
 			if(y == neuronChoice) {
+				
 			enumk.nextElement().setText(LETTERS[y] + "- Network is correct" );
 			}else {
 				enumk.nextElement().setText(LETTERS[y] + "- Network is wrong" );
