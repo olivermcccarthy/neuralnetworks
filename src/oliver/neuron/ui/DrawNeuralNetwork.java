@@ -138,7 +138,7 @@ public class DrawNeuralNetwork extends JPanel {
         // Initializing the JTable 
         String [][] data = new String[1][3];
         data[0]= new String[]{"1","1","1"};
-        DefaultTableModel model = new DefaultTableModel(data,columnNames);
+        MyTableModel model = new  MyTableModel(columnNames);
         runInfoPane= new JTable(model);
 		
 		JScrollPane scroll3 = new JScrollPane(overallInfo);
@@ -155,9 +155,8 @@ public class DrawNeuralNetwork extends JPanel {
 		String[] batchcolumnNames = { "Batch", "Run", "Correct", "%Correct" }; 
 		  
         // Initializing the JTable 
-        String [][] data2 = new String[1][3];
-        data2[0]= new String[]{"0","0","0","0"};
-        DefaultTableModel model2 = new DefaultTableModel(data2,batchcolumnNames);
+     
+        MyTableModel model2 = new MyTableModel(batchcolumnNames);
         batchInfoPane= new JTable(model2);
 		JScrollPane scroll4 = new JScrollPane(batchInfoPane);
 		batchInfoPane.setFont(getFont().deriveFont(12.0f));
@@ -396,7 +395,7 @@ public class DrawNeuralNetwork extends JPanel {
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep, boolean redraw) {
 		
 		
-		String message= String.format("Expected %s  Got %s ", this.trialNumber,
+		String message= String.format("%s, %s ", 
 				Neuron.toString(expected), Neuron.toString(got));
 		this.waitForUserClick(info,message,sleep,redraw);
 	}
@@ -478,16 +477,13 @@ public class DrawNeuralNetwork extends JPanel {
 	}
 
 	
-	ArrayList<String> messages = new ArrayList<String>();
-	ArrayList<String> batchMessages = new ArrayList<String>();
+	
 	int batchesRun =0;
 	public void addCost(Cost theCost) {
 		this.addCost(theCost,false);
 	}
 	public void addCost(Cost theCost, boolean update) {
-		while (batchMessages.size() >= 20) {
-			batchMessages.remove(batchMessages.size() -1);
-		}if(!update) {
+		if(!update) {
 		   batchesRun ++;
 		}
 		if(theCost.numTuples == 0) {
@@ -499,37 +495,30 @@ public class DrawNeuralNetwork extends JPanel {
 		String messC = String.format("%s, %s, %s, %s ", batchesRun,theCost.numTuples, theCost.numTuples-theCost.numWrong,p);
 		
 		
-		this.setMessage(this.batchMessages, this.batchInfoPane, messC, update);
+		this.setMessage(this.batchInfoPane, messC, update);
 	
 	}
 	public  void setMessage(String message) {
-		this.setMessage(this.messages,this.runInfoPane, message,false);
+		this.setMessage(this.runInfoPane, message,false);
 	}
-	public  void setMessage(ArrayList<String> messages,JTable infoPane,String message, boolean update) {
+	public  void setMessage(JTable infoPane,String message, boolean update) {
 		// DefaultTableModel model = new DefaultTableModel();
 	//	 this.runInfoPane.setModel(model);
 		 
-		DefaultTableModel model =(DefaultTableModel)infoPane.getModel();
-		while(model.getRowCount() > 0){
-		model.removeRow(0);
-		}
+		MyTableModel model =(MyTableModel)infoPane.getModel();
+		
 		if(!message.startsWith("Click")) {
-			while (messages.size() >= 20) {
-				messages.remove(messages.size() -1);
-			}
-			if(update && messages.size() > 0) {
-				messages.set(0,message);
+			
+			if(update) {
+				model.updateRow(message.split(","));
 			}else {
-			messages.add(0,message);
+				model.addRow(message.split(","));
 			}
+				
 			
-			for(String msg : messages) {
-			
-				model.addRow(msg.split(","));
-			}
 			
 			 
-			 this.runInfoPane.repaint();
+			infoPane.repaint();
 		}
 	}
 	
