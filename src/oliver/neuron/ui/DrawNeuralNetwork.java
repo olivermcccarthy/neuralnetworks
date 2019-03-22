@@ -275,7 +275,7 @@ public class DrawNeuralNetwork extends JPanel {
 			
 				for (Neuron nu : layer.getNeurons()) {
 
-					NeuronInAPanel.placeNuronOnScreen(nu, this,  baseX + diffX,  baseY + diffY, this.neuronSizeInPixels);
+					NeuronInAPanel.placeNuronOnScreen(nu, this,  baseX + diffX,  baseY + diffY, neuronSizeInPixels);
 					
 					diffY += neuronSpaceHeight;
 				}
@@ -552,6 +552,8 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 	public void forceRedraw() {
-		
+		for(NeuronInAPanel nuPanel: this.panels.values()) {
+			nuPanel.forceRedraw();
+		}
 	}
 }

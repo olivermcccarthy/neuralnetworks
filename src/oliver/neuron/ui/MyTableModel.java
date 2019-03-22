@@ -46,7 +46,7 @@ public class MyTableModel extends AbstractTableModel{
 			int debugME =0;
 		}
 		try {
-		 return messages.get(rowIndex )[columnIndex];	
+		 return messages.get(messages.size() -1 -rowIndex )[columnIndex];	
 			
 		}catch (Throwable t) {
 			
@@ -59,24 +59,26 @@ public class MyTableModel extends AbstractTableModel{
 		
 		try {
 			while(messages.size() > 20) {
-				messages.remove(messages.size() -1);
+				messages.remove(0);
 			}
+			
+			messages.add(data);
+			
+		}catch (Throwable t) {
+			
+		}
+		super.fireTableDataChanged();
+	}
+	public void updateRow(String[] data) {
+		try {
+			while(messages.size() > 20) {
+				messages.remove(0);
+			}
+			
 			messages.add(data);
 		}catch (Throwable t) {
 			
 		}
-		
-	}
-	public void updateRow(String[] data) {
-		try {
-			if(messages.size() > 0) {
-				messages.set(0,data);
-			}else {
-			  messages.add(data);
-			}
-		}catch (Throwable t) {
-			
-		}
-		
+		super.fireTableDataChanged();
 	}
 }

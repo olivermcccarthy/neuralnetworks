@@ -348,4 +348,10 @@ public class NeuronInAPanel extends JPanel {
 
 		int df = 0;
 	}
+
+	public void forceRedraw() {
+		this.imageWeightsOnly = null;
+		this.imageWithInputs = null;
+		
+	}
 }
