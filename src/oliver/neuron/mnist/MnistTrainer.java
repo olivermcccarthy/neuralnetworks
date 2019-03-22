@@ -100,7 +100,7 @@ public class MnistTrainer extends TrialInfo {
 					    }
 					}
 					drawPanel.setInputImage(images.get(image), 10, DrawNeuralNetwork.PICTURE_TYPE.GREYSCALE);
-					drawPanel.waitForUserClick(this, expected2, maxI, false, redraw);
+					drawPanel.waitForUserClick(this, expected2, maxI, true, redraw);
 					
 				}
 				theCost.addResult(expected, output);
