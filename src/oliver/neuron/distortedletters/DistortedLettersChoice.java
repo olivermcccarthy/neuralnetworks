@@ -1,9 +1,9 @@
-package oliver.neuron.perfectball;
+package oliver.neuron.distortedletters;
 
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Polygon;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
@@ -11,45 +11,68 @@ import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextPane;
+
 
 import oliver.neuron.ui.DrawNeuralNetwork;
 
 /**
 
- *
+ * Display a Distorted(Distorted) Letter and ask user to select which Letter it is
  */
-public class WonkyLettersChoice extends JPanel {
+public class DistortedLettersChoice extends JPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -985471666659201980L;
 
+	/**
+	 * Choice of letters
+	 */
 	static String[] LETTERS = new String[] { "E", "F", "H" };
 
+	/**
+	 * Wait for user to choose
+	 */
 	Object waitForMe = "";
-	static WonkyLettersChoice me;
+	
+	
+	/**
+	 * Group of buttons ( User Choose the letter)
+	 */
 	ButtonGroup group = new ButtonGroup();
-	String message;
-	WonkyLetters innerPanel = new WonkyLetters();
+	
+	
+	
+	
+	/**
+	 * Panel displaying the distorted Letter
+	 */
+	DistortedLetters innerPanel = new DistortedLetters();
 	//JTextPane resultPane = new JTextPane();
 
+	/**
+	 * Which Letter did the user choose
+	 */
 	int selectedCoice = -1;
+	
+	
+	/**
+	 * Preferred width of this panel
+	 */
 	static int preferedWidth = 200;
 
-	public WonkyLettersChoice() {
+	public DistortedLettersChoice() {
 
 		this.setLayout(null);
 		this.add(innerPanel);
-	//	this.add(resultPane);
+
 		this.setPreferredSize(new Dimension(preferedWidth, 280));
 
-		// this.add(chosen);
+
 		this.setLayout(null);
 
 		int w = 0;
@@ -58,7 +81,7 @@ public class WonkyLettersChoice extends JPanel {
 
 			JButton but = new JButton(letter);
 			final int oID = id;
-			but.setBounds(0, w, 200, 30);
+			but.setBounds(w, 230, 50, 30);
 			this.add(but);
 			group.add(but);
 			but.addActionListener(new ActionListener() {
@@ -77,22 +100,15 @@ public class WonkyLettersChoice extends JPanel {
 			});
 			id++;
 
-			w += 30;
+			w += 50;
 		}
-
-		// chosen.setBounds(preferedWidth * 2 / 3, 0, preferedWidth / 3, 30);
-
-		//resultPane.setBounds(0, 0, preferedWidth, 60);
 		
-		innerPanel.setBounds(0, 90, preferedWidth, 200);
+	   innerPanel.setBounds(0, 0, preferedWidth, 200);
 
-		// this.add(dont);
+	
 	}
 
-	public void setDrawPanel(DrawNeuralNetwork dN) {
-
-		// dN.addButton(this.dont);
-	}
+	
 
 	/**
 	 * User agrees we set expected[neuronChoce] to 1 and all others to 0 User
@@ -103,7 +119,7 @@ public class WonkyLettersChoice extends JPanel {
 	 * @param in
 	 * @return
 	 */
-	public double[] like(BallTrial trial, DrawNeuralNetwork overallPanel, double[] in) {
+	public double[] like(DistortedLetterTrial trial, DrawNeuralNetwork overallPanel, double[] in) {
 		//resultPane.setBackground(this.getBackground());
 		double[] expected = new double[in.length];
 		int neuronChoice = -1;
@@ -115,21 +131,10 @@ public class WonkyLettersChoice extends JPanel {
 			}
 		}
 		
-		Enumeration<AbstractButton> enumk =group.getElements();
-		int y=0;
-		while (enumk.hasMoreElements()) {
-			if(y == neuronChoice) {
-				
-			enumk.nextElement().setText(LETTERS[y] + "- Network is correct" );
-			}else {
-				enumk.nextElement().setText(LETTERS[y] + "- Network is wrong" );
-			}
-			y ++;
-		}
+		
 		
         String gotLetter = LETTERS[neuronChoice];
-		String text = String.format("Is it a %s? \n  ",
-				LETTERS[neuronChoice]);
+       
 		//this.resultPane.setText(text);
 		//this.resultPane.setFont(this.resultPane.getFont().deriveFont(18.0f));
 		selectedCoice = -1;
@@ -143,6 +148,9 @@ public class WonkyLettersChoice extends JPanel {
 		}
 
 		if (selectedCoice != -1) {
+			if(selectedCoice == -2) {
+				 this.selectedCoice= neuronChoice;
+			}
 			if (this.selectedCoice != neuronChoice) {
 				trial.numWrong++;
 
@@ -179,7 +187,7 @@ public class WonkyLettersChoice extends JPanel {
 
 		JFrame frame = new JFrame("test");
 		frame.setSize(200, 200);
-		WonkyLettersChoice panel = new WonkyLettersChoice();
+		DistortedLettersChoice panel = new DistortedLettersChoice();
 		frame.add(panel);
 		frame.setVisible(true);
 

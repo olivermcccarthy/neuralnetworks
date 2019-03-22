@@ -1,4 +1,4 @@
-package oliver.neuron.perfectball;
+package oliver.neuron.distortedletters;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,23 +11,23 @@ import oliver.neuron.neonnumbers.NeonTrial;
 import oliver.neuron.ui.DrawNeuralNetwork;
 import oliver.neuron.ui.Helper;
 
-public class BallTrial extends  TrialInfo{
+public class DistortedLetterTrial extends  TrialInfo{
 
 	
-	public BallTrial(int numTrialsBetweenSaves, double learningRate, int numValues, double learningRateChange) {
+	public DistortedLetterTrial(int numTrialsBetweenSaves, double learningRate, int numValues, double learningRateChange) {
 		super(numTrialsBetweenSaves, learningRate, numValues, learningRateChange);
 		// TODO Auto-generated constructor stub
 	}
 
-	static WonkyLettersChoice panel = null;
+	static DistortedLettersChoice panel = null;
 	
 
 	public static void main(String[] args) throws Exception {
 
-		BallTrial trainer = new BallTrial(1, 1, 10000, 1.2);
+		DistortedLetterTrial trainer = new DistortedLetterTrial(1, 1, 10000, 1.2);
 
 	
-		 panel = new WonkyLettersChoice();
+		 panel = new DistortedLettersChoice();
 		NeuralNetwork neuralNetwork = new NeuralNetwork(100, 0, 0, 3, false);
 		DrawNeuralNetwork.showNeurons(trainer,neuralNetwork,10, 10);
 		DrawNeuralNetwork.getNeuronPanel(trainer.getName()).setInputPanel(panel);
@@ -82,11 +82,11 @@ public class BallTrial extends  TrialInfo{
 	@Override
 	public String getHelp() {
 		// TODO Auto-generated method stub
-		return "Train a network to recognize wonky letters. "
+		return "Train a network to recognize Distorted letters. "
 				+ "The network learns each time you click the correct letter. "
-				+ "The input panel is broken into 10 by 10 squares.  100 input Neurons that are connected to each of the output Neurons "
-				+ "Weights are shown in a sqaure. Red for positive weights,blue for negative weights  "
-				+ "Watch as the weights change color as the network learns"
+				+ "The input panel is broken into 10 by 10 squares.  \n  100 input Neurons that are connected to each of the output Neurons\n"
+				+ "Weights are shown in a sqaure to teh left of the neuron. Red for positive weights,blue for negative weights  "
+				+ "Watch as the weights change color as your train the network"
 				;
 		
 	}
@@ -98,6 +98,6 @@ public class BallTrial extends  TrialInfo{
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "WonkyLetters";
+		return "DistortedLetters";
 	}
 }
