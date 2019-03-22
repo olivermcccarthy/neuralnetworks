@@ -61,7 +61,7 @@ public class DistortedLetters extends JPanel {
 	/**
 	 * Draw one of the ploygons in routes 
 	 */
-	protected void newPoly() {
+	protected void newLetter() {
 		Dimension dimension = this.getSize();
 		poly = new Polygon();
 		int height = dimension.height ;
@@ -102,7 +102,7 @@ public class DistortedLetters extends JPanel {
 
 		g.setColor(new Color(255, 0, 0));
 		if (poly == null) {
-			newPoly();
+			newLetter();
 		}
 
 		g.fillPolygon(poly);

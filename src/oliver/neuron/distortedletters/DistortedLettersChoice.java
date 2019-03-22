@@ -15,7 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
+import oliver.neuron.Cost;
 import oliver.neuron.ui.DrawNeuralNetwork;
 
 /**
@@ -119,7 +119,7 @@ public class DistortedLettersChoice extends JPanel {
 	 * @param in
 	 * @return
 	 */
-	public double[] like(DistortedLetterTrial trial, DrawNeuralNetwork overallPanel, double[] in) {
+	public double[] like(Cost theCost,DistortedLetterTrial trial, DrawNeuralNetwork overallPanel, double[] in) {
 		//resultPane.setBackground(this.getBackground());
 		double[] expected = new double[in.length];
 		int neuronChoice = -1;
@@ -153,6 +153,7 @@ public class DistortedLettersChoice extends JPanel {
 			}
 			if (this.selectedCoice != neuronChoice) {
 				trial.numWrong++;
+				theCost.numWrong ++;
 
 			}
 			neuronChoice = this.selectedCoice;
@@ -174,8 +175,8 @@ public class DistortedLettersChoice extends JPanel {
 		return expected;
 	}
 
-	protected void newPoly() {
-		this.innerPanel.newPoly();
+	protected void newLetter() {
+		this.innerPanel.newLetter();
 	}
 
 	protected void paintComponent(Graphics g) {

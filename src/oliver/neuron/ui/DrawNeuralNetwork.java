@@ -472,17 +472,27 @@ public class DrawNeuralNetwork extends JPanel {
 	ArrayList<String> batchMessages = new ArrayList<String>();
 	int batchesRun =0;
 	public void addCost(Cost theCost) {
+		this.addCost(theCost,false);
+	}
+	public void addCost(Cost theCost, boolean update) {
 		while (batchMessages.size() >= 20) {
 			batchMessages.remove(batchMessages.size() -1);
+		}if(!update) {
+		   batchesRun ++;
 		}
-		batchesRun ++;
 		if(theCost.numTuples == 0) {
 			theCost.numTuples =1;
 		}
 		int percent = ((theCost.numWrong * 10000)/theCost.numTuples);
 		double p = percent;
 		p = p/100;
-		batchMessages.add(0,String.format("Batch %s. %s incorrect of run %s %s Percent", batchesRun,theCost.numWrong, theCost.numTuples,p));
+		String messC = String.format("Batch %s. %s incorrect of run %s %s Percent", batchesRun,theCost.numWrong, theCost.numTuples,p);
+		if(update & batchMessages.size() > 0) {
+			
+		batchMessages.set(0,messC);
+		}else {
+			batchMessages.add(0,messC);
+		}
 		this.message="";
 		for(String msg : batchMessages) {
 			this.message+= msg + "\n";	
