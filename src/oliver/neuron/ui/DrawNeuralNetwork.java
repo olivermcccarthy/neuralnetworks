@@ -48,19 +48,39 @@ import oliver.neuron.neonnumbers.NeonTrial;
  */
 public class DrawNeuralNetwork extends JPanel {
 
+	/**
+	 * We can draw more than one network at a time
+	 */
 	static HashMap<String,DrawNeuralNetwork> neuronPanels = new HashMap<String,DrawNeuralNetwork>();
 
+	/**
+	 * The Network we are drawing
+	 */
 	NeuralNetwork neuralNetwork = null;
-
-	public static DrawNeuralNetwork getNeuronPanel(String name) {
-		return neuronPanels.get(name);
-	}
-
+	
+	/**
+	 * Nuumber of batches remaining to be run. counst dont from what the user selects as number of batches before they click run 
+	 */
+	int numBatchesRemaining;
+	
+	/**
+	 * Overall trialNumber increment by one every run
+	 */
+	int trialNumber =0;
+    
+	/**
+     * User choice panel. Here they choose batch size etc and click run 
+     */
 	ControlPanel panel ;
 	
+	/**
+	 * Overall frame
+	 */
 	private static JFrame frame;
 
-	private static int SCREEN_SIZE=1000;
+	private static int SCREEN_SIZE=1000; 
+	
+	
 	/**
 	 * Type of input data. 1s and zeros or greyscale
 	 */
@@ -69,11 +89,22 @@ public class DrawNeuralNetwork extends JPanel {
 	};
 
 	/**
-	 * Allow user click through training
+	 * Positive weights are represented by these red colors. 
 	 */
+	static Color[] shadesPositive = new Color[] { new Color(255, 0, 0), new Color(225, 125, 125),
+			new Color(255, 255, 204) };
 	
-
-	HashMap<String, NeuronInAPanel> panels = new HashMap<String, NeuronInAPanel>();
+	/**
+	 * Negative weights are represented by these blue colors. 
+	 */
+	static Color[] shadesNegative = new Color[] { new Color(0, 0, 105), new Color(0, 0, 255),
+			new Color(153, 255, 255) };
+	
+	
+	/**
+	 * A panel for each Neuron being drawn
+	 */
+	HashMap<String, NeuronInAPanel> nueronPanels = new HashMap<String, NeuronInAPanel>();
 
 	/**
 	 * How large to paint each Neuron
@@ -86,6 +117,7 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	PICTURE_TYPE pictureType;
 
+	
 	/**
 	 * When there are more than 20 inputs to a neuron . The weights will be painted
 	 * as a picture. Brightest color being highest weight This value will be the
@@ -104,6 +136,51 @@ public class DrawNeuralNetwork extends JPanel {
 	// Place the input panel on the left hand side
 	private JPanel inputPanel = null;
 
+	/**
+	 * Trial we are displaying
+	 */
+	TrialInfo trialInfo;
+	
+	/**
+	 * Info on runs in the batch ( Last 20) 
+	 */
+	JTable runInfoPane= new JTable();
+	
+	/**
+	 * Info on each batch run ( Last 20) 
+	 */
+	JTable batchInfoPane= new JTable();
+	
+	/**
+	 * Display some short help
+	 */
+	JTextPane helpPanel= null;
+	
+	/**
+	 * Over light blue background color
+	 */
+	static final Color BGColor = new Color(230, 255, 255);
+	
+	/**
+	 * Add help page and each Network we are painting as a tab
+	 */
+	static JTabbedPane tabbed = new JTabbedPane();
+	
+	
+	/**
+	 * We can draw more than one network at a time. This returns the Panel added by showNeurons
+	 * @param name
+	 * @return
+	 */
+	public static DrawNeuralNetwork getNeuronPanel(String name) {
+		return neuronPanels.get(name);
+	}
+	
+	
+	/**
+	 * Paint the input panel ( Usually showing a digit or a letter) 
+	 * @param inputPanel
+	 */
 	public void setInputPanel(JPanel inputPanel) {
 		this.inputPanel = inputPanel;
 		this.add(this.inputPanel);
@@ -117,12 +194,7 @@ public class DrawNeuralNetwork extends JPanel {
 		pictureType = typeOfPicture;
 
 	}
-	TrialInfo trialInfo;
-	JTable runInfoPane= new JTable();
-	JTable batchInfoPane= new JTable();
-	JTextPane overallInfo= null;
-	static final Color BGColor = new Color(230, 255, 255);
-	static JTabbedPane tabbed = new JTabbedPane();
+	
 	public DrawNeuralNetwork(TrialInfo trialInfo) {
 		this.trialInfo = trialInfo;
 		panel = new ControlPanel(trialInfo);
@@ -130,8 +202,8 @@ public class DrawNeuralNetwork extends JPanel {
 		this.add(panel);
 		setBackground(BGColor);
 		
-		overallInfo= new JTextPane();
-		overallInfo.setText(trialInfo.getHelp());
+		helpPanel= new JTextPane();
+		helpPanel.setText(trialInfo.getHelp());
 		 // Column Names 
         String[] columnNames = { "Run", "Expected", "Got" }; 
   
@@ -141,7 +213,7 @@ public class DrawNeuralNetwork extends JPanel {
         MyTableModel model = new  MyTableModel(columnNames);
         runInfoPane= new JTable(model);
 		
-		JScrollPane scroll3 = new JScrollPane(overallInfo);
+		JScrollPane scroll3 = new JScrollPane(helpPanel);
 		scroll3.setBounds(150, 10, SCREEN_SIZE -200 , 100);
 		this.add(scroll3);
 		
@@ -149,7 +221,7 @@ public class DrawNeuralNetwork extends JPanel {
 		runInfoPane.setFont(getFont().deriveFont(12.0f));
 		
 		
-		overallInfo.setBackground(this.getBackground());
+		helpPanel.setBackground(this.getBackground());
 		scroll2.setBounds(200, 120,300 , 80);
 		this.setLayout(null);
 		String[] batchcolumnNames = { "Batch", "Run", "Correct", "%Correct" }; 
@@ -170,6 +242,11 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 
+	/**
+	 * Paint the input image or the input panel on the left hand side of the screen. This shows the user the input image that is being evaluated
+	 * @param g
+	 * @param baseY
+	 */
 	protected void paintInputImage(Graphics g, int baseY) {
 
 		
@@ -216,8 +293,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	public static final int NUM_NURONS_TODRAW=20;
 	
-	private static int maxRedraws =10;
-	int numRedraws =0;
+	
 	/**
 	 * Draw input Image in top corner Draw each layer. Starting with input layer on
 	 * the Left.
@@ -225,10 +301,7 @@ public class DrawNeuralNetwork extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		this.numRedraws++;
-		if(numRedraws > 10) {
-		//	return;
-		}
+		
 		int baseX = -100;
 		int baseY = 220;
 
@@ -296,10 +369,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	
 
-	static Color[] shadesPositive = new Color[] { new Color(255, 0, 0), new Color(225, 125, 125),
-			new Color(255, 255, 204) };
-	static Color[] shadesNegative = new Color[] { new Color(0, 0, 105), new Color(0, 0, 255),
-			new Color(153, 255, 255) };
+	
 
 	/**
 	 * Fade colour based of difference of LOg fade from yellow to red
@@ -373,8 +443,8 @@ public class DrawNeuralNetwork extends JPanel {
 	}
 
 	public int getNumBatches() {
-		numBatchesI = this.panel.getNumBatches();
-		return numBatchesI;
+		numBatchesRemaining = this.panel.getNumBatches();
+		return numBatchesRemaining;
 	}
 
 	public double getLearningRate() {
@@ -389,9 +459,7 @@ public class DrawNeuralNetwork extends JPanel {
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got) {
 		this.waitForUserClick(info, expected, got, true, true);
 	}
-	int numBatchesI;
-	int trialNumber =0;
-	int numWrongThisBatch  =0;
+	
 	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep, boolean redraw) {
 		
 		
@@ -419,7 +487,7 @@ public class DrawNeuralNetwork extends JPanel {
 				e1.printStackTrace();
 			}
 		}
-		if (numBatchesI <= 0) {
+		if (numBatchesRemaining <= 0) {
 			this.panel.waitForMe();
 			getSleepTime();
 			getNumBatches();
@@ -535,9 +603,9 @@ public class DrawNeuralNetwork extends JPanel {
 				while(true) {
 					
 					
-					while(numBatchesI > 0) {
+					while(numBatchesRemaining > 0) {
 						trainer.nextBatch(neuralNetwork);
-						numBatchesI --;
+						numBatchesRemaining --;
 						
 					}
 					waitForUserClick( trainer, "Click run to start ", false,true);
@@ -552,7 +620,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 	public void forceRedraw() {
-		for(NeuronInAPanel nuPanel: this.panels.values()) {
+		for(NeuronInAPanel nuPanel: this.nueronPanels.values()) {
 			nuPanel.forceRedraw();
 		}
 	}
