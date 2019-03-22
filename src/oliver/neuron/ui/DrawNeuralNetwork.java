@@ -27,8 +27,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import oliver.neuron.Cost;
 import oliver.neuron.Layer;
@@ -115,8 +118,8 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 	TrialInfo trialInfo;
-	JTextPane runInfoPane= new JTextPane();
-	JTextPane batchInfoPane= new JTextPane();
+	JTable runInfoPane= new JTable();
+	JTable batchInfoPane= new JTable();
 	JTextPane overallInfo= null;
 	static final Color BGColor = new Color(230, 255, 255);
 	static JTabbedPane tabbed = new JTabbedPane();
@@ -129,28 +132,39 @@ public class DrawNeuralNetwork extends JPanel {
 		
 		overallInfo= new JTextPane();
 		overallInfo.setText(trialInfo.getHelp());
-		
+		 // Column Names 
+        String[] columnNames = { "Run", "Expected", "Got" }; 
+  
+        // Initializing the JTable 
+        String [][] data = new String[1][3];
+        data[0]= new String[]{"1","1","1"};
+        DefaultTableModel model = new DefaultTableModel(data,columnNames);
+        runInfoPane= new JTable(model);
 		
 		JScrollPane scroll3 = new JScrollPane(overallInfo);
-		this.add(scroll3);
 		scroll3.setBounds(150, 10, SCREEN_SIZE -200 , 100);
+		this.add(scroll3);
+		
 		JScrollPane scroll2 = new JScrollPane(runInfoPane);
 		runInfoPane.setFont(getFont().deriveFont(12.0f));
-		runInfoPane.setEditable(false);
-		runInfoPane.setCaretPosition(0);
-		runInfoPane.setBackground(this.getBackground());
+		
+		
 		overallInfo.setBackground(this.getBackground());
-		scroll2.setBounds(150, 120,300 , 50);
+		scroll2.setBounds(200, 120,300 , 80);
 		this.setLayout(null);
-		
-		
+		String[] batchcolumnNames = { "Batch", "Run", "Correct", "%Correct" }; 
+		  
+        // Initializing the JTable 
+        String [][] data2 = new String[1][3];
+        data2[0]= new String[]{"0","0","0","0"};
+        DefaultTableModel model2 = new DefaultTableModel(data2,batchcolumnNames);
+        batchInfoPane= new JTable(model2);
 		JScrollPane scroll4 = new JScrollPane(batchInfoPane);
 		batchInfoPane.setFont(getFont().deriveFont(12.0f));
-		batchInfoPane.setEditable(false);
-		batchInfoPane.setCaretPosition(0);
+		
 		batchInfoPane.setBackground(this.getBackground());
 		
-		scroll4.setBounds(450, 120,300 , 50);
+		scroll4.setBounds(450, 120,300 , 80);
 		this.add(scroll4);
 		this.add(scroll2);
 		
@@ -351,8 +365,7 @@ public class DrawNeuralNetwork extends JPanel {
 		getTopLevelAncestor().repaint();
 	}
 
-	private String message = "About to start Training";
-
+	
 	
     int sleepTimeMs;
 	public int getSleepTime() {
@@ -390,7 +403,7 @@ public class DrawNeuralNetwork extends JPanel {
 	public void waitForUserClick(TrialInfo info, String message, boolean sleep, boolean redraw) {
 
 		trialNumber ++;
-		setMessage(String.format("Run %s %s", trialNumber,message));
+		setMessage(String.format("%s,%s", trialNumber,message));
         if(!redraw) {
         	return;
         }
@@ -464,10 +477,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 
-	public  String getMessage() {
-		return message;
-	}
-
+	
 	ArrayList<String> messages = new ArrayList<String>();
 	ArrayList<String> batchMessages = new ArrayList<String>();
 	int batchesRun =0;
@@ -483,35 +493,42 @@ public class DrawNeuralNetwork extends JPanel {
 		if(theCost.numTuples == 0) {
 			theCost.numTuples =1;
 		}
-		int percent = ((theCost.numWrong * 10000)/theCost.numTuples);
+		int percent = (((theCost.numTuples-theCost.numWrong) * 10000)/theCost.numTuples);
 		double p = percent;
 		p = p/100;
-		String messC = String.format("Batch %s. %s incorrect of run %s %s Percent", batchesRun,theCost.numWrong, theCost.numTuples,p);
-		if(update & batchMessages.size() > 0) {
-			
-		batchMessages.set(0,messC);
-		}else {
-			batchMessages.add(0,messC);
-		}
-		this.message="";
-		for(String msg : batchMessages) {
-			this.message+= msg + "\n";	
-		}
-		 this.batchInfoPane.setText(this.message);
-		 this.batchInfoPane.repaint();
+		String messC = String.format("%s, %s, %s, %s ", batchesRun,theCost.numTuples, theCost.numTuples-theCost.numWrong,p);
+		
+		
+		this.setMessage(this.batchMessages, this.batchInfoPane, messC, update);
 	
 	}
 	public  void setMessage(String message) {
+		this.setMessage(this.messages,this.runInfoPane, message,false);
+	}
+	public  void setMessage(ArrayList<String> messages,JTable infoPane,String message, boolean update) {
+		// DefaultTableModel model = new DefaultTableModel();
+	//	 this.runInfoPane.setModel(model);
+		 
+		DefaultTableModel model =(DefaultTableModel)infoPane.getModel();
+		while(model.getRowCount() > 0){
+		model.removeRow(0);
+		}
 		if(!message.startsWith("Click")) {
 			while (messages.size() >= 20) {
 				messages.remove(messages.size() -1);
 			}
+			if(update && messages.size() > 0) {
+				messages.set(0,message);
+			}else {
 			messages.add(0,message);
-			this.message="";
-			for(String msg : messages) {
-				this.message+= msg + "\n";	
 			}
-			 this.runInfoPane.setText(this.message);
+			
+			for(String msg : messages) {
+			
+				model.addRow(msg.split(","));
+			}
+			
+			 
 			 this.runInfoPane.repaint();
 		}
 	}
@@ -522,8 +539,9 @@ public class DrawNeuralNetwork extends JPanel {
 			@Override
 			public void run() {
 				try {
-				trainer.nextBatch(neuralNetwork);
 				trainer.numPerBatch =1;
+				trainer.nextBatch(neuralNetwork);
+				
 				waitForUserClick( trainer, "Click run to start ", false,true);
 				while(true) {
 					

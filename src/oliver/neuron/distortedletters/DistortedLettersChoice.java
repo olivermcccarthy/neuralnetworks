@@ -171,7 +171,7 @@ public class DistortedLettersChoice extends JPanel {
 			}
 		}
 		String expectedLetter = LETTERS[neuronChoice];
-		overallPanel.waitForUserClick(trial, String.format("Expected %s , Got %s", expectedLetter,gotLetter),false,true);
+		overallPanel.waitForUserClick(trial, String.format("%s, %s", expectedLetter,gotLetter),false,true);
 		return expected;
 	}
 
