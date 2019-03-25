@@ -44,9 +44,7 @@ public class DistortedLetterTrial extends  TrialInfo{
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(getName());
 		drawPanel.setInputPanel(panel);
 	
-		if(this.numPerBatch > 1) {
-		   drawPanel.addCost(theCost);
-		}
+		boolean updateBatchInfo = false;
 		for(int trial = 0; trial < this.numPerBatch; trial ++) {
 				panel.newLetter();
 			double [] inputs = Helper.saveImageAsDouble(panel.innerPanel, 10, 10);
@@ -79,8 +77,8 @@ public class DistortedLetterTrial extends  TrialInfo{
 			neuralNetwork.handleTopError(expected);
 			theCost.addResult(expected, values);
 			drawPanel.repaint();
-			drawPanel.addCost(theCost,true);
-			
+			drawPanel.updateBatchInfo(theCost,updateBatchInfo);
+			updateBatchInfo = true;
 		}
 	
 		return theCost;

@@ -7,22 +7,18 @@ import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.util.HashMap;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-
-
 
 import oliver.neuron.Neuron;
 
 /**
  * Draw Neuron as a square with text showings it's output,bias and error value
- * To the left of the neuron we draw 2 images
- * One representing weights as colors. Red for positive blue for negative
- * The image is broken down into squares one square per input neuron. 
- * The top left hand corner shows the weight for input zero. 
- * ( This is easy to understand if the input is an image)
+ * To the left of the neuron we draw 2 images One representing weights as
+ * colors. Red for positive blue for negative The image is broken down into
+ * squares one square per input neuron. The top left hand corner shows the
+ * weight for input zero. ( This is easy to understand if the input is an image)
+ * 
  * @author oliver
  *
  */
@@ -33,35 +29,30 @@ public class NeuronInAPanel extends JPanel {
 	 */
 	int neuronSizeInPixels;
 
-	/**
-	 * Number of input weights represented in each image row
-	 * Example If we have 100 inputs then we would paint a picture of 10*10
-	 * But we we had 15 inputs we may set numInputsPerImageRow to 1 and have 15 rows
-	 */
-	
-	
 	
 	int widthOfPanelInPixels;
+	
 	/**
-	 * Input weights are drawn as an image. This image is only changed when the weights changed
-	 * So we cache it once its computed to save on CPU cycles when drawing it. 
+	 * Input weights are drawn as an image. This image is only changed when the
+	 * weights changed So we cache it once its computed to save on CPU cycles when
+	 * drawing it.
 	 */
-	Image  imageWithInputs;
-	
-	Image  imageWeightsOnly;
-	
-	
+	Image imageWithInputs;
+
+	Image imageWeightsOnly;
+
 	int weightImageWidthPixels;
+	
 	int weightImageHeightPixels;
 	/**
 	 * Neuron we are drawing
 	 */
 	Neuron neuron;
-	
+
 	/**
 	 * Save all panels in a static HashMap
 	 */
-	
+
 	public NeuronInAPanel(Neuron neuron) {
 		this.neuron = neuron;
 	}
@@ -71,25 +62,7 @@ public class NeuronInAPanel extends JPanel {
 
 	}
 
-	
-	 DrawNeuralNetwork parent;
-	public static void placeNuronOnScreen(Neuron neuron, DrawNeuralNetwork parent, int baseX, int baseY, int neuronSizeInPixels) {
-		NeuronInAPanel existing = parent.panels.get(neuron.getName());
-		
-		if (existing == null) {
-			existing = new NeuronInAPanel(neuron);
-			parent.panels.put(neuron.getName(), existing);
-			parent.add(existing);
-			existing.setBackground( parent.getBackground());
-			//existing.setBorder(BorderFactory.createBevelBorder(1));
-		}
-		existing.parent = parent;
-		existing.neuron = neuron;
-		existing.widthOfPanelInPixels=  neuronSizeInPixels*5/2 ;
-		existing.setBounds(baseX , baseY, existing.widthOfPanelInPixels, neuronSizeInPixels +30);
-		existing.setCords(neuronSizeInPixels);
-		existing.repaint();
-	}
+
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -98,8 +71,7 @@ public class NeuronInAPanel extends JPanel {
 	}
 
 	/**
-	 * Draw a circle for a neuron. Showing value and errorValue. Also Draw links to
-	 * input Neurons. If there are more than 20 inputs we just paint them as a
+	 * Draw a square for a neuron. Showing value and errorValue. Also paint picture of weights
 	 * Square
 	 * 
 	 * @param g
@@ -109,13 +81,13 @@ public class NeuronInAPanel extends JPanel {
 	 */
 	protected void paintNeuron(Graphics g) {
 		int baseX = this.widthOfPanelInPixels - this.neuronSizeInPixels;
-		int baseY=15;
+		int baseY = 15;
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		String textStr = "  " + neuron.getName();
 		char[] chararr = textStr.toCharArray();
-		g2d.setColor(DrawNeuralNetwork.faderYellowToRed(1, 0, neuron.getValue()));
-	
+		g2d.setColor(DrawNeuralNetwork.weightAsColor(1, 0, neuron.getValue()));
+
 		g2d.fillRect(baseX, baseY, neuronSizeInPixels, neuronSizeInPixels);
 
 		int textSpace = neuronSizeInPixels / 5;
@@ -123,7 +95,7 @@ public class NeuronInAPanel extends JPanel {
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace);
 
 		;
-        this.setToolTipText(textStr +" Neuron value = " + neuron.getValue() );
+		this.setToolTipText(textStr + " Neuron value = " + neuron.getValue());
 		textStr = " b " + DrawNeuralNetwork.formatDouble(neuron.getBias());
 		chararr = textStr.toCharArray();
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 2);
@@ -134,70 +106,17 @@ public class NeuronInAPanel extends JPanel {
 		textStr = " value " + DrawNeuralNetwork.formatDouble(neuron.getValue());
 		chararr = textStr.toCharArray();
 		g2d.drawChars(chararr, 0, chararr.length, baseX + 5, baseY + textSpace * 4);
-	
 
 		int numInputs = neuron.getInputs().size();
-	
-		// g2d.setFont(new Font("Monaco", Font.PLAIN, 10));
-		if (numInputs > 10) {
-			
+
+		
 			paintInputsInSquare(g, 0, baseY, false);
-			paintInputsInSquare(g,neuronSizeInPixels*2/3 +10 , baseY, true);
+			paintInputsInSquare(g, neuronSizeInPixels * 2 / 3 + 10, baseY, true);
 			return;
-		}
-		if (numInputs > 5) {
-			double max = 0;
-			double min = 0;
-			for (int x = 0; x < neuron.getWeights().size(); x++) {
-				double weight = neuron.getWeights().get(x);
-				double input = neuron.getInputs().get(x).getValue();
-				double value = weight * input;
-
-				if (value > max) {
-					max = value;
-
-				}
-
-				if (value < min) {
-					min = value;
-
-				}
-			}
-			drawFanOut(g2d, min, max, baseX, baseY,true);
-			return;
-		}
-
+		
+		
 	}
 
-	/**
-	 * Draw a fanout for weights . Brightest red m most positive. Darkest blue most negative  
-	 * @param g2d
-	 * @param min
-	 * @param max
-	 * @param baseX
-	 * @param baseY
-	 * @param neuron
-	 */
-	protected void drawFanOut(Graphics g2d, double min, double max, int baseX, int baseY, boolean includeInput) {
-
-		int fanoutXPos = baseX - 60;
-		int fandoutYChange = this.neuronSizeInPixels / neuron.getInputs().size();
-		for (int x = 0; x < neuron.getWeights().size(); x++) {
-			double weight = neuron.getWeights().get(x);
-			double input = neuron.getInputs().get(x).getValue();
-			double value = weight * 1;
-			Color rgb = DrawNeuralNetwork.faderYellowToRed(max, min, value);
-			g2d.setColor(rgb);
-			Polygon poly = new Polygon();
-			poly.addPoint(baseX, baseY + this.neuronSizeInPixels / 2);
-			int yPoint = baseY + (x * fandoutYChange);
-			poly.addPoint(fanoutXPos, yPoint);
-			yPoint += fandoutYChange;
-			poly.addPoint(fanoutXPos, yPoint);
-			g2d.drawPolygon(poly);
-		}
-
-	}
 	
 	/**
 	 * Paint a picture of the inputs neurons contribution to this neurons sigmoid If
@@ -210,7 +129,7 @@ public class NeuronInAPanel extends JPanel {
 	 * @param baseX
 	 * @param baseY
 	 */
-	protected Image createImage( boolean includeInput) {
+	protected Image showWeightsAsColoredSquare(boolean includeInput) {
 		int w = 0;
 		int h = 0;
 		double maxSize = 0;
@@ -237,58 +156,55 @@ public class NeuronInAPanel extends JPanel {
 			ln *= -1;
 		}
 
-		
-
 		int numInputsPerImageRow = (int) Math.sqrt(neuron.getWeights().size());
-		int scale = this.neuronSizeInPixels / numInputsPerImageRow*2/3;
-	
+		int scale = this.neuronSizeInPixels / numInputsPerImageRow * 2 / 3;
+
 		if (numInputsPerImageRow < 3) {
-			scale= scale/numInputsPerImageRow;
-			numInputsPerImageRow =1;
+			scale = scale / numInputsPerImageRow;
+			numInputsPerImageRow = 1;
 		}
-		int numRows = neuron.getWeights().size()/numInputsPerImageRow;
-		int scaleHeight= this.neuronSizeInPixels/numRows*2/3;
-		if(scaleHeight < scale) {
-			scale= scaleHeight;
+		int numRows = neuron.getWeights().size() / numInputsPerImageRow;
+		int scaleHeight = this.neuronSizeInPixels / numRows * 2 / 3;
+		if (scaleHeight < scale) {
+			scale = scaleHeight;
 		}
 		this.weightImageWidthPixels = numInputsPerImageRow * scale;
 		this.weightImageHeightPixels = numRows * scale;
-		BufferedImage img = new BufferedImage(weightImageWidthPixels, weightImageHeightPixels, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(weightImageWidthPixels, weightImageHeightPixels,
+				BufferedImage.TYPE_INT_RGB);
 
-		
 		int h1 = 0;
-		 
+
 		for (int s = 0; s < scale; s++) {
-			h1 =s;
-			int w1 = 0; 
+			h1 = s;
+			int w1 = 0;
 			for (int x = 0; x < neuron.getWeights().size(); x++) {
 
 				double weight = neuron.getWeights().get(x);
 				double input = neuron.getInputs().get(x).getValue();
 
-				
 				double currentValue = weight;
 				if (includeInput) {
 					currentValue = weight * input;
 				}
 
-				int rgb = DrawNeuralNetwork.faderYellowToRed(maxSize, minSize, currentValue).getRGB();
-               
-				for(int z = 0; z < scale; z++) {
-				img.setRGB(w1, h1, rgb);
-				w1++;
+				int rgb = DrawNeuralNetwork.weightAsColor(maxSize, minSize, currentValue).getRGB();
+
+				for (int z = 0; z < scale; z++) {
+					img.setRGB(w1, h1, rgb);
+					w1++;
 				}
-				
-				if (w1 >= numInputsPerImageRow*scale) {
+
+				if (w1 >= numInputsPerImageRow * scale) {
 					w1 = 0;
-				
-					h1+= scale;
+
+					h1 += scale;
 				}
 			}
 		}
 
 		return img;
-		
+
 	}
 
 	/**
@@ -304,47 +220,37 @@ public class NeuronInAPanel extends JPanel {
 	 */
 	protected void paintInputsInSquare(Graphics g, int baseX, int baseY, boolean includeInput) {
 
-		
 		if (includeInput) {
-			if(this.imageWithInputs == null) {
-				this.imageWithInputs=this.createImage(includeInput);
+			if (this.imageWithInputs == null) {
+				this.imageWithInputs = this.showWeightsAsColoredSquare(includeInput);
 			}
-			if(neuron.getName().endsWith("-000")) {
-				String textStr = "Weights* input";
-				char [] chararr = textStr.toCharArray();
-				g.setColor(Color.black);
-				g.drawChars(chararr, 0, chararr.length, baseX, baseY );
-				}	
-			g.drawImage(this.imageWithInputs, baseX, baseY +20, this.weightImageWidthPixels, this.weightImageHeightPixels, new ImageObserver() {
 
-				@Override
-				public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-			});
+			g.drawImage(this.imageWithInputs, baseX, baseY + 20, this.weightImageWidthPixels,
+					this.weightImageHeightPixels, new ImageObserver() {
+
+						@Override
+						public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+							// TODO Auto-generated method stub
+							return false;
+						}
+					});
 		}
 		if (includeInput == false) {
-			if( this.imageWeightsOnly == null) {
-				this.imageWeightsOnly=this.createImage( includeInput);
-				}
-			if(neuron.getName().endsWith("-000")) {
-			String textStr = "Weights only";
-			char [] chararr = textStr.toCharArray();
-			g.setColor(Color.black);
-			g.drawChars(chararr, 0, chararr.length, baseX, baseY );
+			if (this.imageWeightsOnly == null) {
+				this.imageWeightsOnly = this.showWeightsAsColoredSquare(includeInput);
 			}
-				g.drawImage(this.imageWeightsOnly, baseX, baseY+20, this.weightImageWidthPixels, this.weightImageHeightPixels, new ImageObserver() {
 
-					@Override
-					public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-						// TODO Auto-generated method stub
-						return false;
-					}
-				});
-			
+			g.drawImage(this.imageWeightsOnly, baseX, baseY + 20, this.weightImageWidthPixels,
+					this.weightImageHeightPixels, new ImageObserver() {
+
+						@Override
+						public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+							// TODO Auto-generated method stub
+							return false;
+						}
+					});
+
 		}
-		
 
 		int df = 0;
 	}
@@ -352,6 +258,6 @@ public class NeuronInAPanel extends JPanel {
 	public void forceRedraw() {
 		this.imageWeightsOnly = null;
 		this.imageWithInputs = null;
-		
+
 	}
 }

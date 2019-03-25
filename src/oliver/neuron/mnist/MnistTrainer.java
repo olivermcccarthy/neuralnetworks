@@ -110,7 +110,7 @@ public class MnistTrainer extends TrialInfo {
 
 		}
 		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.numWrong);
-		drawPanel.addCost(theCost);
+		drawPanel.updateBatchInfo(theCost,false);
 		return theCost;
 	}
 
