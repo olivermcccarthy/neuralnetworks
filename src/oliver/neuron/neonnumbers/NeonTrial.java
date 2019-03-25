@@ -28,7 +28,7 @@ public class NeonTrial extends TrialInfo {
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(this.getName());
 	
 	
-			for (int y = 0; y < this.numPerBatch; y++) {
+			for (int y = 0; y < this.numRunsPerBatch; y++) {
 
 				int image = (int)(Math.random()*10);
 				double[] input = inputData.get(image);

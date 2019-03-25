@@ -239,7 +239,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 		batchInfoPane.setBackground(this.getBackground());
 
-		scroll4.setBounds(450, 120, 300, 80);
+		scroll4.setBounds(510, 120, 300, 80);
 		this.add(scroll4);
 		this.add(scroll2);
 
@@ -433,7 +433,7 @@ public class DrawNeuralNetwork extends JPanel {
 			getSleepTime();
 			getNumBatches();
 
-			info.numPerBatch = getNumPerBatch();
+			info.numRunsPerBatch = getNumPerBatch();
 			info.setLearningRate(getLearningRate());
 
 		}
@@ -564,7 +564,7 @@ public class DrawNeuralNetwork extends JPanel {
 			@Override
 			public void run() {
 				try {
-					trainer.numPerBatch = 1;
+					trainer.numRunsPerBatch = 1;
 					trainer.nextBatch(neuralNetwork);
 
 					waitForUserClick(trainer, "Click run to start ", false, true);

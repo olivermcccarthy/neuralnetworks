@@ -100,7 +100,7 @@ public class ControlPanel extends JPanel {
 						numRunsPerBatch.setEnabled(true);
 						sleepTimeBetweenRuns.setEnabled(true);
 						learningRate.setEnabled(true);
-						trialInfo.numPerBatch = 0;
+						trialInfo.numRunsPerBatch = 0;
 					}
 
 				}

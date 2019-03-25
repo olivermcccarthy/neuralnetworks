@@ -157,14 +157,14 @@ public class NeuronInAPanel extends JPanel {
 		}
 
 		int numInputsPerImageRow = (int) Math.sqrt(neuron.getWeights().size());
-		int scale = this.neuronSizeInPixels / numInputsPerImageRow * 2 / 3;
+		int scale = this.neuronSizeInPixels / numInputsPerImageRow ;
 
 		if (numInputsPerImageRow < 3) {
 			scale = scale / numInputsPerImageRow;
 			numInputsPerImageRow = 1;
 		}
 		int numRows = neuron.getWeights().size() / numInputsPerImageRow;
-		int scaleHeight = this.neuronSizeInPixels / numRows * 2 / 3;
+		int scaleHeight = this.neuronSizeInPixels / numRows ;
 		if (scaleHeight < scale) {
 			scale = scaleHeight;
 		}
@@ -225,7 +225,7 @@ public class NeuronInAPanel extends JPanel {
 				this.imageWithInputs = this.showWeightsAsColoredSquare(includeInput);
 			}
 
-			g.drawImage(this.imageWithInputs, baseX, baseY + 20, this.weightImageWidthPixels,
+			g.drawImage(this.imageWithInputs, baseX, baseY , this.weightImageWidthPixels,
 					this.weightImageHeightPixels, new ImageObserver() {
 
 						@Override
@@ -240,7 +240,7 @@ public class NeuronInAPanel extends JPanel {
 				this.imageWeightsOnly = this.showWeightsAsColoredSquare(includeInput);
 			}
 
-			g.drawImage(this.imageWeightsOnly, baseX, baseY + 20, this.weightImageWidthPixels,
+			g.drawImage(this.imageWeightsOnly, baseX, baseY , this.weightImageWidthPixels,
 					this.weightImageHeightPixels, new ImageObserver() {
 
 						@Override

@@ -92,10 +92,9 @@ public class MnistTrainer extends TrialInfo {
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
 		Cost theCost = new Cost(10);
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(this.getName());
-		this.numWrong = 0;
-		this.numRun = 0;
+		
 		int sleepTime = drawPanel.getSleepTime();
-		for (int u = 0; u < this.numPerBatch; u++) {
+		for (int u = 0; u < this.numRunsPerBatch; u++) {
 
 			int image = (int) (Math.random() * images.size());
 			double[] input = inputData.get(image);
@@ -116,14 +115,14 @@ public class MnistTrainer extends TrialInfo {
 				}
 
 			}
-			this.numRun++;
+			
 			if (maxI != expected2) {
 				theCost.numWrong++;
-				this.numWrong++;
+				
 			}
 
 			boolean redraw = true;
-			if (sleepTime == 1 && numPerBatch > 1000) {
+			if (sleepTime == 1 && numRunsPerBatch > 1000) {
 				if (u % 100 != 0) {
 					redraw = false;
 				}

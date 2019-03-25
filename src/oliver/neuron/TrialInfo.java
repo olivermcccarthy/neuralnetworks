@@ -1,6 +1,6 @@
 package oliver.neuron;
 
-import java.io.IOException;
+
 
 /**
  * Information on a Neural Network trial
@@ -11,10 +11,55 @@ import java.io.IOException;
  *
  */
 public abstract class TrialInfo {
-	protected int numTrialsBetweenSaves=100;
+	/**
+	 * We save the network to memory every X Batches
+	 */
+	protected int numBatchesBetweenSaves=100;
+	
+	/**
+	 * Rate at which we learn (adjust weights)
+	 */
 	protected double learningRate = 1;
-	public int numPerBatch =1000;
+	
+	/**
+	 * Number of runs in each batch
+	 */
+	public int numRunsPerBatch =1000;
+	
+	/**
+	 * Pointer to the batch with the best cost
+	 */
 	protected  int bestBatch = 0;
+	
+	/**
+	 * Current batch number we are running
+	 */
+	protected int batchNumber =-1;
+	
+	/**
+	 * Number of teh btach we saved at
+	 */
+	int savePoint;
+	
+	/**
+	 * Cost of the batch we saved at
+	 */
+	protected  double savePointCost = 1;
+	
+	/**
+	 * Cost of current batch
+	 */
+	protected  double currentCost = 1;
+	
+	/**
+	 * If the cost of current is better than the last batch we increase learning rate by this<br>
+	 * If the cost of current is worse than last saved batch we load last saved from memory and decrease learning rate by this<br>
+	 */
+	double learningRateChange = 1.2;
+	
+	/**
+	 * Value of the best cost
+	 */
 	protected  double bestCost = 1;
 	
 	public double getLearningRate() {
@@ -33,11 +78,7 @@ public abstract class TrialInfo {
 		this.bestCost = bestCost;
 	}
 
-	protected int batchNumber =-1;
-	int savePoint;
-	protected  double savePointCost = 1;
-	protected  double currentCost = 1;
-	double learningRateChange = 1.2;
+	
 	
 	
 	public double getCurrentCost() {
@@ -48,8 +89,18 @@ public abstract class TrialInfo {
 		this.currentCost = currentCost;
 	}
 
+	/**
+	 * Abstract method override to send in batch
+	 * @param neuralNetwork
+	 * @param learning
+	 * @return
+	 */
 	public abstract Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) ;
 	
+	/**
+	 * Override to return some short help on the trial
+	 * @return
+	 */
 	public abstract String getHelp();
 	
 	/**
@@ -62,16 +113,23 @@ public abstract class TrialInfo {
 	 */
 	public TrialInfo(int numTrialsBetweenSaves, double learningRate, int numValues, double learningRateChange) {
 		super();
-		this.numTrialsBetweenSaves = numTrialsBetweenSaves;
+		this.numBatchesBetweenSaves = numTrialsBetweenSaves;
 		this.learningRate = learningRate;
-		this.numPerBatch = numValues;
+		this.numRunsPerBatch = numValues;
 		this.learningRateChange = learningRateChange;
 	}
 
 	public String toString() {
-		return String.format("Trial Number %s cost %s Best trial %s Best cost %s  LearningRate %s numValues %s", this.batchNumber,currentCost,bestBatch, bestCost, this.learningRate,  numPerBatch);
+		return String.format("Trial Number %s cost %s Best trial %s Best cost %s  LearningRate %s numValues %s", this.batchNumber,currentCost,bestBatch, bestCost, this.learningRate,  numRunsPerBatch);
 	}
 	
+	/**
+	 * Send in a batch. If the cost of this batch is less the the last batch. 
+	 * Then  increase learning rate by multiplying it by learningRateChange <br>
+	 *  If cost is greater than last batch go back to last save point and decrease learning rate by dividing it by learningRateChange 
+	 * @param neuralNetwork
+	 * @throws Exception
+	 */
 	public void nextBatch(NeuralNetwork neuralNetwork) throws Exception {
 		if(this.currentCost > this.savePointCost || this.currentCost > this.bestCost) {
 			// we must run again
@@ -98,7 +156,7 @@ public abstract class TrialInfo {
 		
 		batchNumber ++;
 		Neuron.learningRate = this.learningRate;	
-		if(batchNumber - savePoint >= numTrialsBetweenSaves) {
+		if(batchNumber - savePoint >= numBatchesBetweenSaves) {
 			neuralNetwork.save();
 			this.savePoint = this.batchNumber -1;
 			this.savePointCost = this.currentCost;
@@ -124,12 +182,6 @@ public abstract class TrialInfo {
 		return "ui";
 	}
 
-	public int numWrong =0;
-	public int numRun =0;
-	public int getNumNumWrong() {
-		// TODO Auto-generated method stub
-		return this.numWrong;
-	}
-
+	
 	abstract public String getName() ;
 }
