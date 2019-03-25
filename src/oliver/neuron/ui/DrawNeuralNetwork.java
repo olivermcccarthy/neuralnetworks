@@ -86,12 +86,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	private static int SCREEN_SIZE = 1000;
 
-	/**
-	 * Type of input data. 1s and zeros or greyscale
-	 */
-	public enum PICTURE_TYPE {
-		BINARY, GREYSCALE
-	};
+	
 
 	/**
 	 * Positive weights are represented by these red colors.
@@ -116,10 +111,7 @@ public class DrawNeuralNetwork extends JPanel {
 	static final int neuronSizeInPixels = 80;
 
 	static final int neuronSpaceHeight = neuronSizeInPixels + 40;
-	/**
-	 * Type of input dataFTrials are b
-	 */
-	PICTURE_TYPE pictureType;
+	
 
 	/**
 	 * When there are more than 20 inputs to a neuron . The weights will be painted
@@ -133,10 +125,11 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	int pictureScale = 1;
 
-	// We will draw the input Image in the top corner;
-	private int[][] inputImage = null;
+	
 
-	// Place the input panel on the left hand side
+	/**
+	 * We will draw the inputPanel on the left
+	 */
 	private JPanel inputPanel = null;
 
 	/**
@@ -193,9 +186,17 @@ public class DrawNeuralNetwork extends JPanel {
 		inputPanel.setBackground(this.getBackground());
 	}
 
-	public void setInputImage(int[][] inputImage, int pictureScale, PICTURE_TYPE typeOfPicture) {
-		this.inputImage = inputImage;
-		pictureType = typeOfPicture;
+	public void setInputImage(int[][] inputImage, ImageInPanel.PICTURE_TYPE typeOfPicture) {
+		int pictureScale = 100/inputImage.length;
+		if(this.inputPanel == null) {
+			JPanel inputPanel = new ImageInPanel();
+			inputPanel.setPreferredSize(new Dimension(100,100));
+			setInputPanel(inputPanel);
+			
+		}
+		((ImageInPanel)this.inputPanel).setInfo(inputImage, pictureScale, typeOfPicture);
+		
+		
 
 	}
 
@@ -244,55 +245,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	}
 
-	/**
-	 * Paint the input image or the input panel on the left hand side of the screen.
-	 * This shows the user the input image that is being evaluated
-	 * 
-	 * @param g
-	 * @param baseY
-	 */
-	protected void paintInputImage(Graphics g, int baseY) {
-
-		if (inputPanel != null) {
-			inputPanel.setBackground(this.getBackground());
-
-			return;
-		}
-		if (inputImage != null) {
-			int pictureHeight = inputImage.length;
-			BufferedImage img = new BufferedImage(pictureWidth * pictureScale, pictureHeight * pictureScale,
-					BufferedImage.TYPE_INT_ARGB);
-
-			for (int h = 0; h < pictureHeight * pictureScale; h++) {
-				for (int w = 0; w < pictureWidth; w++) {
-					if (pictureType == PICTURE_TYPE.GREYSCALE) {
-						int greyScale = 255 - inputImage[h / pictureScale][w];
-						for (int z = 0; z < pictureScale; z++) {
-							img.setRGB(w * pictureScale + z, h, new Color(greyScale, greyScale, greyScale).getRGB());
-						}
-					} else if (pictureType == PICTURE_TYPE.BINARY) {
-						int black = inputImage[h / pictureScale][w];
-						if (black == 1) {
-							for (int z = 0; z < pictureScale; z++) {
-								img.setRGB(w * pictureScale + z, h, Color.RED.getRGB());
-							}
-						}
-					}
-
-				}
-			}
-
-			g.drawImage(img, 0, baseY, pictureWidth * pictureScale, pictureHeight * pictureScale, new ImageObserver() {
-
-				@Override
-				public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-			});
-
-		}
-	}
+	
 
 	public static final int NUM_NURONS_TODRAW = 20;
 
@@ -322,7 +275,7 @@ public class DrawNeuralNetwork extends JPanel {
 		}
 		int diffX = 350;
 		int diffY = 0;
-		paintInputImage(g, 400);
+		
 		for (Layer layer : layers) {
 			if (layer.getNeurons().size() > NUM_NURONS_TODRAW) {
 				continue;
