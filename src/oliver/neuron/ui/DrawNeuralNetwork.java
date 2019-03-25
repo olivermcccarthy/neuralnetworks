@@ -171,7 +171,7 @@ public class DrawNeuralNetwork extends JPanel {
 		helpPanel = new JTextPane();
 		helpPanel.setText(trialInfo.getHelp());
 		// Column Names
-		String[] columnNames = { "Run", "Expected", "Got" };
+		String[] columnNames = { "Batch" ,"Run", "Expected", "Got" };
 
 		// Initializing the JTable
 		String[][] data = new String[1][3];
@@ -203,7 +203,8 @@ public class DrawNeuralNetwork extends JPanel {
 		scroll4.setBounds(510, 120, 300, 80);
 		this.add(scroll4);
 		this.add(scroll2);
-		colorLegend.setBounds(10,200,200,200);
+		colorLegend.setBounds(10,200,200,100);
+		colorLegend.setBackground(this.getBackground());
 		this.add(colorLegend);
 	}
 
@@ -283,7 +284,8 @@ public class DrawNeuralNetwork extends JPanel {
 	public void waitForUserClick(TrialInfo info, String message, boolean sleep, boolean redraw) {
 
 		info.setRunCounter(info.getRunCounter() +1);
-		updateRunInfo(String.format("%s,%s", info.getRunCounter(), message));
+		updateRunInfo(String.format("%s,%s,%s", info.getBatchesRun(),info.getRunCounter(), message));
+		
 		if (!redraw) {
 			return;
 		}
@@ -292,7 +294,7 @@ public class DrawNeuralNetwork extends JPanel {
 		forceRedraw();
 		frame.getContentPane().repaint();
 
-		if (sleep) {
+		if (sleep && info.getNumBatchesRemaining() > 0) {
 			try {
 				Thread.sleep(info.getSleepTimeMs());
 			} catch (InterruptedException e1) {
@@ -304,33 +306,36 @@ public class DrawNeuralNetwork extends JPanel {
 			this.controlPanel.waitForMe();
 			
 
-			info.numRunsPerBatch = this.controlPanel.getNumBatches();
+			info.numRunsPerBatch = this.controlPanel.getNumPerBatch();
 			info.setLearningRate(this.controlPanel.getLearningRate());
-
+			info.setSleepTimeMs(this.controlPanel.getSleepTime());
+			info.setNumBatchesRemaining(this.controlPanel.getNumBatches());
+			info.setRunCounter(0);
+			info.getBatchesRun();
 		}
 
 	}
 	/**
 	 * Wrapper method 
 	 */
-	public void waitForUserClick(TrialInfo info, double[] expected, double[] got) {
+	public void waitForUserClick(TrialInfo info ,double[] expected, double[] got) {
 		this.waitForUserClick(info, expected, got, true, true);
 	}
 
 	/**
 	 * Wrapper method 
 	 */
-	public void waitForUserClick(TrialInfo info, double[] expected, double[] got, boolean sleep, boolean redraw) {
+	public void waitForUserClick(TrialInfo info,double[] expected, double[] got, boolean sleep, boolean redraw) {
 
 		String message = String.format("%s, %s ", Neuron.toString(expected), Neuron.toString(got));
-		this.waitForUserClick(info, message, sleep, redraw);
+		this.waitForUserClick(info,message, sleep, redraw);
 	}
 	
 	
 	/**
 	 * Wrapper method 
 	 */
-	public void waitForUserClick(TrialInfo info, double expected, int got, boolean sleep, boolean redraw) {
+	public void waitForUserClick(TrialInfo info,  double expected, int got, boolean sleep, boolean redraw) {
 		// TODO Auto-generated method stub
 		this.waitForUserClick(info, new double[] { expected }, new double[] { got }, sleep, redraw);
 
@@ -397,6 +402,7 @@ public class DrawNeuralNetwork extends JPanel {
 				p);
 
 		this.addStatsToTable(this.batchInfoPane, messC, update);
+		
 
 	}
 

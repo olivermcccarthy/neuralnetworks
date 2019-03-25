@@ -81,6 +81,8 @@ public abstract class TrialInfo {
 	 * Value of the best cost
 	 */
 	protected  double bestCost = 1;
+
+	public Cost theCost;
 	
 	public double getLearningRate() {
 		return learningRate;
@@ -231,6 +233,11 @@ public abstract class TrialInfo {
 
 	public long getSleepTimeMs() {
 		// TODO Auto-generated method stub
-		return 0;
+		return sleepTimeMs;
+	}
+
+	public void setSleepTimeMs(int sleepTimeMs) {
+		this.sleepTimeMs = sleepTimeMs;
+		
 	}
 }

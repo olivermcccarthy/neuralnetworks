@@ -90,10 +90,11 @@ public class MnistTrainer extends TrialInfo {
 	 * other outputs. After 1000s of iterations the Network learns
 	 */
 	public Cost sendinBatch(NeuralNetwork neuralNetwork, boolean learning) {
-		Cost theCost = new Cost(10);
+		theCost = new Cost(10);
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(this.getName());
 		
 		int sleepTime = drawPanel.controlPanel.getSleepTime();
+		boolean updateBatchInfo = false;
 		for (int u = 0; u < this.numRunsPerBatch; u++) {
 
 			int image = (int) (Math.random() * images.size());
@@ -127,15 +128,20 @@ public class MnistTrainer extends TrialInfo {
 					redraw = false;
 				}
 			}
+			 if(this.numRunsPerBatch ==1) {
+			    	
+			    	return theCost;
+			    }
 			drawPanel.setInputImage(images.get(image), ImageInPanel.PICTURE_TYPE.GREYSCALE);
 			drawPanel.waitForUserClick(this, expected2, maxI, true, redraw);
 
 			theCost.addResult(expected, output);
 			neuralNetwork.handleTopError(expected);
-
+			drawPanel.updateBatchInfo(theCost,updateBatchInfo);
+			updateBatchInfo = true;
 		}
 		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.numWrong);
-		drawPanel.updateBatchInfo(theCost, false);
+		
 		return theCost;
 	}
 

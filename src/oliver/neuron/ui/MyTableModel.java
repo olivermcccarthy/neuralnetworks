@@ -74,8 +74,11 @@ public class MyTableModel extends AbstractTableModel{
 			while(messages.size() > 20) {
 				messages.remove(0);
 			}
-			
-			messages.add(data);
+			if(messages.size() > 0) {
+				messages.set(messages.size() -1, data);
+			}else {
+			  messages.add(data);
+			}
 		}catch (Throwable t) {
 			
 		}
