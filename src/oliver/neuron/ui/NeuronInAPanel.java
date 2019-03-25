@@ -86,7 +86,7 @@ public class NeuronInAPanel extends JPanel {
 		g2d.setColor(Color.BLACK);
 		String textStr = "  " + neuron.getName();
 		char[] chararr = textStr.toCharArray();
-		g2d.setColor(DrawNeuralNetwork.weightAsColor(1, 0, neuron.getValue()));
+		g2d.setColor(ColorLegend.weightAsColor(1, 0, neuron.getValue()));
 
 		g2d.fillRect(baseX, baseY, neuronSizeInPixels, neuronSizeInPixels);
 
@@ -188,7 +188,7 @@ public class NeuronInAPanel extends JPanel {
 					currentValue = weight * input;
 				}
 
-				int rgb = DrawNeuralNetwork.weightAsColor(maxSize, minSize, currentValue).getRGB();
+				int rgb = ColorLegend.weightAsColor(maxSize, minSize, currentValue).getRGB();
 
 				for (int z = 0; z < scale; z++) {
 					img.setRGB(w1, h1, rgb);
