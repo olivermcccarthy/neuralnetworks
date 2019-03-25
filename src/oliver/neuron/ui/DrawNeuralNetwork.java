@@ -58,26 +58,11 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	NeuralNetwork neuralNetwork = null;
 
-	/**
-	 * Number of batches remaining to be run. counts down from what the user
-	 * selects as number of batches before they click run
-	 */
-	int numBatchesRemaining;
-
-	/**
-	 * Overall run counter increment by one every run
-	 */
-	int runCounter = 0;
-
-	/**
-	 * Count number of baches run
-	 */
-	int batchesRun = 0;
 	
 	/**
 	 * User choice panel. Here they choose batch size etc and click run
 	 */
-	ControlPanel panel;
+	public ControlPanel controlPanel;
 
 	ColorLegend colorLegend = new ColorLegend();
 	/**
@@ -101,20 +86,6 @@ public class DrawNeuralNetwork extends JPanel {
 	static final int neuronSizeInPixels = 80;
 
 	static final int neuronSpaceHeight = neuronSizeInPixels + 40;
-	
-
-	/**
-	 * When there are more than 20 inputs to a neuron . The weights will be painted
-	 * as a picture. Brightest color being highest weight This value will be the
-	 * width of the picture.
-	 */
-	int pictureWidth = 28;
-
-	/**
-	 * How many times to blow up the image.
-	 */
-	int pictureScale = 1;
-
 	
 
 	/**
@@ -192,9 +163,9 @@ public class DrawNeuralNetwork extends JPanel {
 
 	public DrawNeuralNetwork(TrialInfo trialInfo) {
 		this.trialInfo = trialInfo;
-		panel = new ControlPanel(trialInfo);
-		panel.setBounds(0, 0, 100, 150);
-		this.add(panel);
+		controlPanel = new ControlPanel(trialInfo);
+		controlPanel.setBounds(0, 0, 100, 150);
+		this.add(controlPanel);
 		setBackground(BGColor);
 
 		helpPanel = new JTextPane();
@@ -296,31 +267,9 @@ public class DrawNeuralNetwork extends JPanel {
 		getTopLevelAncestor().repaint();
 	}
 
-	int sleepTimeMs;
 
-	/**
-	 * Get the sleep time from the contol Panel.
-	 * @return
-	 */
-	public int getSleepTime() {
-		sleepTimeMs = this.panel.getSleepTime();
-		return this.panel.getSleepTime();
-	}
 
-	public int getNumBatches() {
-		numBatchesRemaining = this.panel.getNumBatches();
-		return numBatchesRemaining;
-	}
-
-	public double getLearningRate() {
-		return this.panel.getLearningRate();
-	}
-
-	public int getNumPerBatch() {
-
-		return this.panel.getNumPerBatch();
-	}
-
+	
 	
 
 	/**
@@ -333,8 +282,8 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	public void waitForUserClick(TrialInfo info, String message, boolean sleep, boolean redraw) {
 
-		runCounter++;
-		updateRunInfo(String.format("%s,%s", runCounter, message));
+		info.setRunCounter(info.getRunCounter() +1);
+		updateRunInfo(String.format("%s,%s", info.getRunCounter(), message));
 		if (!redraw) {
 			return;
 		}
@@ -345,19 +294,18 @@ public class DrawNeuralNetwork extends JPanel {
 
 		if (sleep) {
 			try {
-				Thread.sleep(sleepTimeMs);
+				Thread.sleep(info.getSleepTimeMs());
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
-		if (numBatchesRemaining <= 0) {
-			this.panel.waitForMe();
-			getSleepTime();
-			getNumBatches();
+		if (info.getNumBatchesRemaining() <= 0) {
+			this.controlPanel.waitForMe();
+			
 
-			info.numRunsPerBatch = getNumPerBatch();
-			info.setLearningRate(getLearningRate());
+			info.numRunsPerBatch = this.controlPanel.getNumBatches();
+			info.setLearningRate(this.controlPanel.getLearningRate());
 
 		}
 
@@ -437,7 +385,7 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	public void updateBatchInfo(Cost theCost, boolean update) {
 		if (!update) {
-			batchesRun++;
+			this.trialInfo.setBatchesRun(this.trialInfo.getBatchesRun() +1);
 		}
 		if (theCost.numRuns == 0) {
 			theCost.numRuns = 1;
@@ -445,7 +393,7 @@ public class DrawNeuralNetwork extends JPanel {
 		int percent = (((theCost.numRuns - theCost.numWrong) * 10000) / theCost.numRuns);
 		double p = percent;
 		p = p / 100;
-		String messC = String.format("%s, %s, %s, %s ", batchesRun, theCost.numRuns, theCost.numRuns - theCost.numWrong,
+		String messC = String.format("%s, %s, %s, %s ", this.trialInfo.getBatchesRun(), theCost.numRuns, theCost.numRuns - theCost.numWrong,
 				p);
 
 		this.addStatsToTable(this.batchInfoPane, messC, update);
@@ -493,9 +441,9 @@ public class DrawNeuralNetwork extends JPanel {
 					waitForUserClick(trainer, "Click run to start ", false, true);
 					while (true) {
 
-						while (numBatchesRemaining > 0) {
+						while (trainer.getNumBatchesRemaining() > 0) {
 							trainer.nextBatch(neuralNetwork);
-							numBatchesRemaining--;
+							trainer.setNumBatchesRemaining(trainer.getNumBatchesRemaining() -1);
 
 						}
 						waitForUserClick(trainer, "Click run to start ", false, true);

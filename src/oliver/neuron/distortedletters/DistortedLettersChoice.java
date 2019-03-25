@@ -140,7 +140,7 @@ public class DistortedLettersChoice extends JPanel {
 		selectedCoice = -1;
 		synchronized (waitForMe) {
 			try {
-				waitForMe.wait(overallPanel.getSleepTime());
+				waitForMe.wait(overallPanel.controlPanel.getSleepTime());
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

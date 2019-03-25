@@ -93,7 +93,7 @@ public class MnistTrainer extends TrialInfo {
 		Cost theCost = new Cost(10);
 		DrawNeuralNetwork drawPanel = DrawNeuralNetwork.getNeuronPanel(this.getName());
 		
-		int sleepTime = drawPanel.getSleepTime();
+		int sleepTime = drawPanel.controlPanel.getSleepTime();
 		for (int u = 0; u < this.numRunsPerBatch; u++) {
 
 			int image = (int) (Math.random() * images.size());

@@ -57,6 +57,26 @@ public abstract class TrialInfo {
 	 */
 	double learningRateChange = 1.2;
 	
+	
+	/**
+	 * Number of batches remaining to be run. counts down from what the user
+	 * selects as number of batches before they click run
+	 */
+	int numBatchesRemaining;
+
+	/**
+	 * Overall run counter increment by one every run
+	 */
+	int runCounter = 0;
+
+	/**
+	 * Count number of baches run
+	 */
+	int batchesRun = 0;
+	
+	
+    int sleepTimeMs;
+
 	/**
 	 * Value of the best cost
 	 */
@@ -184,4 +204,33 @@ public abstract class TrialInfo {
 
 	
 	abstract public String getName() ;
+	
+	public int getNumBatchesRemaining() {
+		return numBatchesRemaining;
+	}
+
+	public void setNumBatchesRemaining(int numBatchesRemaining) {
+		this.numBatchesRemaining = numBatchesRemaining;
+	}
+
+	public int getRunCounter() {
+		return runCounter;
+	}
+
+	public void setRunCounter(int runCounter) {
+		this.runCounter = runCounter;
+	}
+
+	public int getBatchesRun() {
+		return batchesRun;
+	}
+
+	public void setBatchesRun(int batchesRun) {
+		this.batchesRun = batchesRun;
+	}
+
+	public long getSleepTimeMs() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
