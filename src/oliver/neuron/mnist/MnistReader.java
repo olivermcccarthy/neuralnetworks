@@ -5,9 +5,12 @@ package oliver.neuron.mnist;
 import static java.lang.String.format;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,11 +89,14 @@ public class MnistReader {
 	public static byte[] loadFile(String infile) {
 		try {
 			RandomAccessFile f = new RandomAccessFile(infile, "r");
-			
-			FileChannel chan = f.getChannel();
-			long fileSize = chan.size();
+			ClassLoader classloader = Thread.currentThread().getContextClassLoader();// 6 oliver.action.AssignAction
+
+			InputStream is2 = classloader.getResourceAsStream("oliver/neuron/mnist/"+infile);
+			ReadableByteChannel chan = Channels.newChannel(is2);
+			//FileChannel chan = f.getChannel();
+			long fileSize = 100000000;
 			ByteBuffer bb = ByteBuffer.allocate((int) fileSize);
-			chan.read(bb);
+			 fileSize = chan.read(bb);
 			bb.flip();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			for (int i = 0; i < fileSize; i++)

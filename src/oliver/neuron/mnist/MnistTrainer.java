@@ -11,6 +11,7 @@ import oliver.neuron.Cost;
 import oliver.neuron.NeuralNetwork;
 
 import oliver.neuron.TrialInfo;
+import oliver.neuron.distortedletters.DistortedLetterTrial;
 import oliver.neuron.ui.DrawNeuralNetwork;
 import oliver.neuron.ui.ImageInPanel;
 
@@ -163,6 +164,7 @@ public class MnistTrainer extends TrialInfo {
 		DrawNeuralNetwork.showNeurons(trainer, neuralNetwork, 28, 4);
 
 		DrawNeuralNetwork.getNeuronPanel(trainer.getName()).run(trainer);
+		DistortedLetterTrial.main(new String[] {});
 	}
 
 	public int bufAsInt(byte[] buffer, int startIndex, int length) {
