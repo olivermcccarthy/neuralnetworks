@@ -98,15 +98,7 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	TrialInfo trialInfo;
 
-	/**
-	 * Info on runs in the batch ( Last 20)
-	 */
-	JTable runInfoPane = new JTable();
-
-	/**
-	 * Info on each batch run ( Last 20)
-	 */
-	JTable batchInfoPane = new JTable();
+	
 
 	/**
 	 * Display some short help
@@ -134,6 +126,11 @@ public class DrawNeuralNetwork extends JPanel {
 		return neuronPanels.get(name);
 	}
 
+	/**
+	 * Show info on runs and batches
+	 */
+	RunAndBatachInfoPane runAndBatachInfoPane;
+	
 	/**
 	 * Paint the input panel ( Usually showing a digit or a letter)
 	 * 
@@ -164,45 +161,30 @@ public class DrawNeuralNetwork extends JPanel {
 	public DrawNeuralNetwork(TrialInfo trialInfo) {
 		this.trialInfo = trialInfo;
 		controlPanel = new ControlPanel(trialInfo);
-		controlPanel.setBounds(0, 0, 100, 150);
+		Dimension dim = controlPanel.getPreferredSize();
+		
+		controlPanel.setBounds(0, 0, (int)dim.getWidth(), (int)dim.getHeight());
 		this.add(controlPanel);
 		setBackground(BGColor);
 
 		helpPanel = new JTextPane();
 		helpPanel.setText(trialInfo.getHelp());
-		// Column Names
-		String[] columnNames = { "Batch" ,"Run", "Expected", "Got" };
-
-		// Initializing the JTable
-		String[][] data = new String[1][3];
-		data[0] = new String[] { "1", "1", "1" };
-		MyTableModel model = new MyTableModel(columnNames);
-		runInfoPane = new JTable(model);
+		helpPanel.setBackground(Color.white);
+		
+		
 
 		JScrollPane scroll3 = new JScrollPane(helpPanel);
-		scroll3.setBounds(150, 10, SCREEN_SIZE - 200, 100);
+		scroll3.setBounds(250, 10, SCREEN_SIZE - 200, 100);
 		this.add(scroll3);
 
-		JScrollPane scroll2 = new JScrollPane(runInfoPane);
-		runInfoPane.setFont(getFont().deriveFont(12.0f));
-
-		helpPanel.setBackground(this.getBackground());
-		scroll2.setBounds(200, 120, 300, 80);
 		this.setLayout(null);
-		String[] batchcolumnNames = { "Batch", "Run", "Correct", "%Correct" };
 
-		// Initializing the JTable
-
-		MyTableModel model2 = new MyTableModel(batchcolumnNames);
-		batchInfoPane = new JTable(model2);
-		JScrollPane scroll4 = new JScrollPane(batchInfoPane);
-		batchInfoPane.setFont(getFont().deriveFont(12.0f));
-
-		batchInfoPane.setBackground(this.getBackground());
-
-		scroll4.setBounds(510, 120, 300, 80);
-		this.add(scroll4);
-		this.add(scroll2);
+		
+		
+		runAndBatachInfoPane = new RunAndBatachInfoPane();
+		runAndBatachInfoPane.setBounds(250, 120, 600, 80);
+		this.add(runAndBatachInfoPane);
+	
 		colorLegend.setBounds(10,200,200,100);
 		colorLegend.setBackground(this.getBackground());
 		this.add(colorLegend);
@@ -308,6 +290,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 			info.numRunsPerBatch = this.controlPanel.getNumPerBatch();
 			info.setLearningRate(this.controlPanel.getLearningRate());
+			info.setLearningRateChange(this.controlPanel.getLearningRateChange());
 			info.setSleepTimeMs(this.controlPanel.getSleepTime());
 			info.setNumBatchesRemaining(this.controlPanel.getNumBatches());
 			info.setRunCounter(0);
@@ -392,42 +375,25 @@ public class DrawNeuralNetwork extends JPanel {
 		if (!update) {
 			this.trialInfo.setBatchesRun(this.trialInfo.getBatchesRun() +1);
 		}
-		if (theCost.numRuns == 0) {
-			theCost.numRuns = 1;
-		}
-		int percent = (((theCost.numRuns - theCost.numWrong) * 10000) / theCost.numRuns);
+		
+		int percent = (((theCost.getNumRuns() - theCost.getNumWrong()) * 10000) / theCost.getNumRuns());
 		double p = percent;
 		p = p / 100;
-		String messC = String.format("%s, %s, %s, %s ", this.trialInfo.getBatchesRun(), theCost.numRuns, theCost.numRuns - theCost.numWrong,
+		String messC = String.format("%s, %s, %s, %s ", this.trialInfo.getBatchesRun(), theCost.getNumRuns(), theCost.getNumRuns() - theCost.getNumWrong(),
 				p);
 
-		this.addStatsToTable(this.batchInfoPane, messC, update);
+		 this.runAndBatachInfoPane.addBatchInfoStats(messC, false);
 		
 
 	}
 
 	
 	public void updateRunInfo(String message) {
-		this.addStatsToTable(this.runInfoPane, message, false);
+
+       this.runAndBatachInfoPane.addRunInfoStats(message, false);
 	}
 
-	public void addStatsToTable(JTable infoPane, String message, boolean update) {
-		// DefaultTableModel model = new DefaultTableModel();
-		// this.runInfoPane.setModel(model);
-
-		MyTableModel model = (MyTableModel) infoPane.getModel();
-
-		if (!message.startsWith("Click")) {
-
-			if (update) {
-				model.updateRow(message.split(","));
-			} else {
-				model.addRow(message.split(","));
-			}
-
-			infoPane.repaint();
-		}
-	}
+	
 
 	/**
 	 * Infinite Loop. Waits for user to click run and then runs the selected number of batches

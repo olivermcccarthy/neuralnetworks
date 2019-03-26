@@ -11,11 +11,28 @@ import java.util.List;
  */
 public class Cost implements Comparable<Cost>{
 
-	ArrayList<Tuple> rootMeanSquare = new ArrayList<Tuple>();
-	int tupleSize =0;
-	Tuple cost;
-    public int numWrong =0;
-    public int numRuns =0;
+	/**
+	 * Holds the root mean square between actual and expected for each result
+	 */
+	private ArrayList<Tuple> rootMeanSquare = new ArrayList<Tuple>();
+	
+	/**
+	 * The number of values in expected array
+	 */
+	private int tupleSize =0;
+	
+	/**
+	 * the computed cost
+	 */
+	private Tuple cost;
+	/**
+	 * Number of incorrect results ( Not matching expected
+	 */
+    private int numWrong =0;
+    /**
+     * Number of  results added
+     */
+    private int numRuns =0;
 	/**
 	 * Get the root mean square of the difference between actual and expected
 	 * @param tupleSize
@@ -64,4 +81,16 @@ public class Cost implements Comparable<Cost>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	public int getNumWrong() {
+		return numWrong;
+	}
+	public void incNumWrong() {
+		this.numWrong ++;
+	}
+	public int getNumRuns() {
+		return numRuns;
+	}
+	
+	
+	
 }

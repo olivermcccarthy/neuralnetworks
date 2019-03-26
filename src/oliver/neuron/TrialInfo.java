@@ -240,4 +240,9 @@ public abstract class TrialInfo {
 		this.sleepTimeMs = sleepTimeMs;
 		
 	}
+
+	public void setLearningRateChange(double learningRateChange2) {
+		this.learningRateChange = learningRateChange2;
+		
+	}
 }

@@ -52,7 +52,7 @@ public class NeonTrial extends TrialInfo {
 
 					}
 					if (maxI != expected2) {
-						theCost.numWrong++;
+						theCost.incNumWrong();
 					}
 				
 					theCost.addResult(expected, output);
@@ -65,7 +65,7 @@ public class NeonTrial extends TrialInfo {
 
 			}
 		
-		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.numWrong);
+		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.getNumWrong());
 		return theCost;
 	}
 

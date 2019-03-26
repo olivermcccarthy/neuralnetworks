@@ -5,6 +5,16 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+/**
+ * We depict weights as colors ranging from red ( most positive weights) to dark blue (most negative weights) <br>
+ * This panel shows the range of colors and provides static method  weightAsColor to map a weight to a color
+ *  <li> >= 50% of max weight bright red
+ *  <li> >= 20%  < 50% of max weight dull red
+ *  <li> > 0% < 20& of max yellow
+ *  
+ * @author oliver
+ *
+ */
 public class ColorLegend extends JPanel{
 
 	/**
@@ -20,7 +30,7 @@ public class ColorLegend extends JPanel{
 			new Color(153, 255, 255) };
 
 	/**
-	 * Fade color based of difference of LOg fade from yellow to red
+	 * Map a weight to a color depending on what percentage of max or min value it is
 	 *
 	 */
 	protected static Color weightAsColor(double maxValue, double minValue, double currentValue) {

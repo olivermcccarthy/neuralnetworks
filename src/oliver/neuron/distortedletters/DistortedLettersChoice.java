@@ -153,7 +153,7 @@ public class DistortedLettersChoice extends JPanel {
 			}
 			if (this.selectedCoice != neuronChoice) {
 			
-				theCost.numWrong ++;
+				theCost.incNumWrong();
 
 			}
 			neuronChoice = this.selectedCoice;

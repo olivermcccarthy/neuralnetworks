@@ -118,7 +118,7 @@ public class MnistTrainer extends TrialInfo {
 			}
 			
 			if (maxI != expected2) {
-				theCost.numWrong++;
+				theCost.incNumWrong();
 				
 			}
 
@@ -140,7 +140,7 @@ public class MnistTrainer extends TrialInfo {
 			drawPanel.updateBatchInfo(theCost,updateBatchInfo);
 			updateBatchInfo = true;
 		}
-		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.numWrong);
+		System.out.println(theCost.getCost().getAverage() + " numWrong " + theCost.getNumWrong());
 		
 		return theCost;
 	}

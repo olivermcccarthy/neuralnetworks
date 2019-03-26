@@ -10,6 +10,18 @@ import javax.swing.JPanel;
 
 import oliver.neuron.TrialInfo;
 
+/**
+ * Allow user choose
+ * <li> numberofBatches to run
+ * <li> number of runs in each batch
+ * <li> Sleep between runs ( Show use can see changes in the network
+ * <li> learningRate. RAte at which network learns
+ * <li> learningRateChnage. After a successful batch learning rate may be increased by this. 
+ *  If the cost of the batch has decreased . Then we will decrease the learningRate. We are trying to find the sweet spot. Too high a laearning rate we pass over it
+ *  .Too low a learning rate we take ages to reach it.   
+ * @author oliver
+ *
+ */
 public class ControlPanel extends JPanel {
 
 	/**
@@ -37,7 +49,10 @@ public class ControlPanel extends JPanel {
 	 */
 	JComboBox learningRate = new JComboBox();
 	
-	
+	/**
+	 * Allow user choose learning rate
+	 */
+	JComboBox learningRateChange = new JComboBox();
 	/**
 	 * Choice of how many batches to run
 	 */
@@ -60,6 +75,10 @@ public class ControlPanel extends JPanel {
 	static double[] learningRateChoice= new double[] {1,0.5,0.1,0.05,0.01};
 	
 	/**
+	 * CHoice of chnage in learning rate
+	 */
+	static double[] learningRateChangeChoice= new double[] {1,1.1,1.2,1.01,1.02};
+	/**
 	 * Pointer to Trial Information 
 	 */
 	TrialInfo trialInfo;
@@ -79,6 +98,7 @@ public class ControlPanel extends JPanel {
 	 */
 	int numBatchesI;
 	
+	static int width =200;
 	public ControlPanel(TrialInfo trialInfo) {
 
 		ActionListener listener = new ActionListener() {
@@ -108,24 +128,29 @@ public class ControlPanel extends JPanel {
 			}
 		};
 		button.addActionListener(listener);
-		button.setBounds(0, 0, 100, 30);
-		numBatches.setBounds(0, 30, 100, 30);
-		numRunsPerBatch.setBounds(0, 60, 100, 30);
-		sleepTimeBetweenRuns.setBounds(0, 90, 100, 30);
-		learningRate.setBounds(0, 120, 100, 30);
-		this.setPreferredSize(new Dimension(100, 120));
+		button.setBounds(0, 0, width, 30);
+		numBatches.setBounds(0, 30, width, 30);
+		numRunsPerBatch.setBounds(0, 60, width, 30);
+		sleepTimeBetweenRuns.setBounds(0, 90, width, 30);
+		learningRate.setBounds(0, 120, width, 30);
+		learningRateChange.setBounds(0, 150, width, 30);
+		this.setPreferredSize(new Dimension(width, 180));
 		button.setFont(this.getFont().deriveFont(20.0f));
 		this.add(numRunsPerBatch);
 		this.add(learningRate);
+		this.add(learningRateChange);
         this.setLayout(null);
-       
+        for (double i :  learningRateChangeChoice) {
+        	learningRateChange.addItem(i + " lr dynamic change");	
+		}
+        learningRateChange.setToolTipText("Change in learning rate after each batch. Set to 1  if you do not want learning rate to change");
         for (int i :  numRunsPerBatchesChoice) {
         	numRunsPerBatch.addItem(i + " runs per batch");	
 		}
 		
 		numRunsPerBatch.setToolTipText("Number of runs per batch. Cost is calclated at the end of each batch");
 		
-		learningRate.setToolTipText("Speed at which network learns/adjusts is waits");
+		learningRate.setToolTipText("Speed at which network learns/adjusts is wweights");
 		for (int i : numBatchesChoice) {
 			numBatches.addItem(i + "batches");	
 		}
@@ -140,7 +165,7 @@ public class ControlPanel extends JPanel {
 	     }
 		 
 		for (double i :   learningRateChoice) {
-			learningRate.addItem(i + "  ");	
+			learningRate.addItem(i + " learningrate (lr)");	
 	     }  
 		
 		sleepTimeBetweenRuns.setToolTipText("sleep between each run ");
@@ -170,7 +195,12 @@ public class ControlPanel extends JPanel {
 		
 		return lr;
 	}
-
+	public double getLearningRateChange() {
+		int selectedIndex = this.learningRateChange.getSelectedIndex();
+		double lr = learningRateChangeChoice[selectedIndex];
+		
+		return lr;
+	}
 	public int getNumPerBatch() {
 		int selectedIndex = numRunsPerBatch.getSelectedIndex();
 		int numPerBatch =  numRunsPerBatchesChoice[selectedIndex];
