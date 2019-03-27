@@ -95,7 +95,9 @@ public class DistortedLetterTrial extends  TrialInfo{
 				;
 		
 	}
-	
+	public String getHeading() {
+		return "Train a network to recognize Distorted letters";
+	}
 	public String getPackageS() {
 		// TODO Auto-generated method stub
 		return "perfectball";

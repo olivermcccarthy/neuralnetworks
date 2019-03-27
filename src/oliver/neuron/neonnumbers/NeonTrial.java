@@ -128,9 +128,11 @@ public class NeonTrial extends TrialInfo {
 	@Override
 	public String getHelp() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Train a network to recognize Neon signs";
 	}
-
+	public String getHeading() {
+		return "Train a network to recognize Neon signs";
+	}
 
 	@Override
 	public String getName() {

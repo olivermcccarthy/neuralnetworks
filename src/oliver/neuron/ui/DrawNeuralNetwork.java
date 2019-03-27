@@ -105,6 +105,7 @@ public class DrawNeuralNetwork extends JPanel {
 	 */
 	JTextPane helpPanel = null;
 
+	String heading ="";
 	/**
 	 * Over light blue background color
 	 */
@@ -129,7 +130,7 @@ public class DrawNeuralNetwork extends JPanel {
 	/**
 	 * Show info on runs and batches
 	 */
-	RunAndBatachInfoPane runAndBatachInfoPane;
+	RunAndBatchInfoPane runAndBatachInfoPane;
 	
 	/**
 	 * Paint the input panel ( Usually showing a digit or a letter)
@@ -163,7 +164,7 @@ public class DrawNeuralNetwork extends JPanel {
 		controlPanel = new ControlPanel(trialInfo);
 		Dimension dim = controlPanel.getPreferredSize();
 		
-		controlPanel.setBounds(0, 0, (int)dim.getWidth(), (int)dim.getHeight());
+		controlPanel.setBounds(0, 25, (int)dim.getWidth(), (int)dim.getHeight());
 		this.add(controlPanel);
 		setBackground(BGColor);
 
@@ -174,20 +175,21 @@ public class DrawNeuralNetwork extends JPanel {
 		
 
 		JScrollPane scroll3 = new JScrollPane(helpPanel);
-		scroll3.setBounds(250, 10, SCREEN_SIZE - 200, 100);
+		scroll3.setBounds(250, 25, 600, 100);
 		this.add(scroll3);
 
 		this.setLayout(null);
 
 		
 		
-		runAndBatachInfoPane = new RunAndBatachInfoPane();
-		runAndBatachInfoPane.setBounds(250, 120, 600, 80);
+		runAndBatachInfoPane = new RunAndBatchInfoPane(this);
+		runAndBatachInfoPane.setBounds(250, 130, 600, 110);
 		this.add(runAndBatachInfoPane);
 	
-		colorLegend.setBounds(10,200,200,100);
+		colorLegend.setBounds(10,225,200,100);
 		colorLegend.setBackground(this.getBackground());
 		this.add(colorLegend);
+		heading=trialInfo.getHeading();
 	}
 
 	
@@ -205,6 +207,11 @@ public class DrawNeuralNetwork extends JPanel {
 
 		int baseX = -100;
 		int baseY = 220;
+		g.setColor(Color.BLACK);
+	
+		char[] chararr = heading.toCharArray();
+		g.setFont(g.getFont().deriveFont(20.0f));
+		g.drawChars(chararr, 0, chararr.length, 200, 20);
 		this.setFont(g.getFont().deriveFont(12.0f));
 		int maxLevelSize = 0;
 		
@@ -382,7 +389,7 @@ public class DrawNeuralNetwork extends JPanel {
 		String messC = String.format("%s, %s, %s, %s ", this.trialInfo.getBatchesRun(), theCost.getNumRuns(), theCost.getNumRuns() - theCost.getNumWrong(),
 				p);
 
-		 this.runAndBatachInfoPane.addBatchInfoStats(messC, false);
+		 this.runAndBatachInfoPane.addBatchInfoStats(messC, update);
 		
 
 	}
@@ -397,7 +404,7 @@ public class DrawNeuralNetwork extends JPanel {
 
 	/**
 	 * Infinite Loop. Waits for user to click run and then runs the selected number of batches
-	 * If user click stop during the run. Run will stop and user will have to click run again
+	 * If user clicks stop during the run it will stop and user will have to click run again
 	 * @param trainer
 	 * @throws Exception
 	 */
@@ -460,7 +467,7 @@ public class DrawNeuralNetwork extends JPanel {
 		}
 	
 		existing.neuron = neuron;
-		existing.widthOfPanelInPixels = neuronSizeInPixels * 5 / 2;
+		existing.widthOfPanelInPixels = neuronSizeInPixels * 3;
 		existing.setBounds(baseX, baseY, existing.widthOfPanelInPixels, neuronSizeInPixels + 30);
 		existing.setCords(neuronSizeInPixels);
 		existing.repaint();

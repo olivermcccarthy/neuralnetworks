@@ -126,6 +126,12 @@ public abstract class TrialInfo {
 	public abstract String getHelp();
 	
 	/**
+	 * Override to return some short help on the trial
+	 * @return
+	 */
+	public abstract String getHeading();
+	
+	/**
 	 * 
 	 * @param numTrialsBetweenSaves Save the network every x number of saves 
 	 * @param learningRate learningrate of the Network which will be increased or decreased

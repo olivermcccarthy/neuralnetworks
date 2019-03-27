@@ -3,8 +3,9 @@ package oliver.neuron.ui;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 
-public class RunAndBatachInfoPane extends JPanel{
+public class RunAndBatchInfoPane extends JTextPane{
 
 	/**
 	 * Info on runs in the batch ( Last 20)
@@ -18,13 +19,16 @@ public class RunAndBatachInfoPane extends JPanel{
 	// Column Names
 	String[] columnNames = { "Batch" ,"Run", "Expected", "Got" };
 	String[] batchcolumnNames = { "Batch", "Run", "Correct", "%Correct" };
-	public  RunAndBatachInfoPane () {
+	DrawNeuralNetwork parent;
+	public  RunAndBatchInfoPane (DrawNeuralNetwork parent) {
+		this.parent = parent;
 		MyTableModel model = new MyTableModel(columnNames);
 		runInfoPane = new JTable(model);
 		JScrollPane scroll2 = new JScrollPane(runInfoPane);
 		runInfoPane.setFont(getFont().deriveFont(12.0f));
-		
-		scroll2.setBounds(0, 0, 250, 80);
+		this.setFont(getFont().deriveFont(14.0f));
+		this.setText(" Info on runs" + "                   Info on batches");
+		scroll2.setBounds(0, 20, 250, 80);
 		this.setLayout(null);
 		
 
@@ -34,8 +38,9 @@ public class RunAndBatachInfoPane extends JPanel{
 		batchInfoPane = new JTable(model2);
 		JScrollPane scroll4 = new JScrollPane(batchInfoPane);
 		batchInfoPane.setFont(getFont().deriveFont(12.0f));
-		scroll4.setBounds(300, 0, 250, 80);
-		batchInfoPane.setBackground(this.getBackground());
+		scroll4.setBounds(300, 20, 250, 80);
+		batchInfoPane.setBackground(parent.getBackground());
+		this.setBackground(parent.getBackground());
 		this.add(scroll2);
 		this.add(scroll4);
 		

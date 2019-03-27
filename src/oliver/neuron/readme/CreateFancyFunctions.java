@@ -1,11 +1,15 @@
-package oliver.neuron.math;
+package oliver.neuron.readme;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-
-public class MathToWiki {
+/**
+ * Create images for maths functions in README.orig
+ * @author oliver
+ *
+ */
+public class CreateFancyFunctions {
 
 
 	 
@@ -45,7 +49,9 @@ public class MathToWiki {
 		 BufferedReader reader = new BufferedReader(new FileReader(fileIn));
 		 
 		 String line = reader.readLine();
+		
 		 FileWriter writer = new FileWriter(fileOut);
+		 writer.write(  "Generated from README.orig by oliver.neuron.readme.CreateFancyFunctions \n");
 		 while(line != null) {
 			 while(line.contains("mmm")) {
 				 line = mathME(line);
@@ -126,10 +132,8 @@ public class MathToWiki {
 		   return test;
 	 }
 	public static void main(String[] args) throws Exception {
-		String test = "mmm {-df}/{f^2^} = {e ^-Z^ }/{(1 + e^-Z^)^2^} nnn";
-         mathME(test);
 		
-         parseFile("README2.md", "README.md");
+         parseFile("README.orig", "README.md");
 	   
 	}
 }

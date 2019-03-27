@@ -202,11 +202,14 @@ public class MnistTrainer extends TrialInfo {
 		// TODO Auto-generated method stub
 		return "mnist";
 	}
-
+	@Override
+	public String getHeading() {
+		return "Train a network to recogize hand written digits from the mnist training set";
+	}
 	@Override
 	public String getHelp() {
 		// TODO Auto-generated method stub
-		return "Train a network to recogize hadn written digits from the mnist training set \n"
+		return "Train a network to recogize hand written digits from the mnist training set \n"
 				+ "The network learns each time a digit is passed through as we know the expected digit for each image\n"
 				+ "The input image contains 28*28 pixels.  \n"
 				+ "784 input Neurons that are connected to each of the Hidden Neurons \n"
@@ -220,6 +223,6 @@ public class MnistTrainer extends TrialInfo {
 
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "HandWritten digits";
+		return "Processing mnist data set";
 	}
 }

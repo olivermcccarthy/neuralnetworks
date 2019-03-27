@@ -1,11 +1,11 @@
-package oliver.neuron.math;
+package oliver.neuron.readme;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class WikiToHtml {
+public class ReadmeToHtml {
 
 	static class DenomNumer {
 		String denom = "";

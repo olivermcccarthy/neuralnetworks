@@ -12,8 +12,8 @@ Neural Networks don't use simple equations. for calculating a neurons output.
 
 Sigmoid is used to calculate the result of a Neuron, because its value varies between 0 and 1. Its value changes very little with small changes in weights. With the greatest change( most learning occurring around 0.5). This means we can make tiny improvements in Overall Cost with small changes.
  
-# Recognizing wonky Letters
-Train a network to recognize wonky letters. A wonky letter is drawn on the panel and you tell the network what it is. After a few iterations it gets better and better and recognizing the letter.
+# Recognizing distorted Letters
+Train a network to recognize distorted letters. A distorted letter is drawn on the panel and you tell the network what it is. After a few iterations it gets better and better and recognizing the letter.
   
 Equation for each Neuron
  mmm Signoid = (1)/(1 + e^-Z^) nnn
@@ -24,7 +24,7 @@ Weights are shown in a sqaure. Red for positive weights,blue for negative weight
 Watch as the weights change color as the network learns 
 
 
-# Processing many hand written digits
+# Processing mnist data set
 
 
 Each Neuron calculates an output based on its inputs and weights using the Sigmoid function.   

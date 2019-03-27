@@ -88,7 +88,6 @@ public class MnistReader {
 
 	public static byte[] loadFile(String infile) {
 		try {
-			RandomAccessFile f = new RandomAccessFile(infile, "r");
 			ClassLoader classloader = Thread.currentThread().getContextClassLoader();// 6 oliver.action.AssignAction
 
 			InputStream is2 = classloader.getResourceAsStream("oliver/neuron/mnist/"+infile);
@@ -102,7 +101,7 @@ public class MnistReader {
 			for (int i = 0; i < fileSize; i++)
 				baos.write(bb.get());
 			chan.close();
-			f.close();
+			is2.close();
 			return baos.toByteArray();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
