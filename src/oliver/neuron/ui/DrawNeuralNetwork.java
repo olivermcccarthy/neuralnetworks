@@ -197,7 +197,7 @@ public class DrawNeuralNetwork extends JPanel {
 	public static final int NUM_NURONS_TODRAW = 20;
 
 	/**
-	 *  DRaw each layer on the screen. Input Layer on the left. Output Layer on the right<br>
+	 *  Draw each layer on the screen. Input Layer on the left. Output Layer on the right<br>
 	 *  Also place the input Image on the very left hand side of the screen
 	 * the Left.
 	 */

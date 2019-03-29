@@ -61,14 +61,17 @@ public class ReadmeToHtml {
 		 FileWriter writer = new FileWriter(fileOut);
 		 
 		 while(line != null) {
+			 
 			 if(line.trim().startsWith("-")) {
-				 writer.write("<br><br>");
+				
 				 while(line.trim().startsWith("-")) {
 					 line =line.replaceFirst("-","");
+					 line = formatLine(line).replace("<br>", "");
 					 writer.write("<li>" + line + "");
 					 line = reader.readLine(); 
+					 
 				 }
-				 writer.write("<br><br>");
+				 writer.write("<br>");
 			 }
 			 if(line.trim().startsWith("#")) {
 				 line = line.trim();
@@ -81,24 +84,12 @@ public class ReadmeToHtml {
 				 }
 				 line = line.substring(hLevel);
 				 line = "<h"+hLevel+">" + line +"</h"+hLevel+">"; 
+				 line = formatLine(line);
 				 writer.write(line + "\n");
 				 line = reader.readLine();
 				 continue;
 			 }
-			 if(line.trim().contains("![d](")) {
-				 if(line.contains("(http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20  )")) {
-					 int debugMe =0;
-				 }
-				
-				 line = line.replace("![d](", "<img src=\"");
-				
-				 line = line.replace(" )", "\">");
-				
-				 writer.write(line + "\n");
-				 writer.write("<br>\n");
-				 line = reader.readLine();
-				 continue;
-			 }
+			
 					 
 			 if(line.trim().startsWith("|")) {
 				 writer.write("<table>\n");
@@ -118,6 +109,7 @@ public class ReadmeToHtml {
 							line = line.replaceAll("td>", "th>");
 						}
 						first = false;
+						line = formatLine(line);
 						writer.write(line + "\n");
 					}
 					
@@ -126,12 +118,28 @@ public class ReadmeToHtml {
 				 
 				 writer.write("</table>\n"); 
 			 }
+			 line = formatLine(line);
 			 writer.write( line + "\n");
 			 line = reader.readLine();
 		 }
 		 writer.close();
 	 }
 	
+	 private static String formatLine(String line) {
+		 if(line.trim().contains("![d](")) {
+			 if(line.contains("http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20%20Z%20=%200.24%20*%200.4%20%2B%200.45%20*0.5%20")) {
+				 int debugMe =0;
+			 }
+			
+			 line = line.replace("![d](", "<img src=\"");
+			
+			 line = "<br> " + line.replace(" )", "\">") +" <br>" ;
+			
+			
+			
+		 }
+		 return line;
+	 }
 	public static void main(String[] args) {
 		 try {
 			parseFile("README.md","src/oliver/neuron/ui/SimpleNeuron.html");

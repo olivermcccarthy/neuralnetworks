@@ -1,27 +1,47 @@
+Generated from README.orig by oliver.neuron.readme.CreateFancyFunctions 
 
 <h1> neuralnetworks</h1>
-
-Neural Networks don't use simple equations. for calculating a neurons output. 
- 
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20Output=%20Z%20=%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20 ">
-<br>
- <br> 
-
-.Instead they use complex Ones like 
- 
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
-<br>
+Each neuron in our brains learns one thing based on inputs. ( A bit simplistic given we have billions of them)
+Imagine a neuron a decides whether to cross the road or not based on
+<li> Amount of money across the road (M)<li> Number of cars on the road. (C)<br>
+This is a baby neuron and it assigns a random weight to each input
+<li> Wm  weight for amount of money<li> Wc weight for number of cars<br>
+<br> It then makes a decision to cross the road  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20 "> <br>
  <br>
- where Z is as above 
 
-Sigmoid is used to calculate the result of a Neuron, because its value varies between 0 and 1. Its value changes very little with small changes in weights. With the greatest change( most learning occurring around 0.5). This means we can make tiny improvements in Overall Cost with small changes.
- 
-<h1> Recognizing wonky Letters</h1>
-Train a network to recognize wonky letters. A wonky letter is drawn on the panel and you tell the network what it is. After a few iterations it gets better and better and recognizing the letter.
+If Z > 0 we cross the road. 
+Then the neuron is told whether it made the right decision or not. 
+<li> -1 dont cross the road<li> 1 cross the road<br>It then adjusts its weights. by an error in proportion to  a learning rate
+<li> Z output of equation <li> expected ( 0 dont cross the road 1 cross the road)  <li> error = Z - Expected <li> Learning rate (lr)<li> Wm = Wm - error *M * le. ( New money weight  is equal to old money weight - error * money *lr) <li> Wc = Wc - error *C . ( New car weight  is equal to old car weight - error * cars *lr )<br>as you can see weights are adjusted in proportion to error and value and learning rate
+
+Number of cars can vary from 0 to 10. Money varies from 1 euro to 1000 euros
+We normalize these values so they vary from 0 to 1 
+<li> Cars 10 cars normalized to 5 , 4 cars normalized to .4<li> Money 100 euros normalized to .1 , 1000 euros normalized to 1, 400 euros normalized to .4<br>we normalize to reduce the variation in results  
+Example
+<li> C = 5 (cars)  0.5<li> M = 400 (euros) 0.4<li> Wm = 0.24<li> Wc = 0.45<li> Learning rate (lr) = 0.1  ( learn slowly) <li>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20%20Z%20=%200.24%20*%200.4%20%2B%200.45%20*0.5%20=%200.096%20%2B%200.225%20=%200.321%20 "> <br> <br>  
+<li> Z =   0.321<br>
+Expected = -1 dont cross the road
+<li> Error = 0.321 -(-1) = 1.321  <li> Wm = Wm - error *M *lr<li> Wm = 0.24 -  0.321 *0.4 *.1 = 0.24 - 0.01284 = 0.22716 <li> Wc = Wc - error *C *lr<li> Wc = 0.45 -  0.321 *.5 *.1 = 0.45 - 0.01605 = 0.43395<br>
+So if we tried the equation again
+<li>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20%20Z%20=%200.22716%20*%200.4%20%2B%200.43395%20*%200.5%20=%200.090864%20%2B%200.216975%20=%200.307839%20 "> <br> <br>
+<li> Z = 0.307839 is closer to expected -1.<br> 
+By trying enough random trials the will learn when to cross the road.
+The clever among you will realize that the poor neuron will be killed off quickly. But this is maths so our neuron just picks itself up and tries again.
+   
+It repeats the trial multiple times with varying amounts of money and numbers of cars until it learns the correct weights. 
+This could be applied to solving lots of problems, running a trial and adjusting weights based on expected result 
+
+
+The actual equation used is more complex  than simply multiplying weights by inputs   
+<br>  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 "> <br>
+ <br>
+
+
+<h1> Recognizing distorted Letters</h1>
+Train a network to recognize distorted letters. A distorted letter is drawn on the panel and you tell the network what it is. After a few iterations it gets better and better and recognizing the letter.
   
 Equation for each Neuron
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Signoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 "> <br>
  <br>
 
 The network learns each time you click the correct letter. 
@@ -30,7 +50,7 @@ Weights are shown in a sqaure. Red for positive weights,blue for negative weight
 Watch as the weights change color as the network learns 
 
 
-<h1> Processing many hand written digits</h1>
+<h1> Processing mnist data set</h1>
 
 
 Each Neuron calculates an output based on its inputs and weights using the Sigmoid function.   
@@ -38,20 +58,32 @@ This shows how a neural network can be trained to recognize hand written digits.
 This jar contains all the training digits from the "http://yann.lecun.com/exdb/mnist/" mnist training set  (60000 plus images).
 It knows the expected output for each image. So we use this info to train our network. One pass through the network is referred to as one run.  
  
-<br><br><li> This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). <li> Each hidden neuron is connected to each output Neuron. <li> In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of the weights ranging from most positive(Red) to most Negative(Dark Blue). <li> For each trial an input image is loaded and  passed through the network<br><br>
+<li> This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). <li> Each hidden neuron is connected to each output Neuron. <li> In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of the weights ranging from most positive(Red) to most Negative(Dark Blue). <li> For each trial an input image is loaded and  passed through the network<br>
 
 Each Neuron in the hidden layer calculates its sigmoid based on input*weight. 
 Then each Neuron in the output layer calculates its sigmoid based on input(output from hidden Layer)*weight.
  
 
-<br><br><li> Each output Neuron adjusts its weights(A tiny bit) based on this expected value.<li> Then each Neuron in the hidden layer adjusts its weights.<br><br>
+<li> Each output Neuron adjusts its weights(A tiny bit) based on this expected value.<li> Then each Neuron in the hidden layer adjusts its weights.<br>
 And thats just one trial. For the Network to learn with any degree of accuracy we would need to run thousands of runs passing expected value each time so that the network can learn a little each time. 
    
  You can watch as the Network Learns And see it getting better at predicting the digit
 
 <h1> Maths behind it</h1>
 This is a very basic look at the maths behind sigmoid and how weights are adjusted
-   
+<h2> Neural Networks don't use simple equations. for calculating a neurons output.</h2>
+A simple equation would be to multiply all inputs by a weight  
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20Output=%20Z%20=%20w(1%29*input(1%29%20%2B%20w(2%29*input(2%29%20%2B%20..%20%2B%20w(x%29*input(x%29%20%2B%20...%20%2B%20w(n%29%20%20-%20bias%20 "> <br>
+ <br> 
+This could give us a broad range of results bwteen a large negative number and a large positive number 
+.Instead of using this output we apply another function to Z.  
+ 
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 "> <br>
+ <br>
+ where Z is as above . The result of sigmoid varies from 0 to 1. This is nice a neat for us. Im not going to go into all the reasons why this is useful (I dont understand them)  
+
+Sigmoid is used to calculate the result of a Neuron, because its value varies between 0 and 1. Its value changes very little with small changes in weights. With the greatest change( most learning occurring around 0.5). This means we can make tiny improvements in Overall Cost with small changes.
+    
 <h2>  Variable Definitions</h2>
    
 <table>
@@ -84,8 +116,7 @@ We change them in proportion to pdW(x)-Cost ( Partial Derivative of Weight with 
 
 There are some funky maths to prove this but for the outputlayer
 
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20pdW(x%29-Cost%20=%20input(x%29%20*(sigMoid%20-%20T%29%20*%20sigMoid%20*%20(1%20-%20sigMoid%29%20 ">
-<br>
+<br>  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20pdW(x%29-Cost%20=%20input(x%29%20*(sigMoid%20-%20T%29%20*%20sigMoid%20*%20(1%20-%20sigMoid%29%20 "> <br>
  <br>n
 
 
@@ -110,61 +141,49 @@ Using chain rule pdW(x)-Cost =
 <h2> Proof of pdZ-Sigmoid = sigMoid * (1 - sigMoid)</h2>
  
  
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Sigmoid%20=%20(1%29/(1%20%2B%20e^{-Z}%29%20 "> <br>
  <br>
  Reciprocal Rule  derivative of 
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20d({\frac{1}{f}%29%20=%20%20%20-df/(f^{2}%29%20 "> <br>
  <br> 
  here    
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20 ">
-<br>
- <br>  and   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20 ">
-<br>
- <br> and  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f%20=%20%201%20%2B%20e^{-Z}%20 "> <br>
+<br>  <br>  and   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20df%20=%20-e^{-Z}%20 "> <br>
+<br>  <br> and  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20f^{2}%20=%20(1%20%2B%20e%20^{-Z}%29^{2}%20 "> <br>
  <br> 
  
  Thus
  
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{e%20^{-Z}%20}{(1%20%2B%20e^{-Z}%29^{2}}%20 "> <br>
  <br>
    
  For fun and to get what we are looking for we add and subtract 1 above the line
  
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20={\frac{1%20%2B%20e%20^{-Z}%20-1}{(1%20%2B%20e^{-Z}%29^{2}}%20 "> <br>
  <br> 
  
  Rewriting this we get  
  
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=%20{\frac{1%20%2B%20e%20^{-Z}}{(1%20%2B%20e^{-Z}%29^{2}}%20-%20{\frac{1}{(1%20%2B%20e^{-Z}%29^{2}}%20 "> <br>
  <br> 
  
  Then we take out the following from first and second part 
  
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 "> <br>
  <br> 
  
  Giving us
 =
- <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20 ">
-<br>
+<br>  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{-df}{f^{2}}%20=({\frac{1}{(1%20%2B%20e^{-Z}%29}%29(1%20-{\frac{1}{(1%20%2B%20e^{-Z}%29}%29%20%20 "> <br>
  <br>
   
 
   
-Of course  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 ">
-<br>
+<br> Of course  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20{\frac{1}{(1%20%2B%20e^{-Z}%29}%20 "> <br>
  <br> Is Sigmoid 
   Therefore the partial derivative of Sigmoid with respect to Z is  
   
-  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20 ">
-<br>
+<br>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20%20{\frac{\partial%20Sigmoid}{\partial%20Z}%20=%20Sigmoid*(1%20-%20Sigmoid%29%20 "> <br>
  <br>
   
   This is useful because we can easily calculate the derivative of Sigmoid
