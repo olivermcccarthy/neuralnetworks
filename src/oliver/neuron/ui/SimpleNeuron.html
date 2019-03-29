@@ -3,28 +3,76 @@ Generated from README.orig by oliver.neuron.readme.CreateFancyFunctions
 <h1> neuralnetworks</h1>
 Each neuron in our brains learns one thing based on inputs. ( A bit simplistic given we have billions of them)
 Imagine a neuron a decides whether to cross the road or not based on
-<li> Amount of money across the road (M)<li> Number of cars on the road. (C)<br>
+<ul>
+<li> Amount of money across the road (M)
+<li> Number of cars on the road. (C)
+
+</ul>
 This is a baby neuron and it assigns a random weight to each input
-<li> Wm  weight for amount of money<li> Wc weight for number of cars<br>
+<ul>
+<li> Wm  weight for amount of money
+<li> Wc weight for number of cars
+
+</ul>
 <br> It then makes a decision to cross the road  <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20 "> <br>
  <br>
 
 If Z > 0 we cross the road. 
 Then the neuron is told whether it made the right decision or not. 
-<li> -1 dont cross the road<li> 1 cross the road<br>It then adjusts its weights. by an error in proportion to  a learning rate
-<li> Z output of equation <li> expected ( 0 dont cross the road 1 cross the road)  <li> error = Z - Expected <li> Learning rate (lr)<li> Wm = Wm - error *M * le. ( New money weight  is equal to old money weight - error * money *lr) <li> Wc = Wc - error *C . ( New car weight  is equal to old car weight - error * cars *lr )<br>as you can see weights are adjusted in proportion to error and value and learning rate
+<ul>
+<li> -1 dont cross the road
+<li> 1 cross the road
+
+</ul>It then adjusts its weights. by an error in proportion to  a learning rate
+<ul>
+<li> Z output of equation 
+<li> expected ( 0 dont cross the road 1 cross the road)  
+<li> error = Z - Expected 
+<li> Learning rate (lr)
+<li> Wm = Wm - error *M * le. ( New money weight  is equal to old money weight - error * money *lr) 
+<li> Wc = Wc - error *C . ( New car weight  is equal to old car weight - error * cars *lr )
+
+</ul>as you can see weights are adjusted in proportion to error and value and learning rate
 
 Number of cars can vary from 0 to 10. Money varies from 1 euro to 1000 euros
 We normalize these values so they vary from 0 to 1 
-<li> Cars 10 cars normalized to 5 , 4 cars normalized to .4<li> Money 100 euros normalized to .1 , 1000 euros normalized to 1, 400 euros normalized to .4<br>we normalize to reduce the variation in results  
+<ul>
+<li> Cars 10 cars normalized to 5 , 4 cars normalized to .4
+<li> Money 100 euros normalized to .1 , 1000 euros normalized to 1, 400 euros normalized to .4
+
+</ul>we normalize to reduce the variation in results  
 Example
-<li> C = 5 (cars)  0.5<li> M = 400 (euros) 0.4<li> Wm = 0.24<li> Wc = 0.45<li> Learning rate (lr) = 0.1  ( learn slowly) <li>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20%20Z%20=%200.24%20*%200.4%20%2B%200.45%20*0.5%20=%200.096%20%2B%200.225%20=%200.321%20 "> <br> <br>  
-<li> Z =   0.321<br>
+<ul>
+<li> C = 5 (cars)  0.5
+<li> M = 400 (euros) 0.4
+<li> Wm = 0.24
+<li> Wc = 0.45
+<li> Learning rate (lr) = 0.1  ( learn slowly) 
+<li>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20%20Z%20=%200.24%20*%200.4%20%2B%200.45%20*0.5%20=%200.096%20%2B%200.225%20=%200.321%20 "> 
+
+</ul> <br>  
+<ul>
+<li> Z =   0.321
+
+</ul>
 Expected = -1 dont cross the road
-<li> Error = 0.321 -(-1) = 1.321  <li> Wm = Wm - error *M *lr<li> Wm = 0.24 -  0.321 *0.4 *.1 = 0.24 - 0.01284 = 0.22716 <li> Wc = Wc - error *C *lr<li> Wc = 0.45 -  0.321 *.5 *.1 = 0.45 - 0.01605 = 0.43395<br>
+<ul>
+<li> Error = 0.321 -(-1) = 1.321  
+<li> Wm = Wm - error *M *lr
+<li> Wm = 0.24 -  0.321 *0.4 *.1 = 0.24 - 0.01284 = 0.22716 
+<li> Wc = Wc - error *C *lr
+<li> Wc = 0.45 -  0.321 *.5 *.1 = 0.45 - 0.01605 = 0.43395
+
+</ul>
 So if we tried the equation again
-<li>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20%20Z%20=%200.22716%20*%200.4%20%2B%200.43395%20*%200.5%20=%200.090864%20%2B%200.216975%20=%200.307839%20 "> <br> <br>
-<li> Z = 0.307839 is closer to expected -1.<br> 
+<ul>
+<li>   <img src="http://chart.apis.google.com/chart?cht=tx&chl=%20Z%20=%20Wm%20*%20M%20%2B%20Wc%20*C%20%20Z%20=%200.22716%20*%200.4%20%2B%200.43395%20*%200.5%20=%200.090864%20%2B%200.216975%20=%200.307839%20 "> 
+
+</ul> <br>
+<ul>
+<li> Z = 0.307839 is closer to expected -1.
+
+</ul> 
 By trying enough random trials the will learn when to cross the road.
 The clever among you will realize that the poor neuron will be killed off quickly. But this is maths so our neuron just picks itself up and tries again.
    
@@ -58,13 +106,23 @@ This shows how a neural network can be trained to recognize hand written digits.
 This jar contains all the training digits from the "http://yann.lecun.com/exdb/mnist/" mnist training set  (60000 plus images).
 It knows the expected output for each image. So we use this info to train our network. One pass through the network is referred to as one run.  
  
-<li> This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). <li> Each hidden neuron is connected to each output Neuron. <li> In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of the weights ranging from most positive(Red) to most Negative(Dark Blue). <li> For each trial an input image is loaded and  passed through the network<br>
+<ul>
+<li> This Network has 28*28 inputs Neurons one for each pixel in the input image. Each of these input Neurons is connected to a hidden neuron (These links are not shown). 
+<li> Each hidden neuron is connected to each output Neuron. 
+<li> In neural networks each connection has a weight. Here we cant show all actual weights so we paint a picture of the weights ranging from most positive(Red) to most Negative(Dark Blue). 
+<li> For each trial an input image is loaded and  passed through the network
+
+</ul>
 
 Each Neuron in the hidden layer calculates its sigmoid based on input*weight. 
 Then each Neuron in the output layer calculates its sigmoid based on input(output from hidden Layer)*weight.
  
 
-<li> Each output Neuron adjusts its weights(A tiny bit) based on this expected value.<li> Then each Neuron in the hidden layer adjusts its weights.<br>
+<ul>
+<li> Each output Neuron adjusts its weights(A tiny bit) based on this expected value.
+<li> Then each Neuron in the hidden layer adjusts its weights.
+
+</ul>
 And thats just one trial. For the Network to learn with any degree of accuracy we would need to run thousands of runs passing expected value each time so that the network can learn a little each time. 
    
  You can watch as the Network Learns And see it getting better at predicting the digit

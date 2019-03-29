@@ -63,15 +63,15 @@ public class ReadmeToHtml {
 		 while(line != null) {
 			 
 			 if(line.trim().startsWith("-")) {
-				
+				 writer.write("<ul>\n");
 				 while(line.trim().startsWith("-")) {
 					 line =line.replaceFirst("-","");
 					 line = formatLine(line).replace("<br>", "");
-					 writer.write("<li>" + line + "");
+					 writer.write("<li>" + line + "\n");
 					 line = reader.readLine(); 
 					 
 				 }
-				 writer.write("<br>");
+				 writer.write("\n</ul>");
 			 }
 			 if(line.trim().startsWith("#")) {
 				 line = line.trim();
